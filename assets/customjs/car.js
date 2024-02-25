@@ -100,17 +100,17 @@ var car = {
                         "</td><td>" + identification_date + 
                         "</td><td>" + registration_date + 
                         "</td><td>" + date_closed + 
-                        "</td><td>" + corrective_action_status + "<br><small>" + ca_completion_date + "</small>" +
-                        "</td><td>" + for_correction_status + "<br><small>" + fc_completion_date + "</small>" +
+                        // "</td><td>" + corrective_action_status + "<br><small>" + ca_completion_date + "</small>" +
+                        // "</td><td>" + for_correction_status + "<br><small>" + fc_completion_date + "</small>" +
                         "</td><td>" + status +
                         "</td><td>" +
                         "<div class='btn-group mb-2'>" +
                         "<button type='button' class='btn btn-success dropdown-toggle' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='fa fa-file'></i> <i class='mdi mdi-chevron-down'></i></button>" +
                         "<div class='dropdown-menu'>" +
-                        "<a class='dropdown-item edit-car' data-status='"+status+"' data-requestor='" + requestor + "'  data-findings='" + findings + "' data-consequences='" + consequences + "' data-requirements_not_fulfilled='" + requirements_not_fulfilled + "' data-issuance_of_nc_remarks='" + issuance_of_nc_remarks + "' data-issuance_of_nc='" + issuance_of_nc + "' data-car_id='" + car_id + "' data-car_no='" + car_no + "' data-source='" + source + "' data-section='" + section + "' data-issued_by='" + issued_by + "' data-issued_to='" + issued_to + "' data-identification_date='" + identification_date + "' data-registration_date='" + registration_date + "' data-bs-toggle='modal' data-bs-target='#add-car-issuance'>Issuance of NC</a>" +
-                        "<a class='dropdown-item' href='#'>History</a>" +
-                        "<a class='dropdown-item edit-corrective-action' href='#' data-status='"+status+"' data-requestor='" + requestor + "'  data-findings='" + findings + "' data-consequences='" + consequences + "' data-requirements_not_fulfilled='" + requirements_not_fulfilled + "' data-issuance_of_nc_remarks='" + issuance_of_nc_remarks + "' data-issuance_of_nc='" + issuance_of_nc + "' data-car_id='" + car_id + "' data-car_no='" + car_no + "' data-source='" + source + "' data-section='" + section + "' data-issued_by='" + issued_by + "' data-issued_to='" + issued_to + "' data-identification_date='" + identification_date + "' data-registration_date='" + registration_date + "' data-bs-toggle='modal' data-bs-target='#root-cause'>Corrective Action</a>" +
-                        "<a class='dropdown-item edit-correction-action' href='#' data-status='"+status+"' data-requestor='" + requestor + "'  data-findings='" + findings + "' data-consequences='" + consequences + "' data-requirements_not_fulfilled='" + requirements_not_fulfilled + "' data-issuance_of_nc_remarks='" + issuance_of_nc_remarks + "' data-issuance_of_nc='" + issuance_of_nc + "' data-car_id='" + car_id + "' data-car_no='" + car_no + "' data-source='" + source + "' data-section='" + section + "' data-issued_by='" + issued_by + "' data-issued_to='" + issued_to + "' data-identification_date='" + identification_date + "' data-registration_date='" + registration_date + "' data-bs-toggle='modal' data-bs-target='#corrective-action'>Correction</a>" +
+                        // "<a class='dropdown-item edit-car' data-status='"+status+"' data-requestor='" + requestor + "'  data-findings='" + findings + "' data-consequences='" + consequences + "' data-requirements_not_fulfilled='" + requirements_not_fulfilled + "' data-issuance_of_nc_remarks='" + issuance_of_nc_remarks + "' data-issuance_of_nc='" + issuance_of_nc + "' data-car_id='" + car_id + "' data-car_no='" + car_no + "' data-source='" + source + "' data-section='" + section + "' data-issued_by='" + issued_by + "' data-issued_to='" + issued_to + "' data-identification_date='" + identification_date + "' data-registration_date='" + registration_date + "' data-bs-toggle='modal' data-bs-target='#add-car-issuance'>Issuance of NC</a>" +
+                        // "<a class='dropdown-item' href='#'>History</a>" +
+                        "<a class='dropdown-item edit-corrective-action' href='#' data-status='"+status+"' data-requestor='" + requestor + "'  data-findings='" + findings + "' data-consequences='" + consequences + "' data-requirements_not_fulfilled='" + requirements_not_fulfilled + "' data-issuance_of_nc_remarks='" + issuance_of_nc_remarks + "' data-issuance_of_nc='" + issuance_of_nc + "' data-car_id='" + car_id + "' data-car_no='" + car_no + "' data-source='" + source + "' data-section='" + section + "' data-issued_by='" + issued_by + "' data-issued_to='" + issued_to + "' data-identification_date='" + identification_date + "' data-registration_date='" + registration_date + "' data-bs-toggle='modal' data-bs-target='#root-cause'>RFI Action</a>" +
+                        // "<a class='dropdown-item edit-correction-action' href='#' data-status='"+status+"' data-requestor='" + requestor + "'  data-findings='" + findings + "' data-consequences='" + consequences + "' data-requirements_not_fulfilled='" + requirements_not_fulfilled + "' data-issuance_of_nc_remarks='" + issuance_of_nc_remarks + "' data-issuance_of_nc='" + issuance_of_nc + "' data-car_id='" + car_id + "' data-car_no='" + car_no + "' data-source='" + source + "' data-section='" + section + "' data-issued_by='" + issued_by + "' data-issued_to='" + issued_to + "' data-identification_date='" + identification_date + "' data-registration_date='" + registration_date + "' data-bs-toggle='modal' data-bs-target='#corrective-action'>Correction</a>" +
                         osqm_review_correction +
                         osqm_review_corrective_action +
                         osqm_approval_correction+
@@ -211,35 +211,35 @@ var car = {
             });
         });
 
-        jQuery('#addCARFormIssuance .issued_to').change(function(){
-            department = $(this).val();
-            $.ajax({
-                type: 'POST',
-                url: '../car/getSection', // Replace 'MyController' with your controller name
-                data: {department: department},
-                success: function (response) {
-                    if(response != 'null'){
+        // jQuery('#addCARFormIssuance .issued_to').change(function(){
+        //     department = $(this).val();
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '../car/getSection', // Replace 'MyController' with your controller name
+        //         data: {department: department},
+        //         success: function (response) {
+        //             if(response != 'null'){
 
-                        $('#addCARFormIssuance .section').html('<option value=""></option>');
-                        $.each(JSON.parse(response), function (index, item) {
-                            // Access each item's properties
-                            var id = item.id;
-                            var section_name = item.section_name;
+        //                 $('#addCARFormIssuance .section').html('<option value=""></option>');
+        //                 $.each(JSON.parse(response), function (index, item) {
+        //                     // Access each item's properties
+        //                     var id = item.id;
+        //                     var section_name = item.section_name;
     
-                            var html = '<option value="'+id+'">'+section_name+'</option>';
-                            // Do something with the data, for example, display it on the page
-                            $('#addCARFormIssuance .section').append(html);
-                        });
+        //                     var html = '<option value="'+id+'">'+section_name+'</option>';
+        //                     // Do something with the data, for example, display it on the page
+        //                     $('#addCARFormIssuance .section').append(html);
+        //                 });
 
                        
-                    }   
-                },
-                error: function () {
-                    // Handle errors
-                    diList.notifyError();
-                }
-            });
-        });
+        //             }   
+        //         },
+        //         error: function () {
+        //             // Handle errors
+        //             diList.notifyError();
+        //         }
+        //     });
+        // });
     },
 
     loadCorrectiveAction: function(){
@@ -1776,9 +1776,6 @@ var car = {
 
             var car_id = jQuery(this).data('car_id');
             jQuery('.car_id').val(car_id);
-            $('#risk-number').empty();
-            $('#opportunity-number').empty();
-            $('#rootcause').empty();
             $('#identified-root').empty();
 
             $.ajax({
@@ -1798,505 +1795,119 @@ var car = {
                             $('[name="existing_nonconformity_remarks"]').val(response[0].existing_nonconformity_remarks);
                             $('[name="update_doc_info_remarks"]').val(response[0].update_doc_info_remarks);
 
-                            var riskEntries = JSON.parse(response[0].risk_entry);
-
-                            riskEntries.forEach(function (risk) {
-                                var riskHtml = `
-                                    <div class="col-lg-12 risk-number-repeatable">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Risk Number</label>
-                                                                <input type="text" class="form-control" readonly name="risk_number[]" value="${risk.risk_number}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Details / Updates</label>
-                                                                <input type="text" class="form-control" readonly name="risk_number_details_update[]" value="${risk.risk_number_details_update}">
-                                                            </div>
-                                                        </div>
-                                     
-                                                        <div class="col-xl-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Attachment</label>
-                                                                <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                                // Append the risk HTML to the container
-                                $('#risk-number').append(riskHtml);
-                            });
-
-
-                            var opportunityEntries = JSON.parse(response[0].opportunity_entry);
-
-                            opportunityEntries.forEach(function (opportunity) {
-                                var opportunityHtml = `
-                                    <div class="col-lg-12 opportunity-number-repeatable">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Opportunity Number</label>
-                                                                <input type="text" class="form-control" readonly name="opportunity_number[]" value="${opportunity.opportunity_number}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Opportunities Identified (if applicable)</label>
-                                                                <input type="text" class="form-control" readonly name="opportunity_identified[]" value="${opportunity.opportunity_identified}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Attachment</label>
-                                                                <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
-                                                            </div>
-                                                        </div>
-                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                                // Append the opportunity HTML to the container
-                                $('#opportunity-number').append(opportunityHtml);
-                            });
-
-
-                            var rootCauseEntries = JSON.parse(response[0].root_cause_entry);
-
-                            rootCauseEntries.forEach(function (rootCause) {
-                                var rootCauseHtml = `
-                                    <div class="col-lg-12 rootcause-repeatable">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Root Cause Analysis Used</label>
-                                                                <input type="text" class="form-control" readonly name="rootcause[]" value="${rootCause.rootcause}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">File Name</label>
-                                                                <input type="text" class="form-control" readonly name="rootcause_file_name[]" value="${rootCause.rootcause_file_name}">
-                                                            </div>
-                                                        </div>
-                                                        <<div class="col-xl-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Attachment</label>
-                                                                <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
-                                                            </div>
-                                                        </div>
-                                            
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                                // Append the root cause HTML to the container
-                                $('#rootcause').append(rootCauseHtml);
-                            });
-
 
                             var identifiedRootEntries = JSON.parse(response[0].identified_root_entry);
                             var count = 0;
                             identifiedRootEntries.forEach(function (identifiedRoot) {
 
-                                var issued_by = '';
-                                var issued_to = '';
-                                var section_name = '';
-                                
-                                if(identifiedRoot.tpn_issued_by){
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '../car/getDivisionByID', // Replace 'MyController' with your controller name
-                                        data: {id: identifiedRoot.tpn_issued_by},
-                                        success: function (response) {
-                                            response = JSON.parse(response);
-
-                                            if(response[0]){
-                                                 issued_by = response[0].div_name;
-                                            }
-                                        }
-                                    });
-                                }
-
-                                if(identifiedRoot.tpn_issued_to){
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '../car/getDepartmentByID', // Replace 'MyController' with your controller name
-                                        data: {id: identifiedRoot.tpn_issued_to},
-                                        success: function (response) {
-                                            response = JSON.parse(response);
-                                            if(response[0]){
-                                                 issued_to = response[0].dep_name;
-                                            }
-                                        }
-                                    });
-                                }
-                                
-                                if(identifiedRoot.section){
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '../car/getSectionByID', // Replace 'MyController' with your controller name
-                                        data: {id: identifiedRoot.section},
-                                        success: function (response) {
-                                            response = JSON.parse(response);
-                                            if(response[0]){
-                                                 section_name = response[0].section_name;
-                                            }
-                                        }
-                                    });
-                                }
-
-                                setTimeout(function() {
-
-                                var identifiedRootHtml = `
-                                    <div class="col-lg-12 identified-root-repeatable">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <div class="row">
-                                                        <div class="col-xl-4 mb-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Identified Root Cause</label>
-                                                                <input type="text" readonly class="form-control" name="identified_root[]" value="${identifiedRoot.identified_root}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3 mb-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">TPN Control</label>
-                                                                <input type="text" readonly class="form-control" name="tpn_control[]" value="${identifiedRoot.tpn_control}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3 mb-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Corrective Action</label>
-                                                                <input type="text" readonly class="form-control" name="identified_root_corrective_action[]" value="${identifiedRoot.identified_root_corrective_action}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4 mb-1">
-                                                            <div class="form-group">
-                                                                <label for="issued_by" class="form-label">Issued By</label>
-                                                                <input type="text" readonly class="form-control" name="tpn_issued_by[${count}]" value="${issued_by}">
-                                                                <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3 mb-1">
-                                                            <div class="form-group">
-                                                                <label for="issued_to" class="form-label">Issued To</label>
-                                                                <input type="text" readonly class="form-control" name="tpn_issued_to[${count}]" value="${issued_to}">
-                                                                <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3 mb-1">
-                                                            <div class="form-group">
-                                                                <label for="section" class="form-label">Section Unit</label>
-                                                                <input type="text" readonly class="form-control" name="section[${count}]" value="${section_name}">
-                                                                <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Person Responsible</label>
-                                                                <input type="text" readonly class="form-control" name="identified_root_person_responsible[]" placeholder="Enter Name of personnel" value="${identifiedRoot.identified_root_person_responsible}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-3">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Completion Date</label>
-                                                                <input type="date" readonly class="form-control" name="identified_root_completion_date[]" value="${identifiedRoot.identified_root_completion_date}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-1">
-                                                            <div class="mb-3 mb-xl-0">
-                                                                <label class="form-label">Attachment</label>
-                                                                <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
-                                                            </div>
-                                                        </div>
+            
+                            var identifiedRootHtml = `
+                            <div class="col-lg-12 identified-root-repeatable">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <div class="row">
+                                                <div class="col-xl-4 mb-1">
+                                                    <div class="mb-3 mb-xl-0">
+                                                        <label class="form-label">Identified Root Cause</label>
+                                                        <input type="text" readonly class="form-control" name="identified_root[]" value="${identifiedRoot.identified_root}">
+                                                    </div>
+                                                </div>
+                
+                                                <div class="col-xl-4 mb-1">
+                                                    <div class="mb-3 mb-xl-0">
+                                                        <label class="form-label">Corrective Action</label>
+                                                        <input type="text" readonly class="form-control" name="identified_root_corrective_action[]" value="${identifiedRoot.identified_root_corrective_action}">
+                                                    </div>
+                                                </div>
+                    
+                
+                                                <div class="col-xl-4">
+                                                    <div class="mb-3 mb-xl-0">
+                                                        <label class="form-label">Person Responsible</label>
+                                                        <input type="text" readonly class="form-control" name="identified_root_person_responsible[]" placeholder="Enter Name of personnel" value="${identifiedRoot.identified_root_person_responsible}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3">
+                                                    <div class="mb-3 mb-xl-0">
+                                                        <label class="form-label">Completion Date</label>
+                                                        <input type="date" readonly class="form-control" name="identified_root_completion_date[]" value="${identifiedRoot.identified_root_completion_date}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-1">
+                                                    <div class="mb-3 mb-xl-0">
+                                                        <label class="form-label">Attachment</label>
+                                                        <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                `;
-                                // Append the identified root HTML to the container
-                                $('#identified-root').append(identifiedRootHtml);
-
-                                count++;
-                                }, 3000);
+                                </div>
+                            </div>
+                            `;
+                            // Append the identified root HTML to the container
+                            $('#identified-root').append(identifiedRootHtml);
                             });
 
                         }
 
                     }   
 
-                    
-                var riskHtml = `
-                <div class="col-lg-12 risk-number-repeatable">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-xl-4">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Risk Number</label>
-                                            <input type="text" class="form-control" name="risk_number[]" value="">
+
+                    var identifiedRootHtml = `
+                    <div class="col-lg-12 identified-root-repeatable">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-xl-4 mb-1">
+                                            <div class="mb-3 mb-xl-0">
+                                                <label class="form-label">Identified Root Cause</label>
+                                                <input type="text" class="form-control" name="identified_root[]" value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Details / Updates</label>
-                                            <input type="text" class="form-control" name="risk_number_details_update[]" value="">
+           
+                                        <div class="col-xl-4 mb-1">
+                                            <div class="mb-3 mb-xl-0">
+                                                <label class="form-label">Corrective Action</label>
+                                                <input type="text" class="form-control" name="identified_root_corrective_action[]" value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Attachment</label>
-                                            <input type="file" class="form-control" name="risk_number_attachment[]" value="">
+        
+              
+                                        <div class="col-xl-4">
+                                            <div class="mb-3 mb-xl-0">
+                                                <label class="form-label">Person Responsible</label>
+                                                <input type="text" class="form-control" name="identified_root_person_responsible[]" placeholder="Enter Name of personnel" value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-1">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Remove</label>
-                                            <button type="button" class="btn btn-danger remove-risk-number-action"><i class="fas fa-trash"></i></button>
+                                        <div class="col-xl-4">
+                                            <div class="mb-3 mb-xl-0">
+                                                <label class="form-label">Completion Date</label>
+                                                <input type="date" class="form-control" name="identified_root_completion_date[]" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <div class="mb-3 mb-xl-0">
+                                                <label class="form-label">Attachment</label>
+                                                <input type="file" class="form-control" name="identified_root_attachment_attachment[]" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-1">
+                                            <div class="mb-3 mb-xl-0">
+                                                <label class="form-label">Remove</label>
+                                                <button type="button" class="btn btn-danger remove-identified-root-action"><i class="fas fa-trash"></i></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 `;
-                // Append the risk HTML to the container
-                $('#risk-number').append(riskHtml);
-
-                var opportunityHtml = `
-                <div class="col-lg-12 opportunity-number-repeatable">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-xl-4">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Opportunity Number</label>
-                                            <input type="text" class="form-control" name="opportunity_number[]" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Opportunities Identified (if applicable)</label>
-                                            <input type="text" class="form-control" name="opportunity_identified[]" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Attachment</label>
-                                            <input type="file" class="form-control" name="opportunity_number_attachment[]" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-1">
-                                        <div class="mb-3 mb-xl-0">
-                                            <label class="form-label">Remove</label>
-                                            <button type="button" class="btn btn-danger remove-opportunity-number-action"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                `;
-                // Append the opportunity HTML to the container
-                $('#opportunity-number').append(opportunityHtml);
-
-                var rootCauseHtml = `
-                                <div class="col-lg-12 rootcause-repeatable">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <div class="row">
-                                                    <div class="col-xl-4">
-                                                        <div class="mb-3 mb-xl-0">
-                                                            <label class="form-label">Root Cause Analysis Used</label>
-                                                            <input type="text" class="form-control" name="rootcause[]" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <div class="mb-3 mb-xl-0">
-                                                            <label class="form-label">File Name</label>
-                                                            <input type="text" class="form-control" name="rootcause_file_name[]" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-3">
-                                                        <div class="mb-3 mb-xl-0">
-                                                            <label class="form-label">Attachment</label>
-                                                            <input type="file" class="form-control" name="rootcause_attachment_attachment[]" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-1">
-                                                        <div class="mb-3 mb-xl-0">
-                                                            <label class="form-label">Remove</label>
-                                                            <button type="button" class="btn btn-danger remove-rootcause-action"><i class="fas fa-trash"></i></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                `;
-                // Append the root cause HTML to the container
-                $('#rootcause').append(rootCauseHtml);
-                
-
-                setTimeout(function() {
-
-                    $.ajax({
-                        type: 'POST',
-                        url: '../car/getDivision', // Replace 'MyController' with your controller name
-                        data: {},
-                        success: function (response) {
-                            var html 
-                            if(response != 'null'){
-        
-                                $.each(JSON.parse(response), function (index, item) {
-                                    // Access each item's properties
-                                    var id = item.id;
-                                    var div_name = item.div_name;
-            
-                                    html += '<option value="'+id+'">'+div_name+'</option>';
-                                    // Do something with the data, for example, display it on the page
-                                });
-
-                                var identifiedRootHtml = `
-                                        <div class="col-lg-12 identified-root-repeatable">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="mb-3">
-                                                        <div class="row">
-                                                            <div class="col-xl-4 mb-1">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">Identified Root Cause</label>
-                                                                    <input type="text" class="form-control" name="identified_root[]" value="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-3 mb-1">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">TPN Control</label>
-                                                                    <select class="form-select tpn-control" name="tpn_control[]">
-                                                                        <option value="total">Total</option>
-                                                                        <option value="partial">Partial</option>
-                                                                        <option value="no">No</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-3 mb-1">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">Corrective Action</label>
-                                                                    <input type="text" class="form-control" name="identified_root_corrective_action[]" value="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-4 mb-1">
-                                                                <div class="form-group" style="display: none;>
-                                                                    <label for="issued_by" class="form-label">Issued By</label>
-                                                                    <select class="form-select issued_by" name="tpn_issued_by[]">
-                                                                        <option value=""></option>
-                                                                        ${html}
-                                                                    </select>
-                                                                    <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-3 mb-1">
-                                                                <div class="form-group" style="display: none;>
-                                                                    <label for="issued_to" class="form-label">Issued To</label>
-                                                                    <select class="form-select issued_to" name="tpn_issued_to[]">
-                                                                        <option value=""></option>
-                                                                    </select>
-                                                                    <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-3 mb-1">
-                                                                <div class="form-group" style="display: none;>
-                                                                    <label for="section" class="form-label">Section Unit</label>
-                                                                    <select class="form-select section"  name="tpn_section[]">
-                                                                        <option value=""></option>
-                                                                    </select>
-                                                                    <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-4">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">Person Responsible</label>
-                                                                    <input type="text" class="form-control" name="identified_root_person_responsible[]" placeholder="Enter Name of personnel" value="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-3">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">Completion Date</label>
-                                                                    <input type="date" class="form-control" name="identified_root_completion_date[]" value="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-3">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">Attachment</label>
-                                                                    <input type="file" class="form-control" name="identified_root_attachment_attachment[]" value="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xl-1">
-                                                                <div class="mb-3 mb-xl-0">
-                                                                    <label class="form-label">Remove</label>
-                                                                    <button type="button" class="btn btn-danger remove-identified-root-action"><i class="fas fa-trash"></i></button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                    // Append the identified root HTML to the container
-                                $('#identified-root').append(identifiedRootHtml);
-
-                                issued_by = jQuery(this).parent().parent().parent().find('.issued_by');
-                                issued_to = jQuery(this).parent().parent().parent().find('.issued_to');
-                                section = jQuery(this).parent().parent().parent().find('.section');
-                
-                                issued_by.val();
-                                issued_to.val();
-                                section.val();
-                
-                                issued_by.parent().hide();
-                                issued_to.parent().hide();
-                                section.parent().hide();
-        
-                            }   
-                        },
-                        error: function () {
-                            // Handle errors
-                            diList.notifyError();
-                        }
-                    });
-                    
-                }, 3000);
+                // Append the identified root HTML to the container
+            $('#identified-root').append(identifiedRootHtml);
 
 
                 },
@@ -4591,24 +4202,24 @@ var car = {
             if (car.validateForm()) {
     
                 var car_no = jQuery('#car_no').val();
-                var identification_date = jQuery('#identification_date').val();
+                // var identification_date = jQuery('#identification_date').val();
                 var source = jQuery('#source').val();
                 var requestor = jQuery('#requestor').val();
-                var issued_by = jQuery('#issued_by').val();
-                var issued_to = jQuery('#issued_to').val();
+                // var issued_by = jQuery('#issued_by').val();
+                // var issued_to = jQuery('#issued_to').val();
                 var findings = jQuery('#findings').val();
-                var consequences = jQuery('#consequences').val();
+                // var consequences = jQuery('#consequences').val();
                 var requirements_not_fulfilled = jQuery('#requirements_not_fulfilled').val();
                 
                 var data = {
                     'car_no' : car_no,
-                    'identification_date' : identification_date,
+                    // 'identification_date' : identification_date,
                     'source' : source,
                     'requestor' : requestor,
-                    'issued_by' : issued_by,
-                    'issued_to' : issued_to,
+                    // 'issued_by' : issued_by,
+                    // 'issued_to' : issued_to,
                     'findings' : findings,
-                    'consequences' : consequences,
+                    // 'consequences' : consequences,
                     'requirements_not_fulfilled': requirements_not_fulfilled
                 }
     
@@ -4688,41 +4299,13 @@ var car = {
             e.preventDefault();
 
             var formData = new FormData($("#root_cause_form")[0]);
-
-                        
-            // Iterate over file inputs and append to formData
-            $('[name^="risk_number_attachment[]"]').each(function (index, element) {
-                var files = element.files;
-                for (var i = 0; i < files.length; i++) {
-                    formData.append('risk_number_attachment[]', files[i]);
-                }
-            });
-
-            $('[name^="opportunity_number_attachment[]"]').each(function (index, element) {
-                var files = element.files;
-                for (var i = 0; i < files.length; i++) {
-                    formData.append('opportunity_number_attachment[]', files[i]);
-                }
-            });
-
-            $('[name^="rootcause_attachment_attachment[]"]').each(function (index, element) {
-                var files = element.files;
-                for (var i = 0; i < files.length; i++) {
-                    formData.append('rootcause_attachment_attachment[]', files[i]);
-                }
-            });
-
+                    
             $('[name^="identified_root_attachment_attachment[]"]').each(function (index, element) {
                 var files = element.files;
                 for (var i = 0; i < files.length; i++) {
                     formData.append('identified_root_attachment_attachment[]', files[i]);
                 }
             });
-
-
-            
-            console.log('FormData Content:', formData);
-            console.log('Risk Number Attachment Files:', $('[name^="risk_number_attachment[]"]')[0].files);
 
             // Make an AJAX request to submit the form data
             $.ajax({
@@ -5304,15 +4887,16 @@ var car = {
     },
 
     identifiedRoot: function(){
-        $("#add-identified-root").on("click", function(){
+        $("#root_cause_form").on("click", "#add-identified-root", function(){
+ 
             // Clone the first .identified-root-repeatable div
-            var clone = $(".identified-root-repeatable:last").clone();
-            
+            var clone = $("#identified-root .identified-root-repeatable:last").clone();
+
             // Clear input values in the cloned section
             clone.find('input').val('');
     
             // Append the cloned section to the parent container
-            $(".identified-root-repeatable:last").after(clone);
+            $("#identified-root .identified-root-repeatable:last").after(clone);
     
             // Show the remove button for the new entry
             clone.find('.remove-identified-root-action').show();

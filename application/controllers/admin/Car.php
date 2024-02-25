@@ -19,7 +19,7 @@ class car extends CI_Controller {
 
         $this->role_checker->checkViewerRole();
         $data['page'] = 'admin/car';
-		$data['title'] = 'Corrective Action Request';
+		$data['title'] = 'Request For Improvement (R.F.I)';
         $data['customcss'] = 'car.css';
         $data['customjs'] = 'car.js';
         $data['source'] = $this->MainModel->getCarSource();
@@ -1472,107 +1472,88 @@ class car extends CI_Controller {
     
             return $attachments;
         }
-    
-        // Handle each array of file uploads
-        $risk_attachments = handleFileUpload('risk_number_attachment');
 
-        // var_dump( $risk_attachments);
-
-        $opportunity_attachments = handleFileUpload('opportunity_number_attachment');
-        $rootcause_attachments = handleFileUpload('rootcause_attachment_attachment');
         $identified_attachments = handleFileUpload('identified_root_attachment_attachment');
 
         $existing_nonconformity = $this->input->post('existing_nonconformity');
         $existing_nonconformity_remarks = $this->input->post('existing_nonconformity_remarks');
-        $update_doc_info = $this->input->post('update_doc_info');
-        $update_doc_info_remarks = $this->input->post('update_doc_info_remarks');
-    
-        //array
-        $risk_entry = array();
-    
-        $risk_number = $this->input->post('risk_number');
-        $risk_number_details_update = $this->input->post('risk_number_details_update');
-    
-        foreach($risk_number as $key => $value){
-            $risk_entry[] = array(
-                'risk_number' => $risk_number[$key],
-                'risk_number_details_update' => $risk_number_details_update[$key],
-                'risk_attachments' => $risk_attachments['risk_number_attachment'][$key]
-            );
-        }
+        $causes_of_the_noncormity = $this->input->post('causes_of_the_noncormity');
+
+        $corrective_action_implemented = $this->input->post('corrective_action_implemented');
+        $corrective_action_implemented_remarks = $this->input->post('corrective_action_implemented_remarks');
+        $change_to_qms = $this->input->post('change_to_qms');
+        $change_to_qms_remarks = $this->input->post('change_to_qms_remarks');
         
         $car_id = $this->input->post('car_id');
-        $opportunity_identified_yn = $this->input->post('opportunity_identified_yn');
-    
-        //array
-        $opportunity_number = $this->input->post('opportunity_number');
-        $opportunity_identified = $this->input->post('opportunity_identified');
-    
-        $opportunity_entry = array();
-    
-        foreach($opportunity_number as $key => $value){
-            $opportunity_entry[] = array(
-                'opportunity_number' => $opportunity_number[$key],
-                'opportunity_identified' => $opportunity_identified[$key],
-                'opportunity_attachments' => $opportunity_attachments['opportunity_number_attachment'][$key]
-            );
-        }
-    
-        //array
-        $rootcause = $this->input->post('rootcause');
-        $rootcause_file_name = $this->input->post('rootcause_file_name');
-    
-        $rootcause_entry = array();
-    
-        foreach($rootcause as $key => $value){
-            $rootcause_entry[] = array(
-                'rootcause' => $rootcause[$key],
-                'rootcause_file_name' => $rootcause_file_name[$key],
-                'rootcause_attachments' => $rootcause_attachments['rootcause_attachment_attachment'][$key]
-            );
-        }
-    
+
         //array
         $identified_root = $this->input->post('identified_root');
-        $tpn_control = $this->input->post('tpn_control');
         $identified_root_corrective_action = $this->input->post('identified_root_corrective_action');
         $identified_root_person_responsible = $this->input->post('identified_root_person_responsible');
         $identified_root_completion_date = $this->input->post('identified_root_completion_date');
 
-        $tpn_issued_by = $this->input->post('tpn_issued_by');
-        $tpn_issued_to = $this->input->post('tpn_issued_to');
-        $tpn_section = $this->input->post('tpn_section');
-    
         $identified_entry = array();
     
         foreach($identified_root as $key => $value){
             $identified_entry[] = array(
                 'identified_root' => $identified_root[$key],
-                'tpn_control' => $tpn_control[$key],
                 'identified_root_corrective_action' => $identified_root_corrective_action[$key],
                 'identified_root_person_responsible' => $identified_root_person_responsible[$key],
                 'identified_root_completion_date' => $identified_root_completion_date[$key],
                 'identified_attachments' => $identified_attachments['identified_root_attachment_attachment'][$key],
-                'tpn_issued_by' => isset($tpn_issued_by[$key]) ? $tpn_issued_by[$key] : "",
-                'tpn_issued_to' => isset($tpn_issued_to[$key]) ? $tpn_issued_to[$key] : "",
-                'tpn_section' => isset($tpn_section[$key]) ? $tpn_section[$key] : "",
             );
         }
     
         // Use $data for any further processing or database insertion
         $existing_record = $this->db->get_where('corrective_action', array('car_id' => $car_id))->row();
 
+        $correction_entry = array();
+
+        $correction = $this->input->post('correction');
+        $correction_person_responsible = $this->input->post('correction_person_responsible');
+        $correction_completion_date = $this->input->post('correction_completion_date');
+    
+        foreach($correction as $key => $value){
+            if($correction[$key]){
+                $correction_entry[] = array(
+                    'correction' => $correction[$key],
+                    'correction_person_responsible' => $correction_person_responsible[$key],
+                    'correction_completion_date' => $correction_completion_date[$key]
+                );
+            }
+            
+        }
+        
+        $consequence_entry = array();
+
+        //array
+        $consequence = $this->input->post('consequence');
+        $consequence_person_responsible = $this->input->post('consequence_person_responsible');
+        $consequence_completion_date = $this->input->post('consequence_completion_date');
+    
+        foreach($consequence as $key => $value){
+            if($consequence[$key]){
+                $consequence_entry[] = array(
+                    'consequence' => $consequence[$key],
+                    'consequence_person_responsible' => $consequence_person_responsible[$key],
+                    'consequence_completion_date' => $consequence_completion_date[$key]
+                );
+            }
+           
+        }
+
         $data = array(
             'car_id' => $car_id,
             'existing_nonconformity' => $existing_nonconformity,
-            'update_doc_info' => $update_doc_info,
+            'causes_of_the_noncormity' => $causes_of_the_noncormity,
             'existing_nonconformity_remarks' => $existing_nonconformity_remarks,
-            'update_doc_info_remarks' => $update_doc_info_remarks,
-            'risk_entry' => json_encode($risk_entry),
-            'opportunity_identified' => $opportunity_identified_yn,
-            'opportunity_entry' => json_encode($opportunity_entry),
-            'root_cause_entry' => json_encode($rootcause_entry),
+            'corrective_action_implemented' => $corrective_action_implemented,
+            'corrective_action_implemented_remarks' => $corrective_action_implemented_remarks,
+            'change_to_qms' => $change_to_qms,
+            'change_to_qms_remarks' => $change_to_qms_remarks,
             'identified_root_entry' => json_encode($identified_entry),
+            'correction_entry' => json_encode($correction_entry),
+            'consequence_entry' => json_encode($consequence_entry),
         );
         
         if ($existing_record) {
@@ -1792,11 +1773,11 @@ class car extends CI_Controller {
     public function save() {
         // Fetch data sent from AJAX request
         $car_no = $this->input->post('car_no');
-        $identification_date = $this->input->post('identification_date');
+        // $identification_date = $this->input->post('identification_date');
         $source = $this->input->post('source');
         $requestor = $this->input->post('requestor');
-        $issued_by = $this->input->post('issued_by');
-        $issued_to = $this->input->post('issued_to');
+        // $issued_by = $this->input->post('issued_by');
+        // $issued_to = $this->input->post('issued_to');
         $findings = $this->input->post('findings');
         $consequences = $this->input->post('consequences');
         $requirements_not_fulfilled = $this->input->post('requirements_not_fulfilled');
@@ -1816,26 +1797,26 @@ class car extends CI_Controller {
         }
 
         // Output the result
-        $expiry = $currentDate->format('Y-m-d');
+        // $expiry = $currentDate->format('Y-m-d');
 
 
         $data = array(
             'car_no' => $car_no,
             'requestor' => $requestor,
-            'identification_date' => $identification_date,
+            // 'identification_date' => $identification_date,
             'source' => $source,
-            'issued_by' => $issued_by,
-            'issued_to' => $issued_to,
+            // 'issued_by' => $issued_by,
+            // 'issued_to' => $issued_to,
             'findings' => $findings,
-            'consequences' => $consequences,
+            // 'consequences' => $consequences,
             'requirements_not_fulfilled' => $requirements_not_fulfilled,
             'corrective_action_status' => '',
             'for_correction_status' => '',
-            'ca_completion_date' => $expiry,
-            'fc_completion_date' => $expiry,
+            // 'ca_completion_date' => $expiry,
+            // 'fc_completion_date' => $expiry,
             'registration_date' => date('Y-m-d'),
-            'corrective_action_status' => '',
-            'status' => 'For Issuance of NC',
+            // 'corrective_action_status' => '',
+            'status' => 'For RFI Action',
         );
 
         // Save data to the 'car' table using the model

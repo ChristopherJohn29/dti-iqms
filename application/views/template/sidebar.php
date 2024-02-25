@@ -10,7 +10,7 @@
 <li class="menu-item">
     <a href="<?=base_url().'admin/car/car'?>" class="menu-link">
         <span class="menu-icon"><i data-feather="layers"></i></span>
-        <span class="menu-text"> C.A.R  </span>
+        <span class="menu-text"> R.F.I  </span>
     </a>
 </li>
 
