@@ -1566,7 +1566,7 @@ class car extends CI_Controller {
         }
 
         $cardata = array(
-            'corrective_action_status' => 'For OSQM Review'
+            'corrective_action_status' => 'For Verification'
         );
 
         $this->db->where('id', $car_id);
