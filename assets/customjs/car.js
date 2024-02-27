@@ -2223,10 +2223,10 @@ var car = {
                             var count = 0;
                             identifiedRootEntries.forEach(function(identifiedRoot) {
 
-                            var remarksReview = identifiedRoot.identified_root_verification !== undefined ? correction.identified_root_verification : '';
-                            var reviewValue = identifiedRoot.identified_root_remarks_verification !== undefined ? risk.identified_root_remarks_verification : '';
-                            var remarksReview_ = identifiedRoot.identified_root_verification_second !== undefined ? correction.identified_root_verification_second : '';
-                            var reviewValue_ = identifiedRoot.identified_root_remarks_verification_second !== undefined ? risk.identified_root_remarks_verification_second : '';
+                            var remarksReview = identifiedRoot.identified_root_verification !== undefined ? identifiedRoot.identified_root_verification : '';
+                            var reviewValue = identifiedRoot.identified_root_remarks_verification !== undefined ? identifiedRoot.identified_root_remarks_verification : '';
+                            var remarksReview_ = identifiedRoot.identified_root_verification_second !== undefined ? identifiedRoot.identified_root_verification_second : '';
+                            var reviewValue_ = identifiedRoot.identified_root_remarks_verification_second !== undefined ? identifiedRoot.identified_root_remarks_verification_second : '';
 
                             var identifiedRootHtml = `
                             <div class="col-lg-12 identified-root-repeatable">

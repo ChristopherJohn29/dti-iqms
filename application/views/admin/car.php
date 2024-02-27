@@ -1048,7 +1048,7 @@
                         </div>
                         <h4>2.3 Corrective Actions ( Including Updating Risk & Opportunities & Changes to QMS)</h4>
                         <h5>2.3.1 Corrective Action – To Address the cause of the NC and to prevent recurrence.<h5>
-                        <div id="identified-root" class="mb-3 ">
+                        <div id="identified-root" class="mb-3 identified-root">
                            <div class="col-lg-12 identified-root-repeatable">
                               <div class="card">
                                  <div class="card-body">
@@ -1368,7 +1368,7 @@
                         </div>
                         <h4>2.3 Corrective Actions ( Including Updating Risk & Opportunities & Changes to QMS)</h4>
                         <h5>2.3.1 Corrective Action – To Address the cause of the NC and to prevent recurrence.<h5>
-                        <div class="mb-3  identified-root">
+                        <div class="mb-3 identified-root">
                            <div class="col-lg-12 identified-root-repeatable">
                               <div class="card">
                                  <div class="card-body">
