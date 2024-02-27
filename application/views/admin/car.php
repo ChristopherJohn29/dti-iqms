@@ -1104,7 +1104,7 @@
                         </div>   
 
                         <div class="text-end mb-3">
-                              <button type="button" class="btn btn-primary left" id="add-identified-root">Add Identified Root Cause</button>
+                              <button type="button" class="btn btn-primary left add-identified-root">Add Identified Root Cause</button>
                            </div>
                            <div id="checkboxes">
                            <div class="col-lg-12">

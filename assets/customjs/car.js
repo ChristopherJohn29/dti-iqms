@@ -5230,7 +5230,31 @@ var car = {
     },
 
     correction: function() {
-        $(".add-correction").on("click", function() {
+
+        $("#root_cause_form").on("click", ".add-correction", function() {
+            // Clone the first .correction-repeatable div
+            var clone = $("#root_cause_form .correction-repeatable:last").clone();
+
+            // Clear input values in the cloned section
+            clone.find('input').val('');
+
+            // Append the cloned section to the parent container
+            $("#root_cause_form .correction-repeatable:last").after(clone);
+
+            // Show the remove button for the new entry
+            clone.find('.remove-corrective-action').show();
+
+            // Add Remove Correction button click event for the new entry
+            clone.find('.remove-corrective-action').on("click", function() {
+                // Check if there is more than one entry before removal
+                if ($('.correction-repeatable').length > 1) {
+                    $(this).closest('.correction-repeatable').remove();
+                }
+            });
+        });
+
+
+        $("#root_cause_form_new").on("click", ".add-correction", function() {
             // Clone the first .correction-repeatable div
             var clone = $(".correction-repeatable:last").clone();
 
@@ -5262,15 +5286,39 @@ var car = {
     },
 
     consequences: function() {
-        $(".add-consequences").on("click", function() {
+
+        $("#root_cause_form").on("click", ".add-consequences", function() {
             // Clone the first .consequences-repeatable div
-            var clone = $(".consequences-repeatable:last").clone();
+            var clone = $("#root_cause_form .consequences-repeatable:last").clone();
 
             // Clear input values in the cloned section
             clone.find('input').val('');
 
             // Append the cloned section to the parent container
-            $(".consequences-repeatable:last").after(clone);
+            $("#root_cause_form .consequences-repeatable:last").after(clone);    
+
+            // Show the remove button for the new entry
+            clone.find('.remove-consequences-action').show();
+
+            // Add Remove Consequences button click event for the new entry
+            clone.find('.remove-consequences-action').on("click", function() {
+                // Check if there is more than one entry before removal
+                if ($('.consequences-repeatable').length > 1) {
+                    $(this).closest('.consequences-repeatable').remove();
+                }
+            });
+        });
+
+
+        $("#root_cause_form_new").on("click", ".add-consequences", function() {
+            // Clone the first .consequences-repeatable div
+            var clone = $("#root_cause_form_new .consequences-repeatable:last").clone();
+
+            // Clear input values in the cloned section
+            clone.find('input').val('');
+
+            // Append the cloned section to the parent container
+            $("#root_cause_form_new .consequences-repeatable:last").after(clone);
 
             // Show the remove button for the new entry
             clone.find('.remove-consequences-action').show();
@@ -5501,6 +5549,37 @@ var car = {
 
     identifiedRoot: function() {
         $("#root_cause_form").on("click", ".add-identified-root", function() {
+
+            // Clone the first .identified-root-repeatable div
+            var clone = $("#identified-root .identified-root-repeatable:last").clone();
+
+            // Clear input values in the cloned section
+            clone.find('input').val('');
+
+            // Append the cloned section to the parent container
+            $("#identified-root .identified-root-repeatable:last").after(clone);
+
+            // Show the remove button for the new entry
+            clone.find('.remove-identified-root-action').show();
+
+            // Add Remove Identified Root Cause button click event for the new entry
+            clone.find('.remove-identified-root-action').on("click", function() {
+                // Check if there is more than one entry before removal
+                if ($('.identified-root-repeatable').length > 1) {
+                    $(this).closest('.identified-root-repeatable').remove();
+                }
+            });
+        });
+
+        // Remove Identified Root Cause button click event for the initial entry
+        $(".remove-identified-root-action").on("click", function() {
+            // Check if there is more than one entry before removal
+            if ($('.identified-root-repeatable').length > 1) {
+                $(this).closest('.identified-root-repeatable').remove();
+            }
+        });
+
+        $("#root_cause_form_new").on("click", ".add-identified-root", function() {
 
             // Clone the first .identified-root-repeatable div
             var clone = $("#identified-root .identified-root-repeatable:last").clone();
