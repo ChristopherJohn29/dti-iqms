@@ -1491,6 +1491,11 @@ class car extends CI_Controller {
         $identified_root_corrective_action = $this->input->post('identified_root_corrective_action');
         $identified_root_person_responsible = $this->input->post('identified_root_person_responsible');
         $identified_root_completion_date = $this->input->post('identified_root_completion_date');
+        $identified_attachments = $this->input->post('identified_attachments');
+        $identified_root_verification = $this->input->post('identified_root_verification');
+        $identified_root_remarks_verification = $this->input->post('identified_root_remarks_verification');
+        $identified_root_verification_second = $this->input->post('identified_root_verification_second');
+        $identified_root_remarks_verification_second = $this->input->post('identified_root_remarks_verification_second');
 
         $identified_entry = array();
     
@@ -1500,7 +1505,11 @@ class car extends CI_Controller {
                 'identified_root_corrective_action' => $identified_root_corrective_action[$key],
                 'identified_root_person_responsible' => $identified_root_person_responsible[$key],
                 'identified_root_completion_date' => $identified_root_completion_date[$key],
-                'identified_attachments' => $identified_attachments['identified_root_attachment_attachment'][$key],
+                'identified_attachments' => (isset($identified_attachments['identified_root_attachment_attachment'][$key]) ? $identified_attachments['identified_root_attachment_attachment'][$key] : (isset($identified_attachments[$key]) ? $identified_attachments[$key] : "")),
+                'identified_root_verification' => $identified_root_verification[$key],
+                'identified_root_remarks_verification' => $identified_root_remarks_verification[$key],
+                'identified_root_verification_second' => $identified_root_verification_second[$key],
+                'identified_root_remarks_verification_second' => $identified_root_remarks_verification_second[$key],
             );
         }
     
@@ -1512,13 +1521,17 @@ class car extends CI_Controller {
         $correction = $this->input->post('correction');
         $correction_person_responsible = $this->input->post('correction_person_responsible');
         $correction_completion_date = $this->input->post('correction_completion_date');
+        $correction_acceptable_verification = $this->input->post('correction_acceptable_verification');
+        $correction_acceptable_remarks_verification = $this->input->post('correction_acceptable_remarks_verification');
     
         foreach($correction as $key => $value){
             if($correction[$key]){
                 $correction_entry[] = array(
                     'correction' => $correction[$key],
                     'correction_person_responsible' => $correction_person_responsible[$key],
-                    'correction_completion_date' => $correction_completion_date[$key]
+                    'correction_completion_date' => $correction_completion_date[$key],
+                    'correction_acceptable_verification' => $correction_acceptable_verification[$key],
+                    'correction_acceptable_remarks_verification' => $correction_acceptable_remarks_verification[$key]
                 );
             }
             
@@ -1566,7 +1579,127 @@ class car extends CI_Controller {
         }
 
         $cardata = array(
-            'corrective_action_status' => 'For Verification'
+            'status' => 'For Verification'
+        );
+
+        $this->db->where('id', $car_id);
+        $result = $this->db->update('car', $cardata);
+        
+        if ($result) {
+            echo 'saved';
+        } else {
+            echo 'error';
+        }
+    }
+
+    public function saveRootNew(){
+        
+
+        $existing_nonconformity = $this->input->post('existing_nonconformity');
+        $existing_nonconformity_remarks = $this->input->post('existing_nonconformity_remarks');
+        $causes_of_the_noncormity = $this->input->post('causes_of_the_noncormity');
+
+        $corrective_action_implemented = $this->input->post('corrective_action_implemented');
+        $corrective_action_implemented_remarks = $this->input->post('corrective_action_implemented_remarks');
+        $change_to_qms = $this->input->post('change_to_qms');
+        $change_to_qms_remarks = $this->input->post('change_to_qms_remarks');
+        
+        $car_id = $this->input->post('car_id');
+
+        //array
+        $identified_root = $this->input->post('identified_root');
+        $identified_root_corrective_action = $this->input->post('identified_root_corrective_action');
+        $identified_root_person_responsible = $this->input->post('identified_root_person_responsible');
+        $identified_root_completion_date = $this->input->post('identified_root_completion_date');
+        $identified_attachments = $this->input->post('identified_attachments');
+        $identified_root_verification = $this->input->post('identified_root_verification');
+        $identified_root_remarks_verification = $this->input->post('identified_root_remarks_verification');
+        $identified_root_verification_second = $this->input->post('identified_root_verification_second');
+        $identified_root_remarks_verification_second = $this->input->post('identified_root_remarks_verification_second');
+
+        $identified_entry = array();
+    
+        foreach($identified_root as $key => $value){
+            $identified_entry[] = array(
+                'identified_root' => $identified_root[$key],
+                'identified_root_corrective_action' => $identified_root_corrective_action[$key],
+                'identified_root_person_responsible' => $identified_root_person_responsible[$key],
+                'identified_root_completion_date' => $identified_root_completion_date[$key],
+                'identified_attachments' => $identified_attachments[$key],
+                'identified_root_verification' => $identified_root_verification[$key],
+                'identified_root_remarks_verification' => $identified_root_remarks_verification[$key],
+                'identified_root_verification_second' => $identified_root_verification_second[$key],
+                'identified_root_remarks_verification_second' => $identified_root_remarks_verification_second[$key],
+            );
+        }
+    
+        // Use $data for any further processing or database insertion
+        $existing_record = $this->db->get_where('corrective_action', array('car_id' => $car_id))->row();
+
+        $correction_entry = array();
+
+        $correction = $this->input->post('correction');
+        $correction_person_responsible = $this->input->post('correction_person_responsible');
+        $correction_completion_date = $this->input->post('correction_completion_date');
+        $correction_acceptable_verification = $this->input->post('correction_acceptable_verification');
+        $correction_acceptable_remarks_verification = $this->input->post('correction_acceptable_remarks_verification');
+    
+        foreach($correction as $key => $value){
+            if($correction[$key]){
+                $correction_entry[] = array(
+                    'correction' => $correction[$key],
+                    'correction_person_responsible' => $correction_person_responsible[$key],
+                    'correction_completion_date' => $correction_completion_date[$key],
+                    'correction_acceptable_verification' => $correction_acceptable_verification[$key],
+                    'correction_acceptable_remarks_verification' => $correction_acceptable_remarks_verification[$key]
+                );
+            }
+            
+        }
+        
+        $consequence_entry = array();
+
+        //array
+        $consequence = $this->input->post('consequence');
+        $consequence_person_responsible = $this->input->post('consequence_person_responsible');
+        $consequence_completion_date = $this->input->post('consequence_completion_date');
+    
+        foreach($consequence as $key => $value){
+            if($consequence[$key]){
+                $consequence_entry[] = array(
+                    'consequence' => $consequence[$key],
+                    'consequence_person_responsible' => $consequence_person_responsible[$key],
+                    'consequence_completion_date' => $consequence_completion_date[$key]
+                );
+            }
+           
+        }
+
+        $data = array(
+            'car_id' => $car_id,
+            'existing_nonconformity' => $existing_nonconformity,
+            'causes_of_the_noncormity' => $causes_of_the_noncormity,
+            'existing_nonconformity_remarks' => $existing_nonconformity_remarks,
+            'corrective_action_implemented' => $corrective_action_implemented,
+            'corrective_action_implemented_remarks' => $corrective_action_implemented_remarks,
+            'change_to_qms' => $change_to_qms,
+            'change_to_qms_remarks' => $change_to_qms_remarks,
+            'identified_root_entry' => json_encode($identified_entry),
+            'correction_entry' => json_encode($correction_entry),
+            'consequence_entry' => json_encode($consequence_entry),
+        );
+        
+        if ($existing_record) {
+            // Car_id exists, perform an update
+            $this->db->where('car_id', $car_id);
+            $result = $this->db->update('corrective_action', $data);
+        } else {
+            // Car_id doesn't exist, perform an insert
+            $result = $this->db->insert('corrective_action', $data);
+        }
+
+        $cardata = array(
+            'status' => 'For Verification'
         );
 
         $this->db->where('id', $car_id);

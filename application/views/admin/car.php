@@ -1047,7 +1047,7 @@
                         </div>
                         <h4>2.3 Corrective Actions ( Including Updating Risk & Opportunities & Changes to QMS)</h4>
                         <h5>2.3.1 Corrective Action – To Address the cause of the NC and to prevent recurrence.<h5>
-                        <div id="identified-root" class="mb-3 font-11">
+                        <div id="identified-root" class="mb-3 ">
                            <div class="col-lg-12 identified-root-repeatable">
                               <div class="card">
                                  <div class="card-body">
@@ -1112,7 +1112,7 @@
                                  <div class="card-body">
                                     <div class="row mb-2">
                                        <div class="col-lg-9">
-                                          <h5 class="header-title">2.3.1 Is there a need to update the Risk Register to prevent it from recurring</h5>
+                                          <h5 class="header-title">2.3.2 Is there a need to update the Risk Register to prevent it from recurring</h5>
                                        </div>
                                        <div class="col-lg-3 text-inlign">
                                           <div class="form-check form-check-inline">
@@ -1133,7 +1133,7 @@
 
                                     <div class="row">
                                        <div class="col-lg-9">
-                                          <h4 class="header-title mb-2">2.3.2 Is there a need to make changes to QMS? E.g updating documented information.<br/> Please provide details if Yes.</h4>
+                                          <h4 class="header-title mb-2">2.3.3 Is there a need to make changes to QMS? E.g updating documented information.<br/> Please provide details if Yes.</h4>
                                        </div>
                                        <div class="col-lg-3 text-inlign">
                                           <div class="form-check form-check-inline">
@@ -1165,6 +1165,340 @@
                   <div class="modal-footer">
                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                      <button type="button" class="btn btn-primary" id="saveRoot">Save</button>
+                  </div>
+               </div><!-- /.modal-content -->
+         </div><!-- /.modal-dialog -->
+      </div>
+
+      <div id="root-cause-new-verification" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-xl">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title" id="standard-modalLabel">For Verification</h4>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                  <form class="addCARFormIssuance">
+                  <h3>Section 1. Nonconformity Definition</h3>
+                  <hr>
+                     <input type="hidden" name="car_id" class="car_id">
+                     <div class="row mb-2">
+                        <div class="form-group col-md-4">
+                              <label for="requestor" class="form-label">Div/Sec/Unit</label>
+                              <input type="text" class="form-control requestor" disabled>
+                              <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
+                        </div>
+                        <div class="form-group col-md-4">
+                              <label for="car_no" class="form-label">RFI No.</label>
+                              <input type="text" class="form-control car_no" disabled>
+                              <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
+                        </div>
+                        <!-- <div class="form-group col-md-4">
+                              <label for="identification_date" class="form-label">Identification Date</label>
+                              <input type="date" class="form-control identification_date" disabled>
+                              <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
+                        </div> -->
+
+                        <div class="form-group col-md-4">
+                              <label for="source" class="form-label">Source</label>
+                              <select class="form-select source" name="source" disabled>
+                                 <option value=""></option>
+                                 <?php
+                                    foreach ($source as $key => $value) {
+                                       echo '<option value="'.$value['id'].'">'.$value['source_name'].'</option>';
+                                    }
+                                 ?>
+                              </select>
+                              <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
+                        </div>
+
+                     </div>
+
+
+                     <div class="row mb-2">
+                        <div class="form-group col-md-12">
+                           <label for="findings" class="form-label">Findings</label>
+                           <textarea class="form-control findings" rows="4" disabled></textarea>
+                        </div>
+                     </div>
+
+      
+                     <div class="row mb-2">
+                        <div class="form-group col-md-12">
+                           <label for="requirements_not_fulfilled" class="form-label">Requirements Not Fulfilled: </label><i>(e.g., ISO 9001 Requirements, Statutory & Regulatory Requirements, Policies, Procedures, Guidelines, Work Instructions, or other forms of Documented Information.)</i>
+                           <textarea class="form-control requirements_not_fulfilled" rows="4" disabled></textarea>
+                        </div>
+                     </div>
+
+                  </form>
+
+                     <form action="" id="root_cause_form_new" enctype="multipart/form-data">
+                     <hr>
+                     <h3>Section 2. Improvement Actions</h3>
+                     <hr>
+                     <h4>2.1 Correction and Dealing with Consequences</h4>
+                     <h5 class="inline-block">2.1.1 Correction <small><i>(Immediate action to correct the nonconformity with completion dates and person/s responsible)</i></small></h5>
+                     <div class="mb-3 correction">
+                        <div class="col-lg-12 correction-repeatable orig-correction">
+                           <div class="card">
+                              <div class="card-body">
+                                 <div class="mb-3">
+                                    <div class="row">
+                                       <div class="col-xl-4">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Correction</label>
+                                          <input type="text" class="form-control" name="correction[]">
+                                          </div>
+                                       </div>
+                                       <div class="col-xl-4">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Person Responsible</label>
+                                          <input type="text" class="form-control" name="correction_person_responsible[]" placeholder="Enter Name of personel">
+                                          </div>
+                                       </div>
+                                       <div class="col-xl-3">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Completion Date</label>
+                                          <input type="date" class="form-control" name="correction_completion_date[]" placeholder="Select Date">
+                                          </div>
+                                       </div>
+                                       <div class="col-xl-1">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Remove</label>
+                                          <button type="button" class="btn btn-danger remove-corrective-action"><i class="fas fa-trash"></i></button>
+                                          </div>
+                                       </div>
+
+                                    </div>
+                                 </div>
+                  
+                              </div> <!-- end card-body-->
+                           </div> <!-- end card-->
+                        </div>
+                        
+                     </div>
+               
+                     <h5 class="inline-block">2.1.2 Dealing with Consequences <small><i>(Is there a consequence or potential consequence as result of the nonconformity?)</i></small></h5>
+                     <div  class="consequencesdiv">
+                        <div class="col-lg-12 consequences-repeatable orig-consequence">
+                           <div class="card">
+                              <div class="card-body">
+                                 <div class="mb-3">
+                                    <div class="row">
+                                       <div class="col-xl-4">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Dealing with the consequences</label>
+                                          <input type="text" class="form-control" name="consequence[]">
+                                          </div>
+                                       </div>
+                                       <div class="col-xl-4">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Person Responsible</label>
+                                          <input type="text" class="form-control" name="consequence_person_responsible[]" placeholder="Enter Name of personel">
+                                          </div>
+                                       </div>
+                                       <div class="col-xl-3">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Completion Date</label>
+                                          <input type="date" class="form-control" name="consequence_completion_date[]" placeholder="Select Date">
+                                          </div>
+                                       </div>
+                                       <div class="col-xl-1">
+                                          <div class="mb-3 mb-xl-0">
+                                          <label for="exampleInputEmail1" class="form-label">Remove</label>
+                                          <button type="button" class="btn btn-danger remove-consequences-action"><i class="fas fa-trash"></i></button>
+                                          </div>
+                                       </div>
+
+                                    </div>
+                                 </div>
+                  
+                              </div> <!-- end card-body-->
+                           </div> <!-- end card-->
+                        </div>
+                        
+                     </div>
+                 
+                     <h4>2.2 Root Cause Analysis</h4>
+                        <div id="checkboxes">
+                           <div class="col-lg-12">
+                              <div class="card">
+                                 <div class="card-body">
+                                    <div class="row mb-2">
+                                       <div class="col-lg-9">
+                                          <h5 class="header-title">2.2.1 Is the nonconformity existing  in other areas? Can this potentially occur  elsewhere? </h5>
+                                          <p class="sub-header text-dark">If yes, the Root Cause Analysis  and Corrective Actions shall consider all areas affected.
+                                          <br>If no, the Root Cause Analysis and Corrective Action shall only consider areas Affected.
+                                          <br>(Refer to PROCEDURE as to Who,  When and How)</p>
+                                       </div>
+                                       <div class="col-lg-3 text-inlign">
+                                          <div class="form-check form-check-inline">
+                                             <input type="radio" name="existing_nonconformity" value="1" class="form-check-input">
+                                             <label class="form-check-label" for="existing_nonconformity">YES</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input type="radio" name="existing_nonconformity" value="0" class="form-check-input">
+                                             <label class="form-check-label" for="existing_nonconformity">NO</label>
+                                          </div>
+                                       </div>
+                                       <div class="form-group col-lg-12">
+                                            <label for="existing_nonconformity_remarks" class="form-label">Details</label>
+                                            <textarea class="form-control" id="existing_nonconformity_remarks" name="existing_nonconformity_remarks" rows="4"></textarea>
+                                        </div>
+                                    </div>
+              
+
+                                    <div class="row">
+                                       <div class="col-lg-12">
+                                          <h5 class="header-title">2.2.2 What are the causes of the nonconformities?</h5>
+                                          <p class="sub-header text-dark">You may use different root cause analysis techniques such as 5-Why, Ishikawa Diagram, Why Tree or Cause Mapping as appropriate</p>
+                                       </div>
+                                       <div class="form-group col-lg-12">
+                                            <label for="causes_of_the_noncormity" class="form-label">Details</label>
+                                            <textarea class="form-control" id="causes_of_the_noncormity" name="causes_of_the_noncormity" rows="4"></textarea>
+                                        </div>
+                                    </div>
+
+                              
+                                 </div> <!-- end card-body -->
+                              </div> <!-- end card -->
+                           </div>
+                        </div>
+                        <h4>2.3 Corrective Actions ( Including Updating Risk & Opportunities & Changes to QMS)</h4>
+                        <h5>2.3.1 Corrective Action – To Address the cause of the NC and to prevent recurrence.<h5>
+                        <div class="mb-3  identified-root">
+                           <div class="col-lg-12 identified-root-repeatable">
+                              <div class="card">
+                                 <div class="card-body">
+                                    <div class="mb-3">
+                                       <div class="row">
+                                          <div class="col-xl-4 mb-1">
+                                             <div class="mb-3 mb-xl-0">
+                                             <label class="form-label">Identified Root Cause</label>
+                                             <input type="text" class="form-control" name="identified_root[]">
+                                             </div>
+                                          </div>
+      
+                                          <div class="col-xl-4 mb-1">
+                                             <div class="mb-3 mb-xl-0">
+                                             <label class="form-label">Corrective Action</label>
+                                             <input type="text" class="form-control" name="identified_root_corrective_action[]">
+                                             </div>
+                                          </div>
+
+
+                                          
+                           
+                                          <div class="col-xl-4">
+                                             <div class="mb-3 mb-xl-0">
+                                             <label for="exampleInputEmail1" class="form-label">Person Responsible</label>
+                                             <input type="text" class="form-control" name="identified_root_person_responsible[]" placeholder="Enter Name of personel">
+                                             </div>
+                                          </div>
+                                          <div class="col-xl-4">
+                                             <div class="mb-3 mb-xl-0">
+                                             <label for="exampleInputEmail1" class="form-label">Completion Date</label>
+                                             <input type="date" class="form-control" name="identified_root_completion_date[]" placeholder="Select Date">
+                                             </div>
+                                          </div>
+                                          <div class="col-xl-4">
+                                             <div class="mb-3 mb-xl-0">
+                                             <label class="form-label">Attachment</label>
+                                             <input type="file" class="form-control" name="identified_root_attachment_attachment[]">
+                                             </div>
+                                          </div>
+                                          <div class="col-xl-1">
+                                             <div class="mb-3 mb-xl-0">
+                                             <label class="form-label">Remove</label>
+                                             <button type="button" class="btn btn-danger remove-identified-root-action"><i class="fas fa-trash"></i></button>
+                                             </div>
+                                          </div>
+
+                                       </div>
+                                    </div>
+                     
+                                 </div> <!-- end card-body-->
+                              </div> <!-- end card-->
+                           </div>
+                        </div>   
+
+                     
+                           <div id="checkboxes">
+                           <div class="col-lg-12">
+                              <div class="card">
+                                 <div class="card-body">
+                                    <div class="row mb-2">
+                                       <div class="col-lg-9">
+                                          <h5 class="header-title">2.3.2 Is there a need to update the Risk Register to prevent it from recurring</h5>
+                                       </div>
+                                       <div class="col-lg-3 text-inlign">
+                                          <div class="form-check form-check-inline">
+                                             <input type="radio" name="corrective_action_implemented" value="1" class="form-check-input">
+                                             <label class="form-check-label" for="corrective_action_implemented">YES</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input type="radio" name="corrective_action_implemented" value="0" class="form-check-input">
+                                             <label class="form-check-label" for="corrective_action_implemented">NO</label>
+                                          </div>
+                                       </div>
+                                       <div class="form-group col-lg-12">
+                                            <label for="corrective_action_implemented_remarks" class="form-label">Remarks</label>
+                                            <textarea class="form-control" id="corrective_action_implemented_remarks" name="corrective_action_implemented_remarks" rows="4"></textarea>
+                                        </div>
+                                    </div>
+              
+
+                                    <div class="row">
+                                       <div class="col-lg-9">
+                                          <h4 class="header-title mb-2">2.3.3 Is there a need to make changes to QMS? E.g updating documented information.<br/> Please provide details if Yes.</h4>
+                                       </div>
+                                       <div class="col-lg-3 text-inlign">
+                                          <div class="form-check form-check-inline">
+                                             <input type="radio" name="change_to_qms" value="1" class="form-check-input">
+                                             <label class="form-check-label" for="change_to_qms">YES</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input type="radio"  name="change_to_qms" value="0" class="form-check-input">
+                                             <label class="form-check-label" for="change_to_qms">NO</label>
+                                          </div>
+                                       </div>
+                                       <div class="form-group col-lg-12">
+                                            <label for="change_to_qms_remarks" class="form-label">Remarks</label>
+                                            <textarea class="form-control" id="change_to_qms_remarks" name="change_to_qms_remarks" rows="4"></textarea>
+                                        </div>
+                                    </div>
+
+                              
+                                 </div> <!-- end card-body -->
+                              </div> <!-- end card -->
+                           </div>
+                        </div>
+
+                        <div class="row mb-2">
+                           <div class="form-group col-md-12">
+                              <label for="verification_action_root_cause_analysis" class="form-label">Verification of Request for Improvement</label>
+                              <select class="form-select verification_action_root_cause_analysis" name="verification_action_root_cause_analysis">
+                                 <option value="For Validation">Recomendation for Closing</option>
+                                 <option value="For Revision">For Revision</option>
+                              </select>
+                           </div>
+                        </div>
+
+                        <div class="row mb-2">
+                           <div class="form-group col-md-12">
+                              <label for="verification_action_root_cause_analysis_remarks" class="form-label">Remarks </label>
+                              <textarea class="form-control verification_action_root_cause_analysis_remarks" name="verification_action_root_cause_analysis_remarks" rows="4"></textarea>
+                           </div>
+                        </div>
+    
+
+                       
+                     </form>
+                     
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                     <button type="button" class="btn btn-primary" id="saveRootNew">Save</button>
                   </div>
                </div><!-- /.modal-content -->
          </div><!-- /.modal-dialog -->
@@ -1364,7 +1698,7 @@
                         </div>
 
 
-                        <div id="identified-root-review" class="mb-3 font-11">
+                        <div id="identified-root-review" class="mb-3 ">
                            
                         </div>   
 
@@ -1591,7 +1925,7 @@
                         </div>
 
 
-                        <div id="identified-root-approval" class="mb-3 font-11">
+                        <div id="identified-root-approval" class="mb-3 ">
                            
                         </div>   
 
@@ -1853,7 +2187,7 @@
                         </div>
 
 
-                        <div id="identified-root-verification" class="mb-3 font-11">
+                        <div id="identified-root-verification" class="mb-3 ">
                            <div class="col-lg-12 identified-root-repeatable">
                               <div class="card">
                                  <div class="card-body">
@@ -2209,7 +2543,7 @@
                         </div>
 
 
-                        <div id="identified-root-validation" class="mb-3 font-11">
+                        <div id="identified-root-validation" class="mb-3 ">
                            <div class="col-lg-12 identified-root-repeatable">
                               <div class="card">
                                  <div class="card-body">
