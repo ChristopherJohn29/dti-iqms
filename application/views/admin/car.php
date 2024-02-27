@@ -910,6 +910,7 @@
                   </form>
 
                      <form action="" id="root_cause_form" enctype="multipart/form-data">
+                     <input type="hidden" name="car_id" class="car_id">
                      <hr>
                      <h3>Section 2. Improvement Actions</h3>
                      <hr>
@@ -1233,6 +1234,7 @@
                   </form>
 
                      <form action="" id="root_cause_form_new" enctype="multipart/form-data">
+                     <input type="hidden" name="car_id" class="car_id">
                      <hr>
                      <h3>Section 2. Improvement Actions</h3>
                      <hr>
