@@ -5230,7 +5230,7 @@ var car = {
     },
 
     correction: function() {
-        $("#add-correction").on("click", function() {
+        $(".add-correction").on("click", function() {
             // Clone the first .correction-repeatable div
             var clone = $(".correction-repeatable:last").clone();
 
@@ -5262,7 +5262,7 @@ var car = {
     },
 
     consequences: function() {
-        $("#add-consequences").on("click", function() {
+        $(".add-consequences").on("click", function() {
             // Clone the first .consequences-repeatable div
             var clone = $(".consequences-repeatable:last").clone();
 
@@ -5500,7 +5500,7 @@ var car = {
     },
 
     identifiedRoot: function() {
-        $("#root_cause_form").on("click", "#add-identified-root", function() {
+        $("#root_cause_form").on("click", ".add-identified-root", function() {
 
             // Clone the first .identified-root-repeatable div
             var clone = $("#identified-root .identified-root-repeatable:last").clone();

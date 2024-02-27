@@ -955,7 +955,7 @@
                         
                      </div>
                      <div class="text-end mb-3">
-                        <button type="button" class="btn btn-primary left" id="add-correction">Add Correction</button>
+                        <button type="button" class="btn btn-primary left add-correction">Add Correction</button>
                      </div>
                      <h5 class="inline-block">2.1.2 Dealing with Consequences <small><i>(Is there a consequence or potential consequence as result of the nonconformity?)</i></small></h5>
                      <div id="consequencesdiv">
@@ -998,7 +998,7 @@
                         
                      </div>
                      <div class="text-end">
-                           <button type="button" class="btn btn-primary left" id="add-consequences">Add Consequences</button>
+                           <button type="button" class="btn btn-primary left add-consequences">Add Consequences</button>
                      </div>
                      <h4>2.2 Root Cause Analysis</h4>
                         <div id="checkboxes">
