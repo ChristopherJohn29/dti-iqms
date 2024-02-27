@@ -1506,10 +1506,10 @@ class car extends CI_Controller {
                 'identified_root_person_responsible' => $identified_root_person_responsible[$key],
                 'identified_root_completion_date' => $identified_root_completion_date[$key],
                 'identified_attachments' => (isset($identified_attachments['identified_root_attachment_attachment'][$key]) ? $identified_attachments['identified_root_attachment_attachment'][$key] : (isset($identified_attachments[$key]) ? $identified_attachments[$key] : "")),
-                'identified_root_verification' => $identified_root_verification[$key],
-                'identified_root_remarks_verification' => $identified_root_remarks_verification[$key],
-                'identified_root_verification_second' => $identified_root_verification_second[$key],
-                'identified_root_remarks_verification_second' => $identified_root_remarks_verification_second[$key],
+                'identified_root_verification' => (isset($identified_root_verification[$key]) ?  $identified_root_verification[$key] : ""),
+                'identified_root_remarks_verification' => (isset($identified_root_remarks_verification[$key]) ?  $identified_root_remarks_verification[$key] : ""),
+                'identified_root_verification_second' => (isset($identified_root_verification_second[$key]) ?  $identified_root_verification_second[$key] : ""),
+                'identified_root_remarks_verification_second' => (isset($identified_root_remarks_verification_second[$key]) ?  $identified_root_remarks_verification_second[$key] : ""),
             );
         }
     
@@ -1530,8 +1530,8 @@ class car extends CI_Controller {
                     'correction' => $correction[$key],
                     'correction_person_responsible' => $correction_person_responsible[$key],
                     'correction_completion_date' => $correction_completion_date[$key],
-                    'correction_acceptable_verification' => $correction_acceptable_verification[$key],
-                    'correction_acceptable_remarks_verification' => $correction_acceptable_remarks_verification[$key]
+                    'correction_acceptable_verification' => (isset($correction_acceptable_verification[$key]) ? $correction_acceptable_verification[$key] : ""),
+                    'correction_acceptable_remarks_verification' => (isset($correction_acceptable_remarks_verification[$key])  ? $correction_acceptable_remarks_verification[$key] : "")
                 );
             }
             
@@ -1626,10 +1626,10 @@ class car extends CI_Controller {
                 'identified_root_person_responsible' => $identified_root_person_responsible[$key],
                 'identified_root_completion_date' => $identified_root_completion_date[$key],
                 'identified_attachments' => $identified_attachments[$key],
-                'identified_root_verification' => $identified_root_verification[$key],
-                'identified_root_remarks_verification' => $identified_root_remarks_verification[$key],
-                'identified_root_verification_second' => $identified_root_verification_second[$key],
-                'identified_root_remarks_verification_second' => $identified_root_remarks_verification_second[$key],
+                'identified_root_verification' => (isset($identified_root_verification[$key]) ?  $identified_root_verification[$key] : ""),
+                'identified_root_remarks_verification' => (isset($identified_root_remarks_verification[$key]) ?  $identified_root_remarks_verification[$key] : ""),
+                'identified_root_verification_second' => (isset($identified_root_verification_second[$key]) ?  $identified_root_verification_second[$key] : ""),
+                'identified_root_remarks_verification_second' => (isset($identified_root_remarks_verification_second[$key]) ?  $identified_root_remarks_verification_second[$key] : ""),
             );
         }
     
@@ -1650,8 +1650,8 @@ class car extends CI_Controller {
                     'correction' => $correction[$key],
                     'correction_person_responsible' => $correction_person_responsible[$key],
                     'correction_completion_date' => $correction_completion_date[$key],
-                    'correction_acceptable_verification' => $correction_acceptable_verification[$key],
-                    'correction_acceptable_remarks_verification' => $correction_acceptable_remarks_verification[$key]
+                    'correction_acceptable_verification' => (isset($correction_acceptable_verification[$key]) ? $correction_acceptable_verification[$key] : ""),
+                    'correction_acceptable_remarks_verification' => (isset($correction_acceptable_remarks_verification[$key])  ? $correction_acceptable_remarks_verification[$key] : "")
                 );
             }
             
