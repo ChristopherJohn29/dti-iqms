@@ -2324,7 +2324,7 @@ var car = {
                             correctionEntries.forEach(function(correction) {
 
                                 var remarksReview = correction.correction_acceptable_remarks_verification !== undefined ? correction.correction_acceptable_remarks_verification : '';
-                                var reviewValue = correction.correction_acceptable_verification !== undefined ? risk.correction_acceptable_verification : '';
+                                var reviewValue = correction.correction_acceptable_verification !== undefined ? correction.correction_acceptable_verification : '';
 
 
                                 var correctionHtml = `
