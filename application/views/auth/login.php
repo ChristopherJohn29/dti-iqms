@@ -28,8 +28,8 @@
                         <div class="text-center w-75 m-auto">
                            <div class="auth-brand">
                               <span>
-                                 <img src="<?=base_url()?>assets/images/eastave.png" alt="" height="50">
-                                 <h2>IQMS</h2>
+                                 <img src="<?=base_url()?>assets/images/dti-logo.png" alt="" height="80">
+                                 <h2>iQMS</h2>
                               </span>
                            </div>
                            <p class="text-muted mb-4 mt-3">Enter your email address and password to access admin panel.</p>
@@ -83,7 +83,7 @@
       </div>
       <!-- end page -->
       <footer class="footer footer-alt">
-          <script>document.write(new Date().getFullYear())</script> &copy; East Avenue Medical Center
+          <script>document.write(new Date().getFullYear())</script> &copy; Infoadvance Inc.
       </footer>
       <!-- Authentication js -->
       <script src="<?=base_url()?>assets/js/vendor.min.js"></script>

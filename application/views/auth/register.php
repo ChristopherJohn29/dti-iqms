@@ -264,7 +264,7 @@
       </div>
       <!-- end page -->
       <footer class="footer footer-alt">
-         <script>document.write(new Date().getFullYear())</script> &copy; Eastavenue Medical Center
+         <script>document.write(new Date().getFullYear())</script> &copy; Infoadvance Inc.
       </footer>
       <!-- Theme Settings -->
 

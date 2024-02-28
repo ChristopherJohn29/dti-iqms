@@ -59,7 +59,7 @@
                            <th>ID</th>
                            <th>Document Title</th>
                            <th>Document Code</th>
-                           <th>Department / Unit</th>
+                           <th>Processes</th>
                            <th>Type</th>
                            <th>Date Submitted</th>
                            <th>Status</th>

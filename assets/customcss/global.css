@@ -22,6 +22,6 @@ tr td:not(:last-child) {
 }
 
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
-    background-color: #064c26 !important;
+    background-color: #283477 !important;
 
 }

@@ -41,7 +41,7 @@
                                  <ul class="parsley-errors-list filled hidden"><li class="parsley-required"></li></ul>
                            </div>
                            <div class="form-group col-md-6">
-                                 <label for="dep_id_edit" class="form-label">Department / Unit</label>
+                                 <label for="dep_id_edit" class="form-label">Processes</label>
                                  <select class="form-select" id="dep_id_edit" name="dep_id_edit" required disabled>
                                     <option value=""></option>
                                     <?php
@@ -159,7 +159,7 @@
                         <tr>
                            <th>Document Title</th>
                            <th>Document Code</th>
-                           <th>Department / Unit</th>
+                           <th>Processes</th>
                            <th>Type</th>
                            <th>Date Submitted</th>
                            <th>Status</th>

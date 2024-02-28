@@ -2,7 +2,7 @@
 <html lang="en" data-topbar-color="brand" data-bs-theme="light" data-layout-mode="detached" data-layout-width="default" data-menu-color="brand" data-menu-icon="default" data-sidenav-size="default" class="">
    <head>
       <meta charset="utf-8" />
-      <title>East Avenue Medical Center IQMS</title>
+      <title>DTI IQMS</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!-- App favicon -->
       <link rel="shortcut icon" href="<?=base_url()?>assets/images/favicon.ico">
@@ -301,7 +301,7 @@
                   <div class="row">
                      <div class="col-md-6">
                         <div>
-                           <script>document.write(new Date().getFullYear())</script> © East Avenue Medical Center</a>
+                           <script>document.write(new Date().getFullYear())</script> © Infoadvance Inc.</a>
                         </div>
                      </div>
                      <div class="col-md-6">
