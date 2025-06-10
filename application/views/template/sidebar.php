@@ -14,6 +14,61 @@
     </a>
 </li>
 
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/stakeholders'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="users"></i></span>
+        <span class="menu-text"> Stakeholders Analysis </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/swot'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="grid"></i></span>
+        <span class="menu-text"> SWOT Analysis </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/organization_outcomes'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="target"></i></span>
+        <span class="menu-text"> Organization Outcomes </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/quality_objectives'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="award"></i></span>
+        <span class="menu-text"> Quality Objectives </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/risk_register'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="alert-triangle"></i></span>
+        <span class="menu-text"> Risk Register </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/opportunity_register'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="trending-up"></i></span>
+        <span class="menu-text"> Opportunity Register </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/process_performance'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="activity"></i></span>
+        <span class="menu-text"> Process Performance </span>
+    </a>
+</li>
+
+<li class="menu-item">
+    <a href="<?=base_url().'admin/iqms/improvement_action'?>" class="menu-link">
+        <span class="menu-icon"><i data-feather="arrow-up-circle"></i></span>
+        <span class="menu-text"> Improvement Action </span>
+    </a>
+</li>
 
 <li class="menu-item">
     <a href="#menuDI" data-bs-toggle="collapse" class="menu-link">
