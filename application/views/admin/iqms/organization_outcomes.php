@@ -11,16 +11,70 @@
         </div>
         <!-- end page title -->
 
+        <!-- IQMS Header -->
+        <div class="iqms-header">
+            <div class="form-info">
+                <div class="info-row">
+                    <span class="info-label">FORM CODE:</span>
+                    <span class="info-value">FM-OO-01</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">REVISION:</span>
+                    <span class="info-value">1</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">DATE:</span>
+                    <span class="info-value">01-Jun-25</span>
+                </div>
+            </div>
+
+            <div class="process-info">
+                <div class="info-row">
+                    <span class="info-label">BUREAU/REGIONS/OFFICE:</span>
+                    <span class="info-value">DTI-10 REGIONAL OFFICE</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">FISCAL YEAR:</span>
+                    <span class="info-value">2025</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">STATUS:</span>
+                    <span class="info-value status-active">ACTIVE</span>
+                </div>
+            </div>
+        </div>
 
 
-        <!-- Add New Outcome Button -->
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h4>Instructions:</h4>
+            <ol>
+                <li>Process Owners shall determine the Outcomes related to the process. Sheet No. 4 of the Strategic Plan MS Excel Template will be used.</li>
+                <li>These outcomes are organizational/provincial objectives of specific office that are indirect results of the Core Processes.</li>
+                <li>While these are reviewed and monitored semi-annually upon submission to DBM, if these targets are not achieved, the Process Owner will review the process to determine what improvement needs to be made.</li>
+                <li>Baseline means accomplishment of the previous year; Target – current year.</li>
+            </ol>
+        </div>
+
+        <!-- Add New Outcome Button and Search -->
         <div class="row mb-3">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="iqms-search-bar" placeholder="Search organization outcomes..." id="searchOutcomes">
             </div>
-            <div class="col-md-4 text-right">
+            <div class="col-md-3">
+                <select class="iqms-form-control" id="filter-year">
+                    <option value="2025" selected>2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-right">
                 <button class="iqms-btn iqms-btn-success" onclick="openOutcomeModal()">
                     <i class="fe-plus"></i> Add New Outcome
+                </button>
+                <button class="iqms-btn iqms-btn-secondary" onclick="openReportsModal()">
+                    <i class="fe-file-text"></i> Reports
                 </button>
             </div>
         </div>
@@ -30,138 +84,126 @@
             <table class="iqms-table" id="outcomesTable">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">No.</th>
-                        <th style="width: 25%;">Outcome Category</th>
-                        <th style="width: 35%;">Outcome Description</th>
-                        <th style="width: 15%;">Target</th>
-                        <th style="width: 10%;">Status</th>
-                        <th style="width: 10%;">Actions</th>
+                        <th style="width: 10%;">OO Code</th>
+                        <th style="width: 30%;">Organizational Outcome</th>
+                        <th style="width: 25%;">Measure</th>
+                        <th style="width: 10%;">Baseline</th>
+                        <th style="width: 10%;">Target</th>
+                        <th style="width: 8%;">Status</th>
+                        <th style="width: 7%;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td><strong>Service Delivery</strong></td>
-                        <td>Improve the quality and efficiency of training programs delivered to MSMEs</td>
-                        <td>95% satisfaction rate</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td class="text-center">
-                            <div class="iqms-action-btns">
-                                <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(1)">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteOutcome(1)">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">2</td>
-                        <td><strong>Stakeholder Satisfaction</strong></td>
-                        <td>Enhance stakeholder satisfaction through effective communication and service delivery</td>
-                        <td>90% satisfaction rate</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td class="text-center">
-                            <div class="iqms-action-btns">
-                                <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(2)">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteOutcome(2)">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">3</td>
-                        <td><strong>Capacity Building</strong></td>
-                        <td>Strengthen organizational capacity through continuous learning and development</td>
-                        <td>100% staff trained</td>
-                        <td><span class="badge bg-warning text-dark">In Progress</span></td>
-                        <td class="text-center">
-                            <div class="iqms-action-btns">
-                                <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(3)">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteOutcome(3)">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">4</td>
-                        <td><strong>Innovation</strong></td>
-                        <td>Foster innovation in service delivery methods and processes</td>
-                        <td>5 new initiatives</td>
-                        <td><span class="badge bg-info">Planned</span></td>
-                        <td class="text-center">
-                            <div class="iqms-action-btns">
-                                <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(4)">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteOutcome(4)">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">5</td>
-                        <td><strong>Compliance</strong></td>
-                        <td>Ensure full compliance with quality management standards and regulations</td>
-                        <td>100% compliance</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td class="text-center">
-                            <div class="iqms-action-btns">
-                                <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(5)">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteOutcome(5)">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                    <tbody>
+                        <tr>
+                            <td>OO1</td>
+                            <td>EXPORTS AND INVESTMENT DEVELOPED</td>
+                            <td>Amount of Exports</td>
+                            <td>c/o Head Office</td>
+                            <td>c/o Head Office</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-center">
+                                <div class="iqms-action-btns">
+                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(1)">
+                                        <i class="fe-edit"></i>
+                                    </button>
+                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(1)">
+                                        <i class="fe-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OO1</td>
+                            <td>EXPORTS AND INVESTMENT DEVELOPED</td>
+                            <td>Amount of Approved Investments</td>
+                            <td>c/o Head Office</td>
+                            <td>c/o Head Office</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-center">
+                                <div class="iqms-action-btns">
+                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(2)">
+                                        <i class="fe-edit"></i>
+                                    </button>
+                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(2)">
+                                        <i class="fe-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OO2</td>
+                            <td>INDUSTRIES DEVELOPED</td>
+                            <td>Employment Generated from the Industry Increased Annually</td>
+                            <td>c/o Head Office</td>
+                            <td>c/o Head Office</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-center">
+                                <div class="iqms-action-btns">
+                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(3)">
+                                        <i class="fe-edit"></i>
+                                    </button>
+                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(3)">
+                                        <i class="fe-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OO3</td>
+                            <td>MSME ASSISTED AND DEVELOPED</td>
+                            <td>Percentage of MSMEs assisted to the total number of MSMEs in manufacturing, retail trade, construction and services sectors</td>
+                            <td>79%</td>
+                            <td>70%</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-center">
+                                <div class="iqms-action-btns">
+                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(4)">
+                                        <i class="fe-edit"></i>
+                                    </button>
+                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(4)">
+                                        <i class="fe-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OO4</td>
+                            <td>CONSUMER WELFARE ENHANCED</td>
+                            <td>Consumer Resolution Rate</td>
+                            <td>100%</td>
+                            <td>99%</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-center">
+                                <div class="iqms-action-btns">
+                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(5)">
+                                        <i class="fe-edit"></i>
+                                    </button>
+                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(5)">
+                                        <i class="fe-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OO4</td>
+                            <td>CONSUMER WELFARE ENHANCED</td>
+                            <td>Level of Consumer Awareness Increased</td>
+                            <td>88%</td>
+                            <td>80%</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td class="text-center">
+                                <div class="iqms-action-btns">
+                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(6)">
+                                        <i class="fe-edit"></i>
+                                    </button>
+                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(6)">
+                                        <i class="fe-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
             </table>
-        </div>
-
-        <!-- Summary Cards -->
-        <div class="row mt-4">
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h3 class="text-success">5</h3>
-                        <p>Total Outcomes</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h3 class="text-primary">3</h3>
-                        <p>Active Outcomes</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h3 class="text-warning">1</h3>
-                        <p>In Progress</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h3 class="text-info">1</h3>
-                        <p>Planned</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- container -->
@@ -170,66 +212,109 @@
 
 <!-- Modal for Add/Edit Outcome -->
 <div id="outcomeModal" class="iqms-modal">
-    <div class="iqms-modal-content">
+    <div class="iqms-modal-content" style="max-width: 800px;">
         <div class="iqms-modal-header">
-            <h3 class="iqms-modal-title" id="outcomeModalTitle">Add New Outcome</h3>
+            <h3 class="iqms-modal-title" id="outcomeModalTitle">Add New Organizational Outcome</h3>
             <span class="iqms-close" onclick="closeOutcomeModal()">&times;</span>
         </div>
-        
+
         <form class="iqms-form" id="outcomeForm">
             <input type="hidden" id="outcomeId">
-            
-            <div class="iqms-form-group">
-                <label class="iqms-form-label" for="outcomeCategory">Outcome Category:</label>
-                <select class="iqms-form-control" id="outcomeCategory">
-                    <option value="">Select Category</option>
-                    <option value="Service Delivery">Service Delivery</option>
-                    <option value="Stakeholder Satisfaction">Stakeholder Satisfaction</option>
-                    <option value="Capacity Building">Capacity Building</option>
-                    <option value="Innovation">Innovation</option>
-                    <option value="Compliance">Compliance</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            
-            <div class="iqms-form-group">
-                <label class="iqms-form-label" for="outcomeDescription">Outcome Description:</label>
-                <textarea class="iqms-form-control" id="outcomeDescription" rows="4" placeholder="Enter detailed description of the outcome..."></textarea>
-            </div>
-            
+
             <div class="iqms-form-row">
                 <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="outcomeTarget">Target:</label>
-                    <input type="text" class="iqms-form-control" id="outcomeTarget" placeholder="e.g., 95% satisfaction rate">
+                    <label class="iqms-form-label" for="ooCode">OO Code:</label>
+                    <input type="text" class="iqms-form-control" id="ooCode" required>
                 </div>
                 <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="outcomeStatus">Status:</label>
-                    <select class="iqms-form-control" id="outcomeStatus">
-                        <option value="Planned">Planned</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Active">Active</option>
-                        <option value="Completed">Completed</option>
-                        <option value="On Hold">On Hold</option>
+                    <label class="iqms-form-label" for="fiscalYear">Fiscal Year:</label>
+                    <select class="iqms-form-control" id="fiscalYear" required>
+                        <option value="">Select Year</option>
+                        <option value="2025" selected>2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
                     </select>
                 </div>
             </div>
-            
+
             <div class="iqms-form-group">
-                <label class="iqms-form-label" for="outcomeNotes">Additional Notes:</label>
-                <textarea class="iqms-form-control" id="outcomeNotes" rows="3" placeholder="Enter any additional notes or comments..."></textarea>
+                <label class="iqms-form-label" for="outcomeTitle">Organizational Outcome:</label>
+                <input type="text" class="iqms-form-control" id="outcomeTitle" required>
             </div>
-            
+
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="measure">Measure:</label>
+                <input type="text" class="iqms-form-control" id="measure" required>
+            </div>
+
+            <div class="iqms-form-row">
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="baseline">Baseline (Previous Year):</label>
+                    <input type="text" class="iqms-form-control" id="baseline" required>
+                </div>
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="target">Target (Current Year):</label>
+                    <input type="text" class="iqms-form-control" id="target" required>
+                </div>
+            </div>
+
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="notes">Notes/Instructions:</label>
+                <textarea class="iqms-form-control" id="notes" rows="3" placeholder="Enter any additional notes or instructions..."></textarea>
+            </div>
+
             <div class="mt-4">
-                <button type="button" class="iqms-btn" onclick="saveOutcome()">Save Outcome</button>
+                <button type="button" class="iqms-btn iqms-btn-primary" onclick="saveOutcome()">Save Outcome</button>
                 <button type="button" class="iqms-btn iqms-btn-secondary" onclick="closeOutcomeModal()">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Modal for Reports -->
+<div id="reportsModal" class="iqms-modal">
+    <div class="iqms-modal-content" style="max-width: 700px;">
+        <div class="iqms-modal-header">
+            <h3 class="iqms-modal-title">Organizational Outcomes Reports</h3>
+            <span class="iqms-close" onclick="closeReportsModal()">&times;</span>
+        </div>
+
+        <div class="iqms-form">
+            <div class="iqms-form-row">
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="reportType">Report Type:</label>
+                    <select class="iqms-form-control" id="reportType">
+                        <option value="annual">Annual Progress Report</option>
+                        <option value="semi-annual">Semi-Annual Review</option>
+                        <option value="achievement">Target Achievement</option>
+                    </select>
+                </div>
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="reportYear">Fiscal Year:</label>
+                    <select class="iqms-form-control" id="reportYear">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button class="iqms-btn iqms-btn-primary" onclick="generateReport()">Generate Report</button>
+                <button class="iqms-btn iqms-btn-secondary" onclick="exportToExcel()">Export to Excel</button>
+            </div>
+
+            <div id="reportResults" class="mt-4">
+                <p>Select report parameters and click "Generate Report" to view results.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+// Modal Functions
 function openOutcomeModal() {
-    document.getElementById('outcomeModalTitle').textContent = 'Add New Outcome';
+    document.getElementById('outcomeModalTitle').textContent = 'Add New Organizational Outcome';
     document.getElementById('outcomeId').value = '';
     document.getElementById('outcomeForm').reset();
     document.getElementById('outcomeModal').style.display = 'block';
@@ -239,24 +324,99 @@ function closeOutcomeModal() {
     document.getElementById('outcomeModal').style.display = 'none';
 }
 
+function openReportsModal() {
+    document.getElementById('reportsModal').style.display = 'block';
+}
+
+function closeReportsModal() {
+    document.getElementById('reportsModal').style.display = 'none';
+}
+
 function editOutcome(id) {
-    document.getElementById('outcomeModalTitle').textContent = 'Edit Outcome';
+    // Get the row data
+    const row = event.target.closest('tr');
+    const cells = row.querySelectorAll('td');
+
+    // Get data from the row
+    const ooCode = cells[0].textContent;
+    const outcomeTitle = cells[1].textContent;
+    const measure = cells[2].textContent;
+    const baseline = cells[3].textContent;
+    const target = cells[4].textContent;
+
+    // Fill the form with this data
+    document.getElementById('ooCode').value = ooCode;
+    document.getElementById('outcomeTitle').value = outcomeTitle;
+    document.getElementById('measure').value = measure;
+    document.getElementById('baseline').value = baseline;
+    document.getElementById('target').value = target;
+
+    // Set modal title and ID for editing
+    document.getElementById('outcomeModalTitle').textContent = 'Edit Organizational Outcome';
     document.getElementById('outcomeId').value = id;
-    // In a real application, you would populate the form with existing data
+
+    // Open the modal
     document.getElementById('outcomeModal').style.display = 'block';
 }
 
-function deleteOutcome(id) {
-    if (confirm('Are you sure you want to delete this outcome?')) {
-        // In a real application, this would make an AJAX call to delete the record
-        alert('Outcome deleted successfully!');
+function saveOutcome() {
+    // Get form values
+    const ooCode = document.getElementById('ooCode').value;
+    const fiscalYear = document.getElementById('fiscalYear').value;
+    const outcomeTitle = document.getElementById('outcomeTitle').value;
+    const measure = document.getElementById('measure').value;
+    const baseline = document.getElementById('baseline').value;
+    const target = document.getElementById('target').value;
+    const notes = document.getElementById('notes').value;
+    const outcomeId = document.getElementById('outcomeId').value;
+
+    // Validate required fields
+    if (!ooCode || !fiscalYear || !outcomeTitle || !measure || !baseline || !target) {
+        alert('Please fill in all required fields.');
+        return;
     }
+
+    // Here you would typically send this data to a server
+    console.log('Form submitted:', {
+        outcomeId,
+        ooCode,
+        fiscalYear,
+        outcomeTitle,
+        measure,
+        baseline,
+        target,
+        notes
+    });
+
+    // Show success message
+    alert('Organizational Outcome saved successfully!');
+
+    // Close modal and reset form
+    closeOutcomeModal();
+    document.getElementById('outcomeForm').reset();
 }
 
-function saveOutcome() {
-    // In a real application, this would validate and save the data
-    alert('Outcome saved successfully!');
-    closeOutcomeModal();
+function viewHistory(id) {
+    alert('History functionality would be implemented here for outcome ID: ' + id);
+}
+
+function generateReport() {
+    const reportType = document.getElementById('reportType').value;
+    const reportYear = document.getElementById('reportYear').value;
+
+    // In a real application, this would generate the actual report
+    document.getElementById('reportResults').innerHTML = `
+        <div class="alert alert-info">
+            <h5>Report Generated</h5>
+            <p><strong>Type:</strong> ${reportType}</p>
+            <p><strong>Year:</strong> ${reportYear}</p>
+            <p>Report generation functionality would be implemented here.</p>
+        </div>
+    `;
+}
+
+function exportToExcel() {
+    alert('Excel export functionality would be implemented here.');
 }
 
 // Search functionality
@@ -264,7 +424,7 @@ document.getElementById('searchOutcomes').addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase();
     const table = document.getElementById('outcomesTable');
     const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    
+
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         const text = row.textContent.toLowerCase();
@@ -276,11 +436,26 @@ document.getElementById('searchOutcomes').addEventListener('input', function() {
     }
 });
 
+// Filter functionality
+const filterYear = document.getElementById('filter-year');
+if (filterYear) {
+    filterYear.addEventListener('change', function() {
+        // In a real application, this would filter the table data
+        console.log('Filtering by year:', this.value);
+        alert('Filter by year: ' + this.value + ' - This would filter the table data in a real application.');
+    });
+}
+
 // Close modal when clicking outside
 window.onclick = function(event) {
-    const modal = document.getElementById('outcomeModal');
-    if (event.target == modal) {
+    const outcomeModal = document.getElementById('outcomeModal');
+    const reportsModal = document.getElementById('reportsModal');
+
+    if (event.target == outcomeModal) {
         closeOutcomeModal();
+    }
+    if (event.target == reportsModal) {
+        closeReportsModal();
     }
 }
 </script>

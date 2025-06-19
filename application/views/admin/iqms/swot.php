@@ -11,267 +11,102 @@
         </div>
         <!-- end page title -->
 
-
-
-        <!-- Status Bar -->
-        <div class="card mb-3">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div class="last-updated">
-                    <small class="text-muted">Last Updated: June 10, 2025</small>
+        <!-- IQMS Header -->
+        <div class="iqms-header">
+            <div class="form-info">
+                <div class="info-row">
+                    <span class="info-label">FORM CODE:</span>
+                    <span class="info-value">FM-PL-03</span>
                 </div>
-                <button class="btn btn-success btn-sm">
-                    <i class="fe-download"></i> Export SWOT
-                </button>
+                <div class="info-row">
+                    <span class="info-label">REVISION:</span>
+                    <span class="info-value">2</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">DATE:</span>
+                    <span class="info-value">01-Jun-25</span>
+                </div>
+            </div>
+
+            <div class="process-info">
+                <div class="info-row">
+                    <span class="info-label">BUREAU/REGIONS/OFFICE:</span>
+                    <span class="info-value">DTI-10 REGIONAL OFFICE</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">PROCESS:</span>
+                    <span class="info-value">CONDUCT OF TRAINING</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">PROCESS OWNER:</span>
+                    <span class="info-value">Training Coordinator</span>
+                </div>
             </div>
         </div>
+
+
 
         <!-- Search and Filter -->
         <div class="row mb-3">
             <div class="col-md-8">
-                <input type="text" class="iqms-search-bar" placeholder="Search SWOT items..." id="searchSWOT">
+                <input type="text" class="iqms-search-bar search-input" placeholder="Search SWOT items..." id="searchSWOT">
             </div>
-            <div class="col-md-4">
-                <select class="form-control" id="filterSWOT">
-                    <option value="">All Categories</option>
+            <div class="col-md-3">
+                <select class="iqms-form-control filter-select" id="filterSWOT">
+                    <option value="all">All Categories</option>
                     <option value="strengths">Strengths</option>
                     <option value="weaknesses">Weaknesses</option>
                     <option value="opportunities">Opportunities</option>
                     <option value="threats">Threats</option>
                 </select>
             </div>
+            <div class="col-md-1 text-right">
+                <button class="iqms-btn iqms-btn-success">
+                    <i class="fe-download"></i> Export
+                </button>
+            </div>
         </div>
 
-        <!-- SWOT Grid -->
-        <div class="row">
-            <!-- Strengths -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">STRENGTHS</h5>
-                        <button class="btn btn-sm btn-outline-light" onclick="openSWOTModal('strengths')">
-                            <i class="fe-plus"></i>
-                        </button>
-                    </div>
-                    <div class="card-body" id="strengthsContent">
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">S1</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('s1')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('s1')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Experienced and competent training staff with diverse expertise
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: OR-1, OR-3</small>
-                            </div>
-                        </div>
-
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">S2</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('s2')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('s2')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Established network of development partners and stakeholders
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: OR-2</small>
-                            </div>
-                        </div>
-
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">S3</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('s3')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('s3')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Strong government support and mandate for MSME development
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: OR-4</small>
-                            </div>
-                        </div>
-                    </div>
+        <!-- SWOT Container -->
+        <div class="swot-container">
+            <div class="swot-box strengths">
+                <div class="swot-header">
+                    <span>STRENGTHS</span>
+                    <button class="add-btn" onclick="openModal('strength')">+</button>
+                </div>
+                <div class="swot-content" id="strengths-content">
+                    <!-- Strengths items will be added here dynamically -->
                 </div>
             </div>
 
-            <!-- Weaknesses -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">WEAKNESSES</h5>
-                        <button class="btn btn-sm btn-outline-light" onclick="openSWOTModal('weaknesses')">
-                            <i class="fe-plus"></i>
-                        </button>
-                    </div>
-                    <div class="card-body" id="weaknessesContent">
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">W1</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('w1')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('w1')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Limited training venues and facilities
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: RR-1</small>
-                            </div>
-                        </div>
 
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">W2</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('w2')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('w2')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Budget constraints for training materials and resources
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: RR-2</small>
-                            </div>
-                        </div>
-                    </div>
+            <div class="swot-box weaknesses">
+                <div class="swot-header">
+                    <span>WEAKNESSES</span>
+                    <button class="add-btn" onclick="openModal('weakness')">+</button>
+                </div>
+                <div class="swot-content" id="weaknesses-content">
+                    <!-- Weaknesses items will be added here dynamically -->
                 </div>
             </div>
 
-            <!-- Opportunities -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">OPPORTUNITIES</h5>
-                        <button class="btn btn-sm btn-outline-light" onclick="openSWOTModal('opportunities')">
-                            <i class="fe-plus"></i>
-                        </button>
-                    </div>
-                    <div class="card-body" id="opportunitiesContent">
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">O1</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('o1')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('o1')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Growing interest in digital business and e-commerce
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: OR-5</small>
-                            </div>
-                        </div>
-
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">O2</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('o2')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('o2')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Potential partnerships with private sector for training sponsorship
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: OR-6</small>
-                            </div>
-                        </div>
-                    </div>
+            <div class="swot-box opportunities">
+                <div class="swot-header">
+                    <span>OPPORTUNITIES</span>
+                    <button class="add-btn" onclick="openModal('opportunity')">+</button>
+                </div>
+                <div class="swot-content" id="opportunities-content">
+                    <!-- Opportunities items will be added here dynamically -->
                 </div>
             </div>
 
-            <!-- Threats -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">THREATS</h5>
-                        <button class="btn btn-sm btn-outline-dark" onclick="openSWOTModal('threats')">
-                            <i class="fe-plus"></i>
-                        </button>
-                    </div>
-                    <div class="card-body" id="threatsContent">
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">T1</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('t1')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('t1')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Competition from private training providers
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: RR-3</small>
-                            </div>
-                        </div>
-
-                        <div class="swot-item">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="item-number">T2</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="editSWOTItem('t2')">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSWOTItem('t2')">
-                                        <i class="fe-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="item-text">
-                                Economic uncertainties affecting business participation
-                            </div>
-                            <div class="item-reference">
-                                <small class="text-muted">Ref: RR-4</small>
-                            </div>
-                        </div>
-                    </div>
+            <div class="swot-box threats">
+                <div class="swot-header">
+                    <span>THREATS</span>
+                    <button class="add-btn" onclick="openModal('threat')">+</button>
+                </div>
+                <div class="swot-content" id="threats-content">
+                    <!-- Threats items will be added here dynamically -->
                 </div>
             </div>
         </div>
@@ -282,110 +117,357 @@
 
 <!-- Modal for Add/Edit SWOT Item -->
 <div id="swotModal" class="iqms-modal">
-    <div class="iqms-modal-content">
+    <div class="iqms-modal-content" style="max-width: 700px;">
         <div class="iqms-modal-header">
-            <h3 class="iqms-modal-title" id="swotModalTitle">Add SWOT Item</h3>
-            <span class="iqms-close" onclick="closeSWOTModal()">&times;</span>
+            <h3 class="iqms-modal-title" id="modalTitle">Add SWOT Item</h3>
+            <span class="iqms-close" onclick="closeModal()">&times;</span>
         </div>
-        
+
         <form class="iqms-form" id="swotForm">
-            <input type="hidden" id="swotItemId">
-            <input type="hidden" id="swotCategory">
-            
+            <input type="hidden" id="itemId">
+            <input type="hidden" id="itemType">
+
             <div class="iqms-form-group">
                 <label class="iqms-form-label" for="itemNumber">Item Number:</label>
-                <input type="text" class="iqms-form-control" id="itemNumber" placeholder="e.g., S1, W1, O1, T1">
+                <input type="text" class="iqms-form-control" id="itemNumber" required>
             </div>
-            
+
             <div class="iqms-form-group">
-                <label class="iqms-form-label" for="itemDescription">Description:</label>
-                <textarea class="iqms-form-control" id="itemDescription" rows="4" placeholder="Enter detailed description..."></textarea>
+                <label class="iqms-form-label" for="itemText">Issue/Description:</label>
+                <textarea class="iqms-form-control" id="itemText" rows="3" required></textarea>
             </div>
-            
+
             <div class="iqms-form-group">
-                <label class="iqms-form-label" for="itemReference">Reference:</label>
-                <input type="text" class="iqms-form-control" id="itemReference" placeholder="e.g., OR-1, RR-2">
+                <label class="iqms-form-label" for="potentialRisk">Potential Risk (Negative Effect):</label>
+                <textarea class="iqms-form-control" id="potentialRisk" rows="3"></textarea>
             </div>
-            
+
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="potentialOpportunity">Potential Opportunity (Positive Effect):</label>
+                <textarea class="iqms-form-control" id="potentialOpportunity" rows="3"></textarea>
+            </div>
+
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="reference">Reference/Links:</label>
+                <input type="text" class="iqms-form-control" id="reference">
+            </div>
+
             <div class="mt-4">
-                <button type="button" class="iqms-btn" onclick="saveSWOTItem()">Save Item</button>
-                <button type="button" class="iqms-btn iqms-btn-secondary" onclick="closeSWOTModal()">Cancel</button>
+                <button type="submit" class="iqms-btn iqms-btn-primary">Save</button>
+                <button type="button" class="iqms-btn iqms-btn-secondary" onclick="closeModal()">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-let currentSWOTCategory = '';
+// Sample data - in a real app, this would come from a database
+let swotData = {
+    strengths: [
+        {
+            id: 's1',
+            number: 'S-1',
+            text: 'Presence of dedicated, reliable and competent staff',
+            opportunity: 'Pool of in-house resource persons to conduct the training effectively and efficiently',
+            reference: 'OR-6'
+        },
+        {
+            id: 's2',
+            number: 'S-2',
+            text: 'Inclusive growth programs in place (e.g. training programs)',
+            opportunity: 'Effective and efficient conduct of relevant trainings',
+            reference: 'OR-1'
+        },
+        {
+            id: 's3',
+            number: 'S-3',
+            text: 'Availability of ICT infrastructure (hardware, software, systems)',
+            opportunity: 'Use of new methodology in conducting trainings online such as thru zoom, googlemeet, webex, teams',
+            reference: 'OR-7'
+        }
+    ],
+    weaknesses: [
+        {
+            id: 'w1',
+            number: 'W-1',
+            text: 'Limited manpower',
+            opportunity: '',
+            reference: ''
+        },
+        {
+            id: 'w5',
+            number: 'W-5',
+            text: 'Lack of integrated database and data management system',
+            opportunity: '',
+            reference: ''
+        }
+    ],
+    opportunities: [
+        {
+            id: 'o1',
+            number: 'O-1',
+            text: 'Availability of external training programs',
+            opportunity: 'Pool of in-house resource persons to conduct the training effectively and efficiently',
+            reference: 'OR-6'
+        },
+        {
+            id: 'o3',
+            number: 'O-3',
+            text: 'Availability and advancement of ICT infra and systems',
+            opportunity: 'More MSMEs can be reached to participate in the training program',
+            reference: 'OR-8'
+        }
+    ],
+    threats: [
+        {
+            id: 't1',
+            number: 'T-1',
+            text: 'Negative Political Interventions',
+            opportunity: '',
+            reference: ''
+        },
+        {
+            id: 't2',
+            number: 'T-2',
+            text: 'Power interruptions',
+            opportunity: '',
+            reference: ''
+        }
+    ]
+};
 
-function openSWOTModal(category) {
-    currentSWOTCategory = category;
-    document.getElementById('swotCategory').value = category;
-    document.getElementById('swotModalTitle').textContent = `Add ${category.charAt(0).toUpperCase() + category.slice(1)} Item`;
-    document.getElementById('swotItemId').value = '';
-    document.getElementById('swotForm').reset();
-    document.getElementById('swotModal').style.display = 'block';
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    renderSWOTItems();
+
+    // Form submission handler
+    document.getElementById('swotForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveSWOTItem();
+    });
+
+    // Search functionality
+    document.querySelector('.search-input').addEventListener('input', function() {
+        filterSWOTItems();
+    });
+
+    // Filter functionality
+    document.querySelector('.filter-select').addEventListener('change', function() {
+        filterSWOTItems();
+    });
+});
+
+// Render all SWOT items
+function renderSWOTItems() {
+    renderCategoryItems('strengths');
+    renderCategoryItems('weaknesses');
+    renderCategoryItems('opportunities');
+    renderCategoryItems('threats');
 }
 
-function closeSWOTModal() {
+// Render items for a specific category
+function renderCategoryItems(category) {
+    const container = document.getElementById(`${category}-content`);
+    container.innerHTML = '';
+
+    if (swotData[category].length === 0) {
+        container.innerHTML = '<div class="no-items">No items found</div>';
+        return;
+    }
+
+    swotData[category].forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'swot-item';
+        itemElement.dataset.id = item.id;
+
+        let opportunityHtml = '';
+        if (item.opportunity) {
+            opportunityHtml = `<div class="item-opportunity"><strong>Opportunity:</strong> ${item.opportunity}</div>`;
+        }
+
+        let referenceHtml = '';
+        if (item.reference) {
+            referenceHtml = `<div class="item-reference"><strong>Reference:</strong> ${item.reference}</div>`;
+        }
+
+        itemElement.innerHTML = `
+            <div class="swot-item-header">
+                <span class="item-number">${item.number}</span>
+                <div class="item-actions">
+                    <button class="edit-btn" onclick="editItem('${category}', '${item.id}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteItem('${category}', '${item.id}')">Delete</button>
+                </div>
+            </div>
+            <div class="item-text">${item.text}</div>
+            ${opportunityHtml}
+            ${referenceHtml}
+        `;
+
+        container.appendChild(itemElement);
+    });
+}
+
+// Open modal for adding/editing items
+function openModal(type, id = null) {
+    const modal = document.getElementById('swotModal');
+    const modalTitle = document.getElementById('modalTitle');
+
+    // Set modal title based on type
+    const typeNames = {
+        'strength': 'Strength',
+        'weakness': 'Weakness',
+        'opportunity': 'Opportunity',
+        'threat': 'Threat'
+    };
+
+    if (id) {
+        modalTitle.textContent = `Edit ${typeNames[type]} Item`;
+    } else {
+        modalTitle.textContent = `Add ${typeNames[type]} Item`;
+    }
+
+    // Set item type
+    document.getElementById('itemType').value = type;
+
+    // If editing, populate form with existing data
+    if (id) {
+        const category = type + 's'; // Convert to plural
+        const item = swotData[category].find(item => item.id === id);
+
+        if (item) {
+            document.getElementById('itemId').value = id;
+            document.getElementById('itemNumber').value = item.number;
+            document.getElementById('itemText').value = item.text;
+            document.getElementById('potentialRisk').value = item.risk || '';
+            document.getElementById('potentialOpportunity').value = item.opportunity || '';
+            document.getElementById('reference').value = item.reference || '';
+        }
+    } else {
+        // Reset form for new item
+        document.getElementById('swotForm').reset();
+        document.getElementById('itemId').value = '';
+
+        // Set default item number based on category
+        let prefix = '';
+        switch(type) {
+            case 'strength': prefix = 'S-'; break;
+            case 'weakness': prefix = 'W-'; break;
+            case 'opportunity': prefix = 'O-'; break;
+            case 'threat': prefix = 'T-'; break;
+        }
+
+        // Find the next available number
+        const category = type + 's';
+        const nextNum = swotData[category].length + 1;
+        document.getElementById('itemNumber').value = `${prefix}${nextNum}`;
+    }
+
+    modal.style.display = 'flex';
+}
+
+// Close modal
+function closeModal() {
     document.getElementById('swotModal').style.display = 'none';
 }
 
-function editSWOTItem(id) {
-    document.getElementById('swotModalTitle').textContent = 'Edit SWOT Item';
-    document.getElementById('swotItemId').value = id;
-    // In a real application, you would populate the form with existing data
-    document.getElementById('swotModal').style.display = 'block';
+// Save SWOT item (add new or update existing)
+function saveSWOTItem() {
+    const type = document.getElementById('itemType').value;
+    const id = document.getElementById('itemId').value;
+    const category = type + 's';
+
+    const itemData = {
+        number: document.getElementById('itemNumber').value,
+        text: document.getElementById('itemText').value,
+        risk: document.getElementById('potentialRisk').value,
+        opportunity: document.getElementById('potentialOpportunity').value,
+        reference: document.getElementById('reference').value
+    };
+
+    if (id) {
+        // Update existing item
+        const index = swotData[category].findIndex(item => item.id === id);
+        if (index !== -1) {
+            swotData[category][index] = { ...swotData[category][index], ...itemData };
+        }
+    } else {
+        // Add new item
+        const newId = type.charAt(0) + (swotData[category].length + 1);
+        itemData.id = newId;
+        swotData[category].push(itemData);
+    }
+
+    // Re-render the category
+    renderCategoryItems(category);
+    closeModal();
 }
 
-function deleteSWOTItem(id) {
-    if (confirm('Are you sure you want to delete this SWOT item?')) {
-        // In a real application, this would make an AJAX call to delete the record
-        alert('SWOT item deleted successfully!');
+// Edit item
+function editItem(category, id) {
+    const type = category.slice(0, -1); // Convert to singular (e.g., strengths -> strength)
+    openModal(type, id);
+}
+
+// Delete item
+function deleteItem(category, id) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        swotData[category] = swotData[category].filter(item => item.id !== id);
+        renderCategoryItems(category);
     }
 }
 
-function saveSWOTItem() {
-    // In a real application, this would validate and save the data
-    alert('SWOT item saved successfully!');
-    closeSWOTModal();
+// Filter SWOT items based on search and category filter
+function filterSWOTItems() {
+    const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+    const filterValue = document.querySelector('.filter-select').value;
+
+    // For each category, show/hide items based on filters
+    const categories = ['strengths', 'weaknesses', 'opportunities', 'threats'];
+
+    categories.forEach(category => {
+        const swotBox = document.querySelector(`.swot-box.${category}`);
+
+        // Skip this category if filter is set to another category
+        if (filterValue !== 'all' && filterValue !== category) {
+            swotBox.style.display = 'none';
+            return;
+        }
+
+        swotBox.style.display = 'block';
+
+        const items = document.querySelectorAll(`#${category}-content .swot-item`);
+        let hasVisibleItems = false;
+
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            const isVisible = text.includes(searchTerm);
+            item.style.display = isVisible ? 'block' : 'none';
+
+            if (isVisible) hasVisibleItems = true;
+        });
+
+        // Show "no items" message if no items match the filter
+        const container = document.getElementById(`${category}-content`);
+        const noItemsMsg = container.querySelector('.no-items');
+
+        if (!hasVisibleItems && items.length > 0) {
+            if (!noItemsMsg) {
+                const msg = document.createElement('div');
+                msg.className = 'no-items';
+                msg.textContent = 'No items match your search';
+                container.appendChild(msg);
+            }
+        } else if (noItemsMsg) {
+            container.removeChild(noItemsMsg);
+        }
+    });
 }
-
-// Search functionality
-document.getElementById('searchSWOT').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const items = document.querySelectorAll('.swot-item');
-    
-    items.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-            item.style.display = '';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-});
-
-// Filter functionality
-document.getElementById('filterSWOT').addEventListener('change', function() {
-    const filterValue = this.value;
-    const sections = ['strengths', 'weaknesses', 'opportunities', 'threats'];
-    
-    sections.forEach(section => {
-        const element = document.getElementById(section + 'Content').closest('.col-md-6');
-        if (filterValue === '' || filterValue === section) {
-            element.style.display = '';
-        } else {
-            element.style.display = 'none';
-        }
-    });
-});
 
 // Close modal when clicking outside
 window.onclick = function(event) {
     const modal = document.getElementById('swotModal');
     if (event.target == modal) {
-        closeSWOTModal();
+        closeModal();
     }
 }
 </script>
