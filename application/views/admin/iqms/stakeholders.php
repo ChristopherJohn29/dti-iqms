@@ -71,21 +71,23 @@
                         <table class="table dt-responsive nowrap w-100" id="stakeholdersTable">
                 <thead>
                     <tr>
-                        <th style="width: 20%;">STAKEHOLDER</th>
-                        <th style="width: 25%;">NEEDS & EXPECTATIONS</th>
-                        <th style="width: 20%;">POTENTIAL RISKS</th>
-                        <th style="width: 20%;">POTENTIAL OPPORTUNITIES</th>
-                        <th style="width: 10%;">REFERENCE / LINKS</th>
+                        <th style="width: 18%;">STAKEHOLDER</th>
+                        <th style="width: 22%;">NEEDS & EXPECTATIONS</th>
+                        <th style="width: 18%;">POTENTIAL RISKS</th>
+                        <th style="width: 18%;">POTENTIAL OPPORTUNITIES</th>
+                        <th style="width: 10%;">TO BE CONSIDERED</th>
+                        <th style="width: 9%;">REFERENCE / LINKS</th>
                         <th style="width: 5%;">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Business Persons -->
                     <tr>
-                        <td rowspan="3"><strong>Business Persons</strong><br><small>(Inclusions: business owners, entrepreneurs, MSMEs, product/service providers, investors)</small></td>
+                        <td rowspan="3"><strong>1. Business Persons</strong><br><small>(Inclusions: business owners, entrepreneurs, MSMEs, product/service providers, investors)</small></td>
                         <td>1.5 Proper, comfortable and Minimum Public Health Standards Protocol-compliant venue with decent food</td>
                         <td>-</td>
                         <td>-</td>
+                        <td class="text-center">Yes</td>
                         <td class="text-center">OR-2</td>
                         <td rowspan="3" class="text-center">
                             <div class="btn-group">
@@ -102,21 +104,24 @@
                         <td>1.6 Organized / systematized conduct of various DTI training activities</td>
                         <td>Training not implemented as planned</td>
                         <td>Increase participants retention and improve learning</td>
+                        <td class="text-center">No</td>
                         <td class="text-center">OR-8</td>
                     </tr>
                     <tr>
                         <td>1.18 Expected learning objectives achieved</td>
                         <td>Training not implemented as planned</td>
                         <td>Improved business outcomes</td>
+                        <td class="text-center">Yes</td>
                         <td class="text-center">OR-4</td>
                     </tr>
 
                     <!-- Development Partners -->
                     <tr>
-                        <td rowspan="2"><strong>Development Partners</strong><br><small>(NGAs, LGUs, NGOs, Coaches/Mentors/Designers, MSME Council, Local Chambers, and Industry Associations, Province)</small></td>
+                        <td rowspan="2"><strong>4. Development Partners</strong><br><small>(NGAs, LGUs, NGOs, Coaches/Mentors/Designers, MSME Council, Local Chambers, and Industry Associations, Province)</small></td>
                         <td>4.2 Clear and judicious MOA or MOU</td>
                         <td>Misalignment of goals and objectives</td>
                         <td>Efficient resource allocation and availability of competent Resource Speakers</td>
+                        <td class="text-center">Yes</td>
                         <td class="text-center">RR-3, OR-3</td>
                         <td rowspan="2" class="text-center">
                             <div class="btn-group">
@@ -133,15 +138,17 @@
                         <td>4.3 Prompt and fair compensation of services rendered</td>
                         <td>Legal and Contractual Implications</td>
                         <td>long-term collaboration and trust among development partners</td>
+                        <td class="text-center">No</td>
                         <td class="text-center">RR-4, OR-4</td>
                     </tr>
 
                     <!-- DTI Staff -->
                     <tr>
-                        <td rowspan="2"><strong>DTI-10 Staff/Contractual Services</strong><br><small>(technical and non-technical)</small></td>
+                        <td rowspan="2"><strong>10. DTI-10 Staff/Contractual Services</strong><br><small>(technical and non-technical)</small></td>
                         <td>10.1 Ready provision of appropriate resources and logistical support in the implementation of PAPs</td>
                         <td>Training not implemented as planned</td>
                         <td>Improved training delivery</td>
+                        <td class="text-center">Yes</td>
                         <td class="text-center">RR-2</td>
                         <td rowspan="2" class="text-center">
                             <div class="btn-group">
@@ -158,6 +165,7 @@
                         <td>10.2 Provision of capability building activities as well as physical and mental wellness program</td>
                         <td>Demotivated personnel</td>
                         <td>Efficient resource utilization and improved staff performance</td>
+                        <td class="text-center">No</td>
                         <td class="text-center">RR-5, OR-5</td>
                     </tr>
                 </tbody>
@@ -245,6 +253,15 @@
                         <label class="form-label" for="potentialOpportunity1">Potential Opportunity</label>
                         <p style="font-size: 0.9em; color: #666;">What potential POSITIVE incident/event can happen if requirements are met or exceeded?</p>
                         <textarea class="form-control" id="potentialOpportunity1" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="toBeConsidered1">To Be Considered</label>
+                        <select class="form-control" id="toBeConsidered1">
+                            <option value="">Select Option</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
                     </div>
 
                     <div class="mb-3">
@@ -403,6 +420,7 @@ function resetAnalysisSets() {
     document.getElementById('needs1').value = '';
     document.getElementById('potentialRisk1').value = '';
     document.getElementById('potentialOpportunity1').value = '';
+    document.getElementById('toBeConsidered1').value = '';
     document.getElementById('riskReference1').value = '';
     document.getElementById('opportunityReference1').value = '';
 }
@@ -483,6 +501,15 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
 
             <div class="mb-3">
+                <label class="form-label" for="toBeConsidered${setCount}">To Be Considered</label>
+                <select class="form-control" id="toBeConsidered${setCount}">
+                    <option value="">Select Option</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">References</label>
                 <div class="row">
                     <div class="col-md-6">
@@ -533,11 +560,19 @@ function removeAnalysisSet(button) {
             // Update IDs for form elements
             const textareas = set.querySelectorAll('textarea');
             const inputs = set.querySelectorAll('input[type="text"]');
+            const selects = set.querySelectorAll('select');
 
             textareas.forEach((textarea, i) => {
                 const baseIds = ['needs', 'potentialRisk', 'potentialOpportunity'];
                 if (i < baseIds.length) {
                     textarea.id = baseIds[i] + setNumber;
+                }
+            });
+
+            selects.forEach((select, i) => {
+                const baseIds = ['toBeConsidered'];
+                if (i < baseIds.length) {
+                    select.id = baseIds[i] + setNumber;
                 }
             });
 

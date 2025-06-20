@@ -127,96 +127,91 @@
                             <!-- Assessment Criteria Tab -->
                             <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
                                 <div class="mt-3">
-                                    <h5>Probability Criteria</h5>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Score</th>
-                                                <th>Probability</th>
-                                                <th>Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>High (10-50%)</td>
-                                                <td>Known occurrence within a 2 year period</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Medium (10-50%)</td>
-                                                <td>Known occurrence more than 3 years ago</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Low (<10%)</td>
-                                                <td>Never happened before</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <h5>Opportunity Assessment Criteria</h5>
 
-                                    <h5 class="mt-4">Impact Criteria</h5>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Score</th>
-                                                <th>Impact Area</th>
-                                                <th>Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Service Delivery</td>
-                                                <td>Critical service enhancement affecting objectives</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Financial</td>
-                                                <td>Significant positive effect on budget optimization</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Reputation</td>
-                                                <td>Positive customer feedback and satisfaction</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Probability / Likelihood</h6>
+                                                    <p><strong>HIGH (Score = 3)</strong>: 70-100% chance of success. Organization has more than enough resources.</p>
+                                                    <p><strong>MEDIUM (Score = 2)</strong>: 20-69% chance of success. Barely sufficient resources.</p>
+                                                    <p><strong>LOW (Score = 1)</strong>: 0-19% chance of success. Need to source resources.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Strategic Impact</h6>
+                                                    <p><strong>HIGH (Score = 3)</strong>: Complete alignment with Vision, Mission, Goals. Major progress.</p>
+                                                    <p><strong>MEDIUM (Score = 2)</strong>: Substantial alignment. Major progress on a goal.</p>
+                                                    <p><strong>LOW (Score = 1)</strong>: Minor alignment. Minor progress.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <h5 class="mt-4">Opportunity Evaluation Rating</h5>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Service Delivery Impact</h6>
+                                                    <p><strong>HIGH (Score = 3)</strong>: Transformative improvement.</p>
+                                                    <p><strong>MEDIUM (Score = 2)</strong>: Substantial improvement.</p>
+                                                    <p><strong>LOW (Score = 1)</strong>: Minor improvement.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Financial Impact</h6>
+                                                    <p><strong>HIGH (Score = 3)</strong>: >10% budget increase possible.</p>
+                                                    <p><strong>MEDIUM (Score = 2)</strong>: <10% budget increase possible.</p>
+                                                    <p><strong>LOW (Score = 1)</strong>: No effect on funds.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">Reputation Impact</h6>
+                                                    <p><strong>HIGH (Score = 3)</strong>: Long-term reputation enhancement.</p>
+                                                    <p><strong>MEDIUM (Score = 2)</strong>: Short-term reputation enhancement.</p>
+                                                    <p><strong>LOW (Score = 1)</strong>: No lasting effect.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="mt-4">Opportunity Evaluation Rating Score = Probability + Impact</h5>
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Total Score</th>
                                                 <th>Priority Rating</th>
-                                                <th>Recommended Actions</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>6</td>
+                                                <td>5-6</td>
                                                 <td>1st Priority</td>
-                                                <td>Immediate Implementation</td>
+                                                <td>Prioritize and pursue actions</td>
                                             </tr>
                                             <tr>
-                                                <td>5</td>
-                                                <td>1st Priority</td>
-                                                <td>Opportunity Development</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
+                                                <td>3-4</td>
                                                 <td>2nd Priority</td>
-                                                <td>Opportunity Development</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>2nd Priority</td>
-                                                <td>Opportunity Monitoring</td>
+                                                <td>Consider for future action</td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
                                                 <td>3rd Priority</td>
-                                                <td>Opportunity Monitoring</td>
+                                                <td>Last to be pursued or not at all</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -317,57 +312,84 @@
                 <textarea class="iqms-form-control" id="opportunityDescription" rows="3" placeholder="Enter detailed opportunity description..." required></textarea>
             </div>
 
-            <div class="iqms-form-row">
-                <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="opportunityProbability">Probability Score:</label>
-                    <select class="iqms-form-control" id="opportunityProbability" required>
-                        <option value="">Select Probability</option>
-                        <option value="3">High (10-50%) - Known occurrence within 2 years</option>
-                        <option value="2">Medium (10-50%) - Known occurrence >3 years ago</option>
-                        <option value="1">Low (<10%) - Never happened before</option>
-                    </select>
-                </div>
-                <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="opportunityImpact">Impact Score:</label>
-                    <select class="iqms-form-control" id="opportunityImpact" required>
-                        <option value="">Select Impact</option>
-                        <option value="3">High - Critical enhancement to objectives</option>
-                        <option value="2">Medium - Significant positive financial impact</option>
-                        <option value="1">Low - Minor positive reputation impact</option>
-                    </select>
-                </div>
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="opportunityProbability">Probability (1-3):</label>
+                <select class="iqms-form-control" id="opportunityProbability" required>
+                    <option value="">Select probability</option>
+                    <option value="3">High (3) - 70-100% chance</option>
+                    <option value="2">Medium (2) - 20-69% chance</option>
+                    <option value="1">Low (1) - 0-19% chance</option>
+                </select>
             </div>
 
-            <div class="iqms-form-row">
-                <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="opportunityScore">Opportunity Score:</label>
-                    <input type="text" class="iqms-form-control" id="opportunityScore" readonly>
-                </div>
-                <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="opportunityPriority">Priority:</label>
-                    <input type="text" class="iqms-form-control" id="opportunityPriority" readonly>
-                </div>
-            </div>
+            <div class="iqms-form-group">
+                <label class="iqms-form-label">Impact Assessment:</label>
 
-            <div class="iqms-form-row">
-                <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="opportunityOwner">Opportunity Owner:</label>
-                    <input type="text" class="iqms-form-control" id="opportunityOwner" placeholder="Enter responsible person/department">
+                <div class="iqms-form-row">
+                    <div class="iqms-form-group">
+                        <label class="iqms-form-label" for="strategicImpact">Strategic Impact (1-3):</label>
+                        <select class="iqms-form-control" id="strategicImpact" required>
+                            <option value="">Select impact level</option>
+                            <option value="3">High (3) - Complete alignment</option>
+                            <option value="2">Medium (2) - Substantial alignment</option>
+                            <option value="1">Low (1) - Minor alignment</option>
+                        </select>
+                    </div>
+                    <div class="iqms-form-group">
+                        <label class="iqms-form-label" for="serviceImpact">Service Delivery Impact (1-3):</label>
+                        <select class="iqms-form-control" id="serviceImpact" required>
+                            <option value="">Select impact level</option>
+                            <option value="3">High (3) - Transformative</option>
+                            <option value="2">Medium (2) - Substantial</option>
+                            <option value="1">Low (1) - Minor</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="iqms-form-group">
-                    <label class="iqms-form-label" for="opportunityStatus">Status:</label>
-                    <select class="iqms-form-control" id="opportunityStatus">
-                        <option value="open">Open</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="closed">Closed</option>
-                    </select>
+
+                <div class="iqms-form-row">
+                    <div class="iqms-form-group">
+                        <label class="iqms-form-label" for="financialImpact">Financial Impact (1-3):</label>
+                        <select class="iqms-form-control" id="financialImpact" required>
+                            <option value="">Select impact level</option>
+                            <option value="3">High (3) - >10% budget increase</option>
+                            <option value="2">Medium (2) - <10% budget increase</option>
+                            <option value="1">Low (1) - No effect</option>
+                        </select>
+                    </div>
+                    <div class="iqms-form-group">
+                        <label class="iqms-form-label" for="reputationImpact">Reputation Impact (1-3):</label>
+                        <select class="iqms-form-control" id="reputationImpact" required>
+                            <option value="">Select impact level</option>
+                            <option value="3">High (3) - Long-term enhancement</option>
+                            <option value="2">Medium (2) - Short-term enhancement</option>
+                            <option value="1">Low (1) - No lasting effect</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <div class="iqms-form-group">
-                <label class="iqms-form-label" for="effectivenessIndicator">Effectiveness Indicator (M):</label>
-                <input type="text" class="iqms-form-control" id="effectivenessIndicator" placeholder="Enter effectiveness indicator" required>
+                <label class="iqms-form-label" for="actions">Actions to Address Opportunity:</label>
+                <textarea class="iqms-form-control" id="actions" rows="3" placeholder="Enter actions to address opportunity..." required></textarea>
             </div>
+
+            <div class="iqms-form-row">
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="responsibility">Responsibility:</label>
+                    <input type="text" class="iqms-form-control" id="responsibility" placeholder="Enter responsible person" required>
+                </div>
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="timeline">Timeline:</label>
+                    <input type="text" class="iqms-form-control" id="timeline" placeholder="Enter timeline" required>
+                </div>
+            </div>
+
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="indicator">Effectiveness Indicator:</label>
+                <input type="text" class="iqms-form-control" id="indicator" placeholder="Enter effectiveness indicator" required>
+            </div>
+
+
 
             <div class="mt-4">
                 <button type="button" class="btn btn-primary" onclick="saveOpportunity()">Save Opportunity</button>
@@ -455,27 +477,68 @@
 const opportunities = [
     {
         id: "OR-1",
-        description: "Enhanced training delivery through digital platforms",
-        probability: 2,
-        impact: 3,
-        score: 6,
-        priority: "1st",
-        status: "open",
-        owner: "Training Coordinator",
-        effectivenessIndicator: "100% digital platform utilization",
-        monitoring: { q1: "", q2: "", q3: "", q4: "" }
+        description: "Effective and efficient conduct of relevant trainings",
+        probability: 3,
+        strategicImpact: 3,
+        serviceImpact: 3,
+        financialImpact: 3,
+        reputationImpact: 3,
+        actions: "1.1 Ensure to conduct TNA and profiling of participants and communication in advance to the resource person",
+        responsibility: "Training Coordinator",
+        timeline: "every conduct of training",
+        indicator: "Client satisfaction feedback/rating"
     },
     {
         id: "OR-2",
-        description: "Partnership opportunities with private sector",
+        description: "Increased participant's retention and pleasant learning experience",
         probability: 2,
-        impact: 2,
-        score: 4,
-        priority: "2nd",
-        status: "in-progress",
-        owner: "Training Coordinator",
-        effectivenessIndicator: "Number of partnerships established",
-        monitoring: { q1: "", q2: "", q3: "", q4: "" }
+        strategicImpact: 2,
+        serviceImpact: 2,
+        financialImpact: 2,
+        reputationImpact: 2,
+        actions: "2.1 Ensure comfortable and conducive training environment be considered in selecting a venue",
+        responsibility: "Training Coordinator",
+        timeline: "every conduct of training",
+        indicator: "Post Training effectiveness rating"
+    },
+    {
+        id: "OR-3",
+        description: "Efficient resource allocation and availability of competent Resource Speakers",
+        probability: 3,
+        strategicImpact: 2,
+        serviceImpact: 2,
+        financialImpact: 2,
+        reputationImpact: 2,
+        actions: "3.1 Maximising partnerships through collaboration and harmonization",
+        responsibility: "Training Coordinator",
+        timeline: "Annual",
+        indicator: "MOA/MOU established"
+    },
+    {
+        id: "OR-5",
+        description: "Efficient resource utilization",
+        probability: 3,
+        strategicImpact: 3,
+        serviceImpact: 3,
+        financialImpact: 3,
+        reputationImpact: 3,
+        actions: "5.1 Proper planning and prompt submission of pertinent documents and reports for faster liquidation and payments to stakeholders",
+        responsibility: "Training Coordinator",
+        timeline: "Annual",
+        indicator: "at least 95% Fund Utilization Report"
+    },
+    {
+        id: "OR-6",
+        description: "Pool of in-house resource persons to conduct the training effectively and efficiently",
+        probability: 2,
+        strategicImpact: 3,
+        serviceImpact: 3,
+        financialImpact: 3,
+        reputationImpact: 2,
+        actions: "6.1 Provide capability building activities and trainings applicable to OTU staff",
+        responsibility: "Training Coordinator",
+        timeline: "every conduct of training",
+        indicator: "Fund Utilization"
     }
 ];
 
@@ -500,13 +563,6 @@ document.addEventListener('DOMContentLoaded', function() {
     renderTreatmentsTable();
     renderMonitoringTable();
     populateOpportunityDropdowns();
-
-    // Add event listeners for score calculation
-    const probabilitySelect = document.getElementById('opportunityProbability');
-    const impactSelect = document.getElementById('opportunityImpact');
-
-    if (probabilitySelect) probabilitySelect.addEventListener('change', calculateOpportunityScore);
-    if (impactSelect) impactSelect.addEventListener('change', calculateOpportunityScore);
 });
 
 function renderOpportunitiesTable() {
@@ -517,30 +573,26 @@ function renderOpportunitiesTable() {
     opportunities.forEach(opportunity => {
         const row = document.createElement('tr');
 
+        // Calculate total impact and score
+        const totalImpact = (opportunity.strategicImpact + opportunity.serviceImpact +
+                           opportunity.financialImpact + opportunity.reputationImpact) / 4;
+        const score = opportunity.probability + Math.round(totalImpact);
+
         let priorityBadge = '';
-        if (opportunity.priority === '1st') {
+        if (score >= 5) {
             priorityBadge = '<span class="badge bg-danger">1st Priority</span>';
-        } else if (opportunity.priority === '2nd') {
+        } else if (score >= 3) {
             priorityBadge = '<span class="badge bg-warning">2nd Priority</span>';
         } else {
             priorityBadge = '<span class="badge bg-success">3rd Priority</span>';
-        }
-
-        let statusBadge = '';
-        if (opportunity.status === 'open') {
-            statusBadge = '<span class="badge bg-danger">Open</span>';
-        } else if (opportunity.status === 'in-progress') {
-            statusBadge = '<span class="badge bg-warning">In Progress</span>';
-        } else {
-            statusBadge = '<span class="badge bg-success">Closed</span>';
         }
 
         row.innerHTML = `
             <td>${opportunity.id}</td>
             <td>${opportunity.description}</td>
             <td>${opportunity.probability}</td>
-            <td>${opportunity.impact}</td>
-            <td>${opportunity.score}</td>
+            <td>${Math.round(totalImpact)}</td>
+            <td>${score}</td>
             <td>${priorityBadge}</td>
             <td>
                 <button class="btn btn-warning btn-sm" onclick="editOpportunity('${opportunity.id}')">
@@ -603,11 +655,11 @@ function renderMonitoringTable() {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${opportunity.id}</td>
-            <td>${opportunity.effectivenessIndicator}</td>
-            <td>${opportunity.monitoring.q1}</td>
-            <td>${opportunity.monitoring.q2}</td>
-            <td>${opportunity.monitoring.q3}</td>
-            <td>${opportunity.monitoring.q4}</td>
+            <td>${opportunity.indicator}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
             <td>
                 <button class="btn btn-primary btn-sm" onclick="openMonitoringModal('${opportunity.id}')">
                     Update
@@ -643,24 +695,7 @@ function populateOpportunityDropdowns() {
     }
 }
 
-function calculateOpportunityScore() {
-    const probability = parseInt(document.getElementById('opportunityProbability').value) || 0;
-    const impact = parseInt(document.getElementById('opportunityImpact').value) || 0;
-    const score = probability * impact;
 
-    document.getElementById('opportunityScore').value = score;
-
-    let priority = '';
-    if (score >= 5) {
-        priority = '1st Priority';
-    } else if (score >= 3) {
-        priority = '2nd Priority';
-    } else {
-        priority = '3rd Priority';
-    }
-
-    document.getElementById('opportunityPriority').value = priority;
-}
 
 function openOpportunityModal() {
     document.getElementById('opportunityModalTitle').textContent = 'Add New Opportunity';
@@ -692,11 +727,14 @@ function editOpportunity(id) {
     if (opportunity) {
         document.getElementById('opportunityDescription').value = opportunity.description;
         document.getElementById('opportunityProbability').value = opportunity.probability;
-        document.getElementById('opportunityImpact').value = opportunity.impact;
-        document.getElementById('opportunityOwner').value = opportunity.owner;
-        document.getElementById('opportunityStatus').value = opportunity.status;
-        document.getElementById('effectivenessIndicator').value = opportunity.effectivenessIndicator;
-        calculateOpportunityScore();
+        document.getElementById('strategicImpact').value = opportunity.strategicImpact;
+        document.getElementById('serviceImpact').value = opportunity.serviceImpact;
+        document.getElementById('financialImpact').value = opportunity.financialImpact;
+        document.getElementById('reputationImpact').value = opportunity.reputationImpact;
+        document.getElementById('actions').value = opportunity.actions;
+        document.getElementById('responsibility').value = opportunity.responsibility;
+        document.getElementById('timeline').value = opportunity.timeline;
+        document.getElementById('indicator').value = opportunity.indicator;
     }
 
     document.getElementById('opportunityModal').style.display = 'block';

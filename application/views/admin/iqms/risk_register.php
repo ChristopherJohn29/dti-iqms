@@ -531,7 +531,10 @@
         {
             id: "RR-1",
             description: "Dissatisfied clients",
-            potentialCause: "1.1 The training conducted is not useful/applicable to their level of business",
+            potentialCause: [
+                { id: "1.1", description: "Training not applicable to business level" },
+                { id: "1.2", description: "Poor trainer engagement" }
+            ],
             potentialImpact: "1.1 Low CSF rating",
             category: "Service Delivery",
             probability: 2,
@@ -548,7 +551,10 @@
         {
             id: "RR-2",
             description: "Spread of communicable diseases",
-            potentialCause: "2.1 The training venue is cramped and not well-ventilated",
+            potentialCause: [
+                { id: "2.1", description: "Cramped training venue" },
+                { id: "2.2", description: "Poor ventilation" }
+            ],
             potentialImpact: "2.1 Low CSF rating",
             category: "Service Delivery",
             probability: 2,
@@ -565,7 +571,10 @@
         {
             id: "RR-3",
             description: "Misalignment of goals and objectives",
-            potentialCause: "3.1 The goals, objectives, timelines, and deliverables are not clearly stated in the MOA/MOU",
+            potentialCause: [
+                { id: "3.1", description: "Unclear MOA/MOU terms" },
+                { id: "3.2", description: "Lack of stakeholder consultation" }
+            ],
             potentialImpact: "Lack of impact on objectives or failure to meet intended outcomes",
             category: "Reputation",
             probability: 1,
@@ -582,7 +591,10 @@
         {
             id: "RR-4",
             description: "Legal and Contractual Implications",
-            potentialCause: "4.1 Delayed payment or payment of services rendered to resource speakers and suppliers due to delayed submission of documents",
+            potentialCause: [
+                { id: "4.1", description: "Delayed document submission" },
+                { id: "4.2", description: "Incomplete contracts" }
+            ],
             potentialImpact: "4.1 Damaged reputation and trust",
             category: "Legal Compliance",
             probability: 2,
@@ -599,7 +611,10 @@
         {
             id: "RR-5",
             description: "Irrelevant training programs",
-            potentialCause: "5.1 Inadequate Training Needs Assessment (TNA)",
+            potentialCause: [
+                { id: "5.1", description: "Inadequate TNA" },
+                { id: "5.2", description: "Outdated training content" }
+            ],
             potentialImpact: "5.1 Training objectives are not met, Low CSF rating",
             category: "Service Delivery",
             probability: 2,
@@ -616,7 +631,10 @@
         {
             id: "RR-6",
             description: "Trainings not implemented as planned",
-            potentialCause: "6.1 Delayed approval of project proposals",
+            potentialCause: [
+                { id: "6.1", description: "Delayed approval of project proposals" },
+                { id: "6.2", description: "Budget constraints" }
+            ],
             potentialImpact: "6.1 Unmet targets",
             category: "Service Delivery",
             probability: 2,
@@ -826,10 +844,15 @@
                 priorityBadge = '<span class="badge" style="display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; text-align: center; white-space: nowrap; background-color: #27ae60; color: white;">3rd Priority</span>';
             }
 
+            // Handle potential cause array
+            const causesList = Array.isArray(risk.potentialCause)
+                ? risk.potentialCause.map(cause => `${cause.id}: ${cause.description}`).join('<br>')
+                : risk.potentialCause;
+
             row.innerHTML = `
                 <td>${risk.id}</td>
                 <td>${risk.description}</td>
-                <td>${risk.potentialCause}</td>
+                <td>${causesList}</td>
                 <td>${risk.potentialImpact}</td>
                 <td>${risk.category}</td>
                 <td>${risk.probability}</td>
@@ -876,7 +899,9 @@
             // Find the corresponding risk using riskId
             const risk = risks.find(r => r.id === treatment.riskId);
             const riskDescription = risk ? risk.description : 'N/A';
-            const potentialCause = risk ? risk.potentialCause : 'N/A';
+            const potentialCause = risk ? (Array.isArray(risk.potentialCause)
+                ? risk.potentialCause.map(cause => `${cause.id}: ${cause.description}`).join('<br>')
+                : risk.potentialCause) : 'N/A';
 
             const row = document.createElement('tr');
 
@@ -979,7 +1004,11 @@
             const risk = risks.find(r => r.id === riskId);
             if (risk) {
                 document.getElementById('risk-description').value = risk.description;
-                document.getElementById('potential-cause').value = risk.potentialCause;
+                // Handle potential cause array
+                const causeText = Array.isArray(risk.potentialCause)
+                    ? risk.potentialCause.map(cause => `${cause.id}: ${cause.description}`).join('\n')
+                    : risk.potentialCause;
+                document.getElementById('potential-cause').value = causeText;
                 document.getElementById('potential-impact').value = risk.potentialImpact;
                 document.getElementById('risk-category').value = risk.category.toLowerCase().replace(' ', '-');
                 document.getElementById('risk-probability').value = risk.probability;
