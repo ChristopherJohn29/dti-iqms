@@ -190,6 +190,22 @@
                                     </div>
                                 </div>
 
+                                <!-- Chart Container -->
+                                <div class="chart-container mb-4">
+                                    <div class="quarter-chart">
+                                        <canvas id="q1-chart"></canvas>
+                                    </div>
+                                    <div class="quarter-chart">
+                                        <canvas id="q2-chart"></canvas>
+                                    </div>
+                                    <div class="quarter-chart">
+                                        <canvas id="q3-chart"></canvas>
+                                    </div>
+                                    <div class="quarter-chart">
+                                        <canvas id="q4-chart"></canvas>
+                                    </div>
+                                </div>
+
                                 <table id="monitoring-table" class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -525,6 +541,50 @@
         </form>
     </div>
 </div>
+
+<style>
+.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.quarter-chart {
+    flex: 1 1 30%;
+    max-width: 200px;
+    margin: 5px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 250px;
+}
+
+.quarter-chart canvas {
+    max-height: 180px;
+}
+
+@media (max-width: 600px) {
+    .chart-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .quarter-chart {
+        max-width: 100%;
+        margin: 10px 0;
+    }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
     // Corrected sample data for the risk register
     const risks = [
@@ -545,7 +605,7 @@
             date: "2025-06-05",
             owner: "Training Coordinator",
             effectivenessIndicator: "100% Satisfactory CSF rating",
-            monitoring: { q1: "", q2: "", q3: "", q4: "" },
+            monitoring: { q1: "Y", q2: "N", q3: "", q4: "" },
             monitoringColor: "#d3e6f5"
         },
         {
@@ -565,7 +625,7 @@
             date: "2025-06-04",
             owner: "Training Coordinator",
             effectivenessIndicator: "100% Satisfactory CSF rating",
-            monitoring: { q1: "", q2: "", q3: "", q4: "" },
+            monitoring: { q1: "Y", q2: "Y", q3: "N", q4: "" },
             monitoringColor: "#e6f5e1"
         },
         {
@@ -585,7 +645,7 @@
             date: "2025-06-05",
             owner: "Training Coordinator",
             effectivenessIndicator: "Number of MOAs/MOUs signed",
-            monitoring: { q1: "", q2: "", q3: "", q4: "" },
+            monitoring: { q1: "N", q2: "", q3: "", q4: "Y" },
             monitoringColor: "#fff3cd"
         },
         {
@@ -605,7 +665,7 @@
             date: "2025-06-05",
             owner: "Training Coordinator",
             effectivenessIndicator: "Zero incidence of risk occurrence",
-            monitoring: { q1: "", q2: "", q3: "", q4: "" },
+            monitoring: { q1: "Y", q2: "N", q3: "Y", q4: "" },
             monitoringColor: "#f8d7d8"
         },
         {
@@ -625,7 +685,7 @@
             date: "2025-06-05",
             owner: "Training Coordinator",
             effectivenessIndicator: "100% Satisfactory CSF rating",
-            monitoring: { q1: "", q2: "", q3: "", q4: "" },
+            monitoring: { q1: "N", q2: "Y", q3: "N", q4: "Y" },
             monitoringColor: "#d3e6f5"
         },
         {
@@ -645,7 +705,7 @@
             date: "2025-06-05",
             owner: "Training Coordinator",
             effectivenessIndicator: "Zero incidence of risk occurrence",
-            monitoring: { q1: "", q2: "", q3: "", q4: "" },
+            monitoring: { q1: "Y", q2: "Y", q3: "Y", q4: "N" },
             monitoringColor: "#e6f5e1"
         }
     ];
@@ -735,6 +795,14 @@
     const riskScore = document.getElementById('risk-score');
     const riskPriority = document.getElementById('risk-priority');
 
+    // Chart variables
+    let charts = {
+        q1: null,
+        q2: null,
+        q3: null,
+        q4: null
+    };
+
     // Initialize the app
     document.addEventListener('DOMContentLoaded', function() {
         renderRisksTable();
@@ -775,7 +843,7 @@
                     }
                 });
 
-                if (tab.dataset.tab === 'risk-monitoring') {
+                if (tab.getAttribute('aria-controls') === 'monitoring') {
                     renderMonitoringTable();
                 }
             });
@@ -783,7 +851,10 @@
 
         if (addRiskBtn) addRiskBtn.addEventListener('click', () => openRiskModal());
         if (addTreatmentBtn) addTreatmentBtn.addEventListener('click', () => openTreatmentModal());
-        if (refreshMonitoringBtn) refreshMonitoringBtn.addEventListener('click', () => renderMonitoringTable());
+        if (refreshMonitoringBtn) refreshMonitoringBtn.addEventListener('click', () => {
+            renderMonitoringTable();
+            renderMonitoringChart();
+        });
         if (cancelRiskBtn) cancelRiskBtn.addEventListener('click', () => closeRiskModal());
         if (cancelTreatmentBtn) cancelTreatmentBtn.addEventListener('click', () => closeTreatmentModal());
         if (cancelMonitoringBtn) cancelMonitoringBtn.addEventListener('click', () => closeMonitoringModal());
@@ -966,6 +1037,97 @@
                 openMonitoringModal(riskId);
             });
         });
+
+        // Render charts after table is updated
+        renderMonitoringChart();
+    }
+
+    function renderMonitoringChart() {
+        const counts = getMonitoringCounts();
+
+        const quarters = ['q1', 'q2', 'q3', 'q4'];
+        quarters.forEach(quarter => {
+            const canvas = document.getElementById(`${quarter}-chart`);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const yesCount = counts[quarter].yes;
+            const noCount = counts[quarter].no;
+            const total = yesCount + noCount;
+
+            if (total === 0) return; // Skip if no data
+
+            const yesPercent = ((yesCount / total) * 100).toFixed(1);
+            const noPercent = ((noCount / total) * 100).toFixed(1);
+
+            // Destroy existing chart if it exists
+            if (charts[quarter]) {
+                charts[quarter].destroy();
+            }
+
+            charts[quarter] = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Yes (Y)', 'No (N)'],
+                    datasets: [{
+                        data: [yesCount, noCount],
+                        backgroundColor: ['#27ae60', '#e74c3c'],
+                        borderColor: ['#219653', '#c0392b'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${quarter.toUpperCase()} Status Distribution`,
+                            font: { size: 12 }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    return data.labels.map((label, i) => ({
+                                        text: `${label} (${i === 0 ? yesPercent : noPercent}%)`,
+                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                        strokeStyle: data.datasets[0].borderColor[i],
+                                        lineWidth: data.datasets[0].borderWidth,
+                                        hidden: isNaN(data.datasets[0].data[i]) || data.datasets[0].data[i] === 0,
+                                        index: i
+                                    }));
+                                }
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    aspectRatio: 1.5
+                }
+            });
+        });
+    }
+
+    function getMonitoringCounts() {
+        const counts = {
+            q1: { yes: 0, no: 0 },
+            q2: { yes: 0, no: 0 },
+            q3: { yes: 0, no: 0 },
+            q4: { yes: 0, no: 0 }
+        };
+
+        risks.forEach(risk => {
+            if (risk.monitoring.q1 === 'Y') counts.q1.yes++;
+            else if (risk.monitoring.q1 === 'N') counts.q1.no++;
+            if (risk.monitoring.q2 === 'Y') counts.q2.yes++;
+            else if (risk.monitoring.q2 === 'N') counts.q2.no++;
+            if (risk.monitoring.q3 === 'Y') counts.q3.yes++;
+            else if (risk.monitoring.q3 === 'N') counts.q3.no++;
+            if (risk.monitoring.q4 === 'Y') counts.q4.yes++;
+            else if (risk.monitoring.q4 === 'N') counts.q4.no++;
+        });
+
+        return counts;
     }
 
     function populateRiskIdDropdowns() {

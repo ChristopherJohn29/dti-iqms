@@ -264,25 +264,89 @@
                             <!-- Opportunity Monitoring Tab -->
                             <div class="tab-pane fade" id="monitoring" role="tabpanel" aria-labelledby="monitoring-tab">
                                 <div class="mt-3">
-                                    <table class="table table-bordered" id="monitoringTable">
-                                        <thead>
-                                            <tr>
-                                                <th rowspan="2">Opportunity ID</th>
-                                                <th rowspan="2">Effectiveness Indicator (M)</th>
-                                                <th colspan="4">Y/N (N)</th>
-                                                <th rowspan="2">Actions</th>
-                                            </tr>
-                                            <tr>
-                                                <th>Q1</th>
-                                                <th>Q2</th>
-                                                <th>Q3</th>
-                                                <th>Q4</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Data will be populated by JavaScript -->
-                                        </tbody>
-                                    </table>
+                                    <!-- Status Summary Table -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Quarterly Status Summary</h5>
+                                                    <table class="table table-bordered" id="statusSummaryTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Status</th>
+                                                                <th>Q1</th>
+                                                                <th>Q2</th>
+                                                                <th>Q3</th>
+                                                                <th>Q4</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Data will be populated by JavaScript -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Charts Container -->
+                                    <div class="row mb-4">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Quarterly Status Distribution</h5>
+                                                    <div class="pie-charts-container">
+                                                        <div class="pie-chart-wrapper">
+                                                            <h6>Q1 Status Distribution</h6>
+                                                            <canvas id="q1PieChart" width="200" height="200"></canvas>
+                                                        </div>
+                                                        <div class="pie-chart-wrapper">
+                                                            <h6>Q2 Status Distribution</h6>
+                                                            <canvas id="q2PieChart" width="200" height="200"></canvas>
+                                                        </div>
+                                                        <div class="pie-chart-wrapper">
+                                                            <h6>Q3 Status Distribution</h6>
+                                                            <canvas id="q3PieChart" width="200" height="200"></canvas>
+                                                        </div>
+                                                        <div class="pie-chart-wrapper">
+                                                            <h6>Q4 Status Distribution</h6>
+                                                            <canvas id="q4PieChart" width="200" height="200"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Monitoring Table -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Opportunity Monitoring Details</h5>
+                                                    <table class="table table-bordered" id="monitoringTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th rowspan="2" class="text-center">Opportunity ID</th>
+                                                                <th rowspan="2" class="text-center">Effectiveness Indicator (M)</th>
+                                                                <th colspan="4" class="text-center">Y/N (N)</th>
+                                                                <th rowspan="2" class="text-center">Actions</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-center">Q1</th>
+                                                                <th class="text-center">Q2</th>
+                                                                <th class="text-center">Q3</th>
+                                                                <th class="text-center">Q4</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Data will be populated by JavaScript -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -295,6 +359,54 @@
     <!-- container -->
 </div>
 <!-- content -->
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+<!-- Chart Styles -->
+<style>
+.pie-charts-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto 20px;
+}
+
+.pie-chart-wrapper {
+    text-align: center;
+}
+
+.pie-chart-wrapper canvas {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 0 auto;
+}
+
+.pie-chart-wrapper h6 {
+    margin-bottom: 10px;
+    color: #495057;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#statusSummaryTable .status-yes {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+#statusSummaryTable .status-no {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .pie-charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 
 <!-- Modal for Add/Edit Opportunity -->
 <div id="opportunityModal" class="iqms-modal">
@@ -472,6 +584,64 @@
     </div>
 </div>
 
+<!-- Modal for Update Monitoring Status -->
+<div id="monitoringModal" class="iqms-modal">
+    <div class="iqms-modal-content" style="max-width: 600px;">
+        <div class="iqms-modal-header">
+            <h3 class="iqms-modal-title" id="monitoringModalTitle">Update Monitoring Status</h3>
+            <span class="iqms-close" onclick="closeMonitoringModal()">&times;</span>
+        </div>
+
+        <form class="iqms-form" id="monitoringForm">
+            <input type="hidden" id="monitoringOpportunityId">
+
+            <div class="iqms-form-group">
+                <label class="iqms-form-label" for="monitoringIndicator">Effectiveness Indicator:</label>
+                <input type="text" class="iqms-form-control" id="monitoringIndicator" readonly>
+            </div>
+
+            <div class="iqms-form-row">
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="q1Status">Q1 Status:</label>
+                    <select class="iqms-form-control" id="q1Status" required>
+                        <option value="Y">Yes (Y)</option>
+                        <option value="N">No (N)</option>
+                    </select>
+                </div>
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="q2Status">Q2 Status:</label>
+                    <select class="iqms-form-control" id="q2Status" required>
+                        <option value="Y">Yes (Y)</option>
+                        <option value="N">No (N)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="iqms-form-row">
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="q3Status">Q3 Status:</label>
+                    <select class="iqms-form-control" id="q3Status" required>
+                        <option value="Y">Yes (Y)</option>
+                        <option value="N">No (N)</option>
+                    </select>
+                </div>
+                <div class="iqms-form-group">
+                    <label class="iqms-form-label" for="q4Status">Q4 Status:</label>
+                    <select class="iqms-form-control" id="q4Status" required>
+                        <option value="Y">Yes (Y)</option>
+                        <option value="N">No (N)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" onclick="saveMonitoringStatus()">Update Status</button>
+                <button type="button" class="btn btn-light" onclick="closeMonitoringModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 // Sample data for opportunities
 const opportunities = [
@@ -557,11 +727,30 @@ const treatments = [
     }
 ];
 
+// Sample monitoring data
+const monitoringStatuses = [
+    { opportunityId: "OR-1", indicator: "Client satisfaction feedback/rating", q1: "Y", q2: "Y", q3: "N", q4: "Y" },
+    { opportunityId: "OR-2", indicator: "Post Training effectiveness rating", q1: "Y", q2: "N", q3: "Y", q4: "N" },
+    { opportunityId: "OR-3", indicator: "MOA/MOU established", q1: "N", q2: "Y", q3: "Y", q4: "Y" },
+    { opportunityId: "OR-5", indicator: "at least 95% Fund Utilization Report", q1: "Y", q2: "Y", q3: "Y", q4: "Y" },
+    { opportunityId: "OR-6", indicator: "Fund Utilization", q1: "N", q2: "N", q3: "Y", q4: "N" }
+];
+
+// Chart variables
+let pieCharts = [];
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    // Register Chart.js plugins
+    if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
+        Chart.register(ChartDataLabels);
+    }
+
     renderOpportunitiesTable();
     renderTreatmentsTable();
     renderMonitoringTable();
+    renderStatusSummary();
+    renderStatusCharts();
     populateOpportunityDropdowns();
 });
 
@@ -652,17 +841,18 @@ function renderMonitoringTable() {
 
     tbody.innerHTML = '';
     opportunities.forEach(opportunity => {
+        const monitoring = monitoringStatuses.find(m => m.opportunityId === opportunity.id);
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${opportunity.id}</td>
+            <td class="text-center">${opportunity.id}</td>
             <td>${opportunity.indicator}</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>
+            <td class="text-center">${monitoring ? monitoring.q1 : 'N'}</td>
+            <td class="text-center">${monitoring ? monitoring.q2 : 'N'}</td>
+            <td class="text-center">${monitoring ? monitoring.q3 : 'N'}</td>
+            <td class="text-center">${monitoring ? monitoring.q4 : 'N'}</td>
+            <td class="text-center">
                 <button class="btn btn-primary btn-sm" onclick="openMonitoringModal('${opportunity.id}')">
-                    Update
+                    <i class="fe-edit"></i> Update
                 </button>
             </td>
         `;
@@ -695,7 +885,146 @@ function populateOpportunityDropdowns() {
     }
 }
 
+// Process monitoring data for charts
+function processChartData() {
+    const quarters = ['q1', 'q2', 'q3', 'q4'];
+    const counts = {
+        Y: [0, 0, 0, 0],
+        N: [0, 0, 0, 0]
+    };
 
+    quarters.forEach((quarter, index) => {
+        monitoringStatuses.forEach(status => {
+            if (status[quarter] === 'Y') {
+                counts.Y[index]++;
+            } else {
+                counts.N[index]++;
+            }
+        });
+    });
+
+    return {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [
+            {
+                label: 'Yes (Y)',
+                data: counts.Y,
+                backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                borderColor: 'rgba(39, 174, 96, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'No (N)',
+                data: counts.N,
+                backgroundColor: 'rgba(231, 76, 60, 0.7)',
+                borderColor: 'rgba(231, 76, 60, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+}
+
+// Render status summary table
+function renderStatusSummary() {
+    const summaryTableBody = document.querySelector('#statusSummaryTable tbody');
+    if (!summaryTableBody) return;
+
+    const chartData = processChartData();
+
+    summaryTableBody.innerHTML = `
+        <tr>
+            <td><span class="status-yes">Yes (Y)</span></td>
+            <td class="status-yes">${chartData.datasets[0].data[0]}</td>
+            <td class="status-yes">${chartData.datasets[0].data[1]}</td>
+            <td class="status-yes">${chartData.datasets[0].data[2]}</td>
+            <td class="status-yes">${chartData.datasets[0].data[3]}</td>
+        </tr>
+        <tr>
+            <td><span class="status-no">No (N)</span></td>
+            <td class="status-no">${chartData.datasets[1].data[0]}</td>
+            <td class="status-no">${chartData.datasets[1].data[1]}</td>
+            <td class="status-no">${chartData.datasets[1].data[2]}</td>
+            <td class="status-no">${chartData.datasets[1].data[3]}</td>
+        </tr>
+    `;
+}
+
+// Render pie charts with percentage labels
+function renderStatusCharts() {
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded');
+        return;
+    }
+
+    // Destroy existing charts if any
+    pieCharts.forEach(chart => chart.destroy());
+    pieCharts = [];
+
+    const chartData = processChartData();
+    const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+    const canvases = [
+        document.getElementById('q1PieChart'),
+        document.getElementById('q2PieChart'),
+        document.getElementById('q3PieChart'),
+        document.getElementById('q4PieChart')
+    ];
+
+    quarters.forEach((quarter, index) => {
+        const canvas = canvases[index];
+        if (!canvas) return;
+
+        const total = chartData.datasets[0].data[index] + chartData.datasets[1].data[index];
+        const data = {
+            labels: ['Yes (Y)', 'No (N)'],
+            datasets: [{
+                data: [chartData.datasets[0].data[index], chartData.datasets[1].data[index]],
+                backgroundColor: [
+                    'rgba(39, 174, 96, 0.7)',
+                    'rgba(231, 76, 60, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(39, 174, 96, 1)',
+                    'rgba(231, 76, 60, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const chart = new Chart(canvas, {
+            type: 'pie',
+            data: data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return percentage > 0 ? percentage + '%' : '';
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        pieCharts.push(chart);
+    });
+}
 
 function openOpportunityModal() {
     document.getElementById('opportunityModalTitle').textContent = 'Add New Opportunity';
@@ -778,6 +1107,70 @@ function saveTreatment() {
     renderTreatmentsTable();
 }
 
+function openMonitoringModal(opportunityId) {
+    const opportunity = opportunities.find(o => o.id === opportunityId);
+    const monitoring = monitoringStatuses.find(m => m.opportunityId === opportunityId);
+
+    if (opportunity) {
+        document.getElementById('monitoringModalTitle').textContent = `Update Monitoring Status - ${opportunityId}`;
+        document.getElementById('monitoringOpportunityId').value = opportunityId;
+        document.getElementById('monitoringIndicator').value = opportunity.indicator;
+
+        if (monitoring) {
+            document.getElementById('q1Status').value = monitoring.q1;
+            document.getElementById('q2Status').value = monitoring.q2;
+            document.getElementById('q3Status').value = monitoring.q3;
+            document.getElementById('q4Status').value = monitoring.q4;
+        } else {
+            document.getElementById('q1Status').value = 'N';
+            document.getElementById('q2Status').value = 'N';
+            document.getElementById('q3Status').value = 'N';
+            document.getElementById('q4Status').value = 'N';
+        }
+
+        document.getElementById('monitoringModal').style.display = 'block';
+    }
+}
+
+function closeMonitoringModal() {
+    document.getElementById('monitoringModal').style.display = 'none';
+}
+
+function saveMonitoringStatus() {
+    const opportunityId = document.getElementById('monitoringOpportunityId').value;
+    const q1 = document.getElementById('q1Status').value;
+    const q2 = document.getElementById('q2Status').value;
+    const q3 = document.getElementById('q3Status').value;
+    const q4 = document.getElementById('q4Status').value;
+
+    // Find existing monitoring record or create new one
+    let monitoring = monitoringStatuses.find(m => m.opportunityId === opportunityId);
+    if (monitoring) {
+        monitoring.q1 = q1;
+        monitoring.q2 = q2;
+        monitoring.q3 = q3;
+        monitoring.q4 = q4;
+    } else {
+        const opportunity = opportunities.find(o => o.id === opportunityId);
+        monitoringStatuses.push({
+            opportunityId: opportunityId,
+            indicator: opportunity.indicator,
+            q1: q1,
+            q2: q2,
+            q3: q3,
+            q4: q4
+        });
+    }
+
+    // Refresh displays
+    renderMonitoringTable();
+    renderStatusSummary();
+    renderStatusCharts();
+    closeMonitoringModal();
+
+    alert('Monitoring status updated successfully!');
+}
+
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -786,6 +1179,22 @@ function formatDate(dateString) {
         day: 'numeric'
     });
 }
+
+// Tab switching functionality with chart refresh
+document.addEventListener('DOMContentLoaded', function() {
+    const tabLinks = document.querySelectorAll('#opportunityTabs .nav-link');
+    tabLinks.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(e) {
+            const targetTab = e.target.getAttribute('href');
+            if (targetTab === '#monitoring') {
+                // Refresh charts when monitoring tab is shown
+                setTimeout(() => {
+                    renderStatusCharts();
+                }, 100);
+            }
+        });
+    });
+});
 
 // Search functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -813,12 +1222,16 @@ document.addEventListener('DOMContentLoaded', function() {
 window.onclick = function(event) {
     const opportunityModal = document.getElementById('opportunityModal');
     const treatmentModal = document.getElementById('treatmentModal');
+    const monitoringModal = document.getElementById('monitoringModal');
 
     if (event.target == opportunityModal) {
         closeOpportunityModal();
     }
     if (event.target == treatmentModal) {
         closeTreatmentModal();
+    }
+    if (event.target == monitoringModal) {
+        closeMonitoringModal();
     }
 }
 </script>
