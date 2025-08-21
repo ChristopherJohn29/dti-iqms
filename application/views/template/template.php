@@ -32,7 +32,9 @@
         }
       </script>
 
-
+      <!-- Core JS early: ensure jQuery and core scripts are available before view inline scripts -->
+      <script src="<?=base_url()?>assets/js/vendor.min.js"></script>
+      <script src="<?=base_url()?>assets/js/app.min.js"></script>
 
    </head>
    <body>
@@ -297,10 +299,7 @@
       <!-- END wrapper -->
       <!-- Theme Settings -->
 
-      <!-- Vendor js -->
-      <script src="<?=base_url()?>assets/js/vendor.min.js"></script>
-      <!-- App js -->
-      <script src="<?=base_url()?>assets/js/app.min.js"></script>
+      <!-- Vendor & App js moved to head to ensure availability for inline view scripts -->
       <!-- Plugins js-->
       <script src="<?=base_url()?>assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
       <script src="<?=base_url()?>assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
