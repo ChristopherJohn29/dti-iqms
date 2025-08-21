@@ -329,29 +329,25 @@ $(function(){
   var fiscalYear = $('#iqmsFiscalYear').val() || (new Date().getFullYear());
   var analysisId = null;
 
-  var catMapCodeToId = { business_persons:1, development_partners:4, dti_staff:10 };
-  var catIdToLabel   = { 1:'1. Business Persons', 4:'4. Development Partners', 10:'10. DTI-10 Staff/Contractual Services' };
   var dynamicCategories = {};
+  var dynamicCategoriesByCode = {};
 
   function loadCategories(){
     return $.getJSON('<?=base_url('admin/iqms-data/categories')?>', function(rows){
-      dynamicCategories = {};
-      // Rebuild maps and dropdown options
+      dynamicCategories = {}; dynamicCategoriesByCode = {};
+      // Rebuild dropdown options (all categories by id)
       var $sel = $('#interestedParty');
-      var preserveOther = $sel.find('option[value="other"]').length>0;
+      var keepSelection = $sel.val();
       $sel.empty().append('<option value="">Select Interested Party</option>');
 
       rows.forEach(function(c){
-        dynamicCategories[c.id] = c;
+        dynamicCategories[c.id] = c; dynamicCategoriesByCode[c.category_code] = c;
         var label = (c.category_number ? (c.category_number+'. ') : '') + c.category_name;
-        // For known system categories, keep existing codes; for others, use id as value
-        if(c.id===1){ catIdToLabel[1]=label; $sel.append('<option value="business_persons">'+label+'</option>'); }
-        else if(c.id===4){ catIdToLabel[4]=label; $sel.append('<option value="development_partners">'+label+'</option>'); }
-        else if(c.id===10){ catIdToLabel[10]=label; $sel.append('<option value="dti_staff">'+label+'</option>'); }
-        else { catIdToLabel[c.id]=label; $sel.append('<option value="'+c.id+'">'+label+'</option>'); }
+        $sel.append('<option value="'+c.id+'">'+label+'</option>');
       });
 
-      if(!preserveOther){ $sel.append('<option value="other">Other (specify)</option>'); }
+      $sel.append('<option value="other">Other (specify)</option>');
+      if(keepSelection){ $sel.val(keepSelection); }
     });
   }
 
@@ -378,9 +374,8 @@ $(function(){
     });
     $.each(Object.keys(grouped).sort(function(a,b){return a-b;}), function(_, cid){
       var items = grouped[cid];
-      // Build label from categories fetched
       var catRow = dynamicCategories[cid];
-      var label = catRow ? ((catRow.category_number? (catRow.category_number+'. '):'') + catRow.category_name) : (catIdToLabel[cid] || ('Category '+cid));
+      var label = catRow ? ((catRow.category_number? (catRow.category_number+'. '):'') + catRow.category_name) : ('Category '+cid);
       $.each(items, function(i, r){
         var $tr = $('<tr/>');
         if(i===0){ $tr.append($('<td/>',{rowspan: items.length, html:'<strong>'+label+'</strong>'})); }
@@ -434,11 +429,7 @@ $(function(){
       });
     } else {
       // Preselect interested party when adding via category button
-      if(categoryId){
-        var code = idToCode[parseInt(categoryId,10)] || '';
-        if(code){ $('#interestedParty').val(code); }
-        else { $('#interestedParty').val(String(categoryId)); }
-      }
+      if(categoryId){ $('#interestedParty').val(String(categoryId)); }
       $('#stakeholderModal').show();
     }
   };
@@ -481,7 +472,7 @@ $(function(){
     if(!party){ alert('Please select an interested party'); return; }
     if(party==='other' && !$.trim($('#otherPartyInput').val()||'')){ alert('Please specify the Interested Party'); return; }
     if(!$('#needs1').val()){ alert('Please enter needs and expectations for Set #1'); return; }
-    var cid = (party==='other') ? null : (isNaN(party) ? (catMapCodeToId[party]||null) : parseInt(party,10));
+    var cid = (party==='other') ? null : parseInt(party,10) || null;
     var otherName = $.trim($('#otherPartyInput').val()||'');
 
     // If editing, update only the current row using Set #1 fields
