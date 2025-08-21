@@ -185,15 +185,17 @@ $(function(){
     return $.post(ENDPOINT.ENSURE, { module_code: moduleCode, office_id: officeId, process_id: processId, fiscal_year: fiscalYear }, function(resp){ analysisId = resp.id; }, 'json');
   }
 
+  // Canonicalization maps for swot_type values from DB
+  var SWOT_CANON = { strength:'strength', strengths:'strength', weakness:'weakness', weaknesses:'weakness', opportunity:'opportunity', opportunities:'opportunity', threat:'threat', threats:'threat' };
+  var SWOT_CAT   = { strength:'strengths', weakness:'weaknesses', opportunity:'opportunities', threat:'threats' };
+
   function loadSwot(){
     return $.getJSON(ENDPOINT.LIST, { table:'iqms_swot_entries', analysis_id: analysisId }, function(rows){
       var dataByType = { strengths:[], weaknesses:[], opportunities:[], threats:[] };
-      var map = { strength:'strengths', weakness:'weaknesses', opportunity:'opportunities', threat:'threats' };
       $.each(rows || [], function(_, r){
-        var t = String(r && r.swot_type || '').toLowerCase().trim();
-        if(t.endsWith('s')) t = t.slice(0,-1); // normalize pluralized values
-        var cat = map[t];
-        if(!cat) return; // skip unknown/empty types
+        var raw = String(r && r.swot_type || '').toLowerCase().trim();
+        var canon = SWOT_CANON[raw]; if(!canon) return; // skip unknown/empty types
+        var cat = SWOT_CAT[canon]; if(!cat) return;
         dataByType[cat].push({ id:r.id, number:r.item_number||'', text:r.item_description||'', risk:r.potential_risk||'', opportunity:r.potential_opportunity||'', reference:r.reference_links||'' });
       });
       renderCategory('strengths', dataByType.strengths);
@@ -249,7 +251,11 @@ $(function(){
       $('#itemId').val('');
       var prefix = (type==='strength'?'S-': type==='weakness'?'W-': type==='opportunity'?'O-':'T-');
       $.getJSON(ENDPOINT.LIST, { table:'iqms_swot_entries', analysis_id: analysisId }, function(rows){
-        var nextNum = rows.filter(function(r){ return r.swot_type===type; }).length + 1;
+        var nextNum = (rows||[]).filter(function(r){
+          var raw = String(r && r.swot_type || '').toLowerCase().trim();
+          var canon = SWOT_CANON[raw] || raw; // default to raw if unknown
+          return canon === type;
+        }).length + 1;
         $('#itemNumber').val(prefix+nextNum);
         $('#swotModal').css('display','flex');
       });
@@ -279,7 +285,7 @@ $(function(){
 
   window.deleteItem = function(category, id){
     if(!confirm('Are you sure you want to delete this item?')) return;
-    $.post(ENDPOINT.DEL, { table:'iqms_swot_entries', id:id }, function(){ renderCategory(category); loadSwot(); });
+    $.post(ENDPOINT.DEL, { table:'iqms_swot_entries', id:id }, function(){ loadSwot().then(function(){ filterSWOTItems(); }); });
   };
 
   function filterSWOTItems(){
