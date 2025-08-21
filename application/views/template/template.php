@@ -25,16 +25,9 @@
          echo '<link href="'.base_url().'assets/customcss/'.$customcss.'" rel="stylesheet" type="text/css" />';
       }
       ?>
-      <!-- Ensure jQuery is available before inline view scripts -->
-      <script>
-        if(!window.jQuery){
-          document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"><\/script>');
-        }
-      </script>
-
-      <!-- Core JS early: ensure jQuery and core scripts are available before view inline scripts -->
-      <script src="<?=base_url()?>assets/js/vendor.min.js"></script>
-      <script src="<?=base_url()?>assets/js/app.min.js"></script>
+      <!-- Load jQuery early for view inline scripts (with correct SRI) -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+              integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
    </head>
    <body>
@@ -299,7 +292,11 @@
       <!-- END wrapper -->
       <!-- Theme Settings -->
 
-      <!-- Vendor & App js moved to head to ensure availability for inline view scripts -->
+      <!-- Core vendor and app scripts -->
+      <script src="<?=base_url()?>assets/js/vendor.min.js"></script>
+      <script src="<?=base_url()?>assets/js/app.min.js"></script>
+
+      <!-- Vendor & App js loaded at the end of body to avoid early DOM access issues -->
       <!-- Plugins js-->
       <script src="<?=base_url()?>assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
       <script src="<?=base_url()?>assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
