@@ -387,6 +387,14 @@ $(function(){
         if(r){
           var code = idToCode[parseInt(r.category_id,10)] || 'other';
           $('#interestedParty').val(code).trigger('change');
+          if(code==='other'){
+            var $parent = $('#interestedParty').parent();
+            var $inp = $('#otherPartyInput');
+            if(!$inp.length){
+              $inp = $('<input/>',{type:'text',id:'otherPartyInput','class':'form-control mt-2',placeholder:'Specify interested party'}).appendTo($parent);
+            }
+            $inp.val(r.custom_category_name||'');
+          }
           $('#needs1').val(r.needs_expectations||'');
           $('#potentialRisk1').val(r.potential_risks||'');
           $('#potentialOpportunity1').val(r.potential_opportunities||'');
@@ -442,8 +450,10 @@ $(function(){
     var id = $('#stakeholderId').val();
     var party = $('#interestedParty').val();
     if(!party){ alert('Please select an interested party'); return; }
+    if(party==='other' && !$.trim($('#otherPartyInput').val()||'')){ alert('Please specify the Interested Party'); return; }
     if(!$('#needs1').val()){ alert('Please enter needs and expectations for Set #1'); return; }
     var cid = (party==='other') ? null : (isNaN(party) ? (catMapCodeToId[party]||null) : parseInt(party,10));
+    var otherName = $.trim($('#otherPartyInput').val()||'');
 
     // If editing, update only the current row using Set #1 fields
     if(id){
@@ -452,7 +462,7 @@ $(function(){
         id: id,
         analysis_id: analysisId,
         category_id: cid,
-        custom_category_name: (party==='other') ? 'Other' : '',
+        custom_category_name: (party==='other') ? otherName : '',
         needs_expectations: ($('#needs1').val()||'').trim(),
         potential_risks: ($('#potentialRisk1').val()||'').trim(),
         potential_opportunities: ($('#potentialOpportunity1').val()||'').trim(),
@@ -472,7 +482,7 @@ $(function(){
         table:'iqms_stakeholder_entries',
         analysis_id: analysisId,
         category_id: cid,
-        custom_category_name: (party==='other') ? 'Other' : '',
+        custom_category_name: (party==='other') ? otherName : '',
         needs_expectations: ($('#needs'+n).val()||'').trim(),
         potential_risks: ($('#potentialRisk'+n).val()||'').trim(),
         potential_opportunities: ($('#potentialOpportunity'+n).val()||'').trim(),
