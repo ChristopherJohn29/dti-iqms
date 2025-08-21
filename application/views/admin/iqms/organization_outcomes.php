@@ -265,6 +265,8 @@ $(function(){
 });
 </script>
 
+<script>
+
 function generateReport() {
     const reportType = document.getElementById('reportType').value;
     const reportYear = document.getElementById('reportYear').value;
