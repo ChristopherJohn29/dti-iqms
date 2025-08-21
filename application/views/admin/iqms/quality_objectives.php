@@ -371,7 +371,7 @@ window.viewObjective = function(id){ window.editObjective(id); $('#modalTitleTex
 
 window.deleteObjective = function(id){ if(confirm('Are you sure you want to delete this quality objective?')){ window.objectivesData=(window.objectivesData||[]).filter(function(o){return o.id!==id;}); alert('Quality objective deleted successfully!'); }}
 
-function addActionPlan(){
+window.addActionPlan = function(){
   var $container = $('#actionPlansContainer');
   var count = $container.find('.iqms-action-plan-container').length + 1;
   var $plan = $('<div class="iqms-action-plan-container"/>');
@@ -424,13 +424,13 @@ function addActionPlan(){
   updateActionPlanTitles();
 }
 
-function removeActionPlan(btn){ var $container=$(btn).closest('.iqms-action-plan-container'); var $all=$('.iqms-action-plan-container'); if($all.length>1){ $container.remove(); updateActionPlanTitles(); } else { alert('At least one action plan is required.'); } }
+window.removeActionPlan = function(btn){ var $container=$(btn).closest('.iqms-action-plan-container'); var $all=$('.iqms-action-plan-container'); if($all.length>1){ $container.remove(); updateActionPlanTitles(); } else { alert('At least one action plan is required.'); } }
 
-function updateActionPlanTitles(){ $('.iqms-action-plan-container').each(function(i){ $(this).find('.iqms-action-plan-title').text('Action Plan #'+(i+1)); }); }
+window.updateActionPlanTitles = function(){ $('.iqms-action-plan-container').each(function(i){ $(this).find('.iqms-action-plan-title').text('Action Plan #'+(i+1)); }); }
 
-function resetActionPlans(){ var $container=$('#actionPlansContainer'); var $plans=$container.find('.iqms-action-plan-container'); $plans.slice(1).remove(); var $first=$plans.first(); if($first.length){ $first.find('input, textarea, select').val('').prop('disabled', false); } updateActionPlanTitles(); }
+window.resetActionPlans = function(){ var $container=$('#actionPlansContainer'); var $plans=$container.find('.iqms-action-plan-container'); $plans.slice(1).remove(); var $first=$plans.first(); if($first.length){ $first.find('input, textarea, select').val('').prop('disabled', false); } updateActionPlanTitles(); }
 
-function populateActionPlans(actionPlans){ var $container=$('#actionPlansContainer'); $container.empty(); $.each(actionPlans||[], function(i,plan){ addActionPlan(); var $el=$container.children().eq(i); $el.find('.action-plan-text').val(plan.text||''); $el.find('.action-plan-timeline').val(plan.timeline||''); $el.find('.action-plan-responsibility').val(plan.responsibility||''); $el.find('.action-plan-resources').val(plan.resources||''); $el.find('.action-plan-references').val(plan.references||''); $el.find('.action-plan-status').val(plan.status||''); }); }
+window.populateActionPlans = function(actionPlans){ var $container=$('#actionPlansContainer'); $container.empty(); $.each(actionPlans||[], function(i,plan){ addActionPlan(); var $el=$container.children().eq(i); $el.find('.action-plan-text').val(plan.text||''); $el.find('.action-plan-timeline').val(plan.timeline||''); $el.find('.action-plan-responsibility').val(plan.responsibility||''); $el.find('.action-plan-resources').val(plan.resources||''); $el.find('.action-plan-references').val(plan.references||''); $el.find('.action-plan-status').val(plan.status||''); }); }
 
 // Form submission with jQuery
 $('#objectiveForm').off('submit').on('submit',function(e){ e.preventDefault(); var formData={ id:$('#objectiveId').val(), qualityObjective:$('#qualityObjective').val(), target:$('#target').val(), outputIndicator:$('#outputIndicator').val(), processOwner:$('#processOwner').val(), actionPlans:[] };
