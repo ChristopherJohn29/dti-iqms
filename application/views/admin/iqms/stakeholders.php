@@ -477,21 +477,32 @@ $(function(){
 
     // Adding: support multiple analysis sets
     var $sets = $('#analysisSets .analysis-set');
+
+    function ensureOtherCategoryIfNeeded(cb){
+      if(party !== 'other') return cb(null);
+      $.post('<?=base_url('admin/iqms-data/ensure-category')?>', { category_code: otherName.toLowerCase().replace(/\s+/g,'_'), category_name: otherName }, function(cat){
+        cb(cat && cat.id ? cat.id : null);
+      }, 'json');
+    }
+
     function saveOne(n, done){
-      var data = {
-        table:'iqms_stakeholder_entries',
-        analysis_id: analysisId,
-        category_id: cid,
-        custom_category_name: (party==='other') ? otherName : '',
-        needs_expectations: ($('#needs'+n).val()||'').trim(),
-        potential_risks: ($('#potentialRisk'+n).val()||'').trim(),
-        potential_opportunities: ($('#potentialOpportunity'+n).val()||'').trim(),
-        to_be_considered: $('#toBeConsidered'+n).val()||'',
-        risk_reference: ($('#riskReference'+n).val()||'').trim(),
-        opportunity_reference: ($('#opportunityReference'+n).val()||'').trim(),
-        analysis_set_number: n
-      };
-      $.post(ENDPOINT.SAVE, data, function(){ done(); });
+      function doSave(resolvedCid){
+        var data = {
+          table:'iqms_stakeholder_entries',
+          analysis_id: analysisId,
+          category_id: resolvedCid || cid,
+          custom_category_name: (party==='other') ? otherName : '',
+          needs_expectations: ($('#needs'+n).val()||'').trim(),
+          potential_risks: ($('#potentialRisk'+n).val()||'').trim(),
+          potential_opportunities: ($('#potentialOpportunity'+n).val()||'').trim(),
+          to_be_considered: $('#toBeConsidered'+n).val()||'',
+          risk_reference: ($('#riskReference'+n).val()||'').trim(),
+          opportunity_reference: ($('#opportunityReference'+n).val()||'').trim(),
+          analysis_set_number: n
+        };
+        $.post(ENDPOINT.SAVE, data, function(){ done(); });
+      }
+      ensureOtherCategoryIfNeeded(doSave);
     }
 
     var i=1, total=$sets.length; (function next(){ if(i>total){ alert('Stakeholder entry saved successfully!'); closeStakeholderModal(); return loadStakeholders(); } saveOne(i++, next); })();

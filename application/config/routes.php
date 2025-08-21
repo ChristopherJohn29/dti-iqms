@@ -68,7 +68,7 @@ $route['admin/loadfile/(:num)/(:num)'] = 'admin/files/getfile/$1/$2';
 $route['admin/filerevisiondetails/(:num)'] = 'admin/filedetails/details/$1';
 $route['admin/loadfilerevision/(:num)'] = 'admin/filedetails/getFileRevision/$1';
 
-//published 
+//published
 $route['admin/allPublished/(:num)/(:num)/(:num)(/(:num))?'] = 'admin/published/details/$1/$2/$3/$4';
 
 $route['admin/portal/(:num)/(:num)/(:num)/(:num)'] = 'admin/published/portal/$1/$2/$3/$4';
@@ -82,3 +82,4 @@ $route['admin/iqms-data/delete'] = 'admin/IqmsApi/delete';
 $route['admin/iqms-data/export'] = 'admin/IqmsApi/export_csv';
 $route['admin/iqms-data/children'] = 'admin/IqmsApi/children';
 $route['admin/iqms-data/delete-children'] = 'admin/IqmsApi/delete_children';
+$route['admin/iqms-data/ensure-category'] = 'admin/IqmsApi/ensure_category';

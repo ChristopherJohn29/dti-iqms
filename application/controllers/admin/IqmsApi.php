@@ -89,6 +89,30 @@ class IqmsApi extends CI_Controller {
         return $this->json(['ok'=>true]);
     }
 
+	    // Ensure a stakeholder category exists by code; create if missing
+	    public function ensure_category(){
+	        $code = $this->input->post('category_code', true);
+	        $name = $this->input->post('category_name', true);
+	        if(!$code || !$name){ return $this->json(['error'=>'Missing category_code or category_name'], 400); }
+	        $row = $this->db->get_where('iqms_stakeholder_categories', ['category_code'=>$code])->row_array();
+	        if(!$row){
+	            $payload = [
+	                'category_code' => $code,
+	                'category_name' => $name,
+	                'category_description' => null,
+	                'category_number' => null,
+	                'sort_order' => 0,
+	                'is_system_category' => 0,
+	                'status' => 1
+	            ];
+	            $this->db->insert('iqms_stakeholder_categories', $payload);
+	            $id = $this->db->insert_id();
+	            $row = $this->db->get_where('iqms_stakeholder_categories', ['id'=>$id])->row_array();
+	        }
+	        return $this->json($row);
+	    }
+
+
     public function export_csv(){
         $table = $this->input->get('table', true);
         $analysis_id = (int)$this->input->get('analysis_id');
