@@ -263,68 +263,11 @@
     </div>
 </div>
 
-<script>
-$(function(){
-  var ENDPOINT={
-    ENSURE:'<?=base_url('admin/iqms-data/ensure')?>',LIST:'<?=base_url('admin/iqms-data/list')?>',SAVE:'<?=base_url('admin/iqms-data/save')?>',DEL:'<?=base_url('admin/iqms-data/delete')?>',CHILDREN:'<?=base_url('admin/iqms-data/children')?>',DEL_CHILDREN:'<?=base_url('admin/iqms-data/delete-children')?>'
-  };
-  var moduleCode='QUALITY_OBJECTIVES', officeId=10, processId=1, fiscalYear='2025';
-  var analysisId=null;
-  function ensureAnalysis(){return $.post(ENDPOINT.ENSURE,{module_code:moduleCode,office_id:officeId,process_id:processId,fiscal_year:fiscalYear},function(r){analysisId=r.id;},'json');}
-
-  function loadObjectives(){return $.getJSON(ENDPOINT.LIST,{table:'iqms_quality_objectives',analysis_id:analysisId},function(rows){renderObjectives(rows)});}
-
-  function renderObjectives(rows){var $tb=$('#objectivesTbody').empty();
-    $.each(rows,function(_,o){var statusCls=(o.objective_status||'Not Started').toLowerCase().replace(/\s+/g,'-');
-      var $tr=$('<tr/>');
-      $tr.append('<td>'+(o.objective_code||('QO-'+o.id))+'</td>')
-         .append('<td>'+esc(o.quality_objective||'')+'</td>')
-         .append('<td>'+esc(o.target||'')+'</td>')
-         .append('<td class="qo-action-plan">Loading...</td>')
-         .append('<td class="qo-timeline"></td>')
-         .append('<td>'+esc(o.process_owner||'')+'</td>')
-         .append('<td><span class="iqms-status '+statusCls+'">'+esc(o.objective_status||'Not Started')+'</span></td>')
-         .append('<td class="text-center"><div class="iqms-action-btns">\
-            <button class="iqms-btn iqms-btn-warning iqms-btn-sm" data-id="'+o.id+'" data-act="edit"><i class="fe-edit"></i></button>\
-            <button class="iqms-btn iqms-btn-info iqms-btn-sm" data-id="'+o.id+'" data-act="view"><i class="fe-eye"></i></button>\
-            <button class="iqms-btn iqms-btn-danger iqms-btn-sm" data-id="'+o.id+'" data-act="del"><i class="fe-trash"></i></button>\
-         </div></td>');
-      $tb.append($tr);
-      $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:o.id},function(plans){if(!plans.length){$tr.find('.qo-action-plan').text('-');return;}var p=plans[0];$tr.find('.qo-action-plan').text(p.action_text||'');$tr.find('.qo-timeline').text(p.timeline||'');});
-    });
-    $('#objectivesTbody [data-act]').off('click').on('click',function(){var id=$(this).data('id'),act=$(this).data('act'); if(act==='edit') openEdit(id); else if(act==='view') openView(id); else if(act==='del') delObjective(id);});
-  }
-
-  function loadObjectiveIntoForm(id, cb){
-    $.getJSON(ENDPOINT.LIST,{table:'iqms_quality_objectives',analysis_id:analysisId},function(rows){var o=rows.find(function(x){return x.id==id;}); if(!o) return; $('#qualityObjective').val(o.quality_objective||''); $('#target').val(o.target||''); $('#outputIndicator').val(o.output_indicator||''); $('#processOwner').val(o.process_owner||'');
-      $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:id},function(plans){populateActionPlans(plans.map(function(p){return {text:p.action_text,timeline:p.timeline,responsibility:p.responsibility,resources:p.resources_needed,references:p.references,status:p.action_status};})); cb&&cb();});
-    });
-  }
-
-  function openEdit(id){ $('#modalTitleText').text('Edit Quality Objective'); $('#objectiveId').val(id); loadObjectiveIntoForm(id,function(){ $('#objectiveModal').css('display','flex'); $('body').css('overflow','hidden'); }); }
-  function openView(id){ openEdit(id); setTimeout(function(){ $('#objectiveForm input, #objectiveForm textarea, #objectiveForm select').prop('disabled', true); $('#objectiveForm .mt-4').hide(); $('.iqms-remove-action-plan').hide(); $('#addActionPlanBtn').hide(); },0); }
-  function delObjective(id){ if(!confirm('Delete this quality objective?')) return; $.post(ENDPOINT.DEL,{table:'iqms_quality_objectives',id:id},function(){loadObjectives();}); }
-
-  window.openObjectiveModal=function(){ $('#modalTitleText').text('Add New Quality Objective'); $('#objectiveId').val(''); $('#objectiveForm')[0].reset(); resetActionPlans(); $('#objectiveModal').css('display','flex'); $('body').css('overflow','hidden'); };
-  window.closeObjectiveModal=function(){ $('#objectiveModal').hide(); $('body').css('overflow','auto'); $('#objectiveForm input, #objectiveForm textarea, #objectiveForm select').prop('disabled', false); $('#objectiveForm .mt-4').show(); $('.iqms-remove-action-plan').show(); $('#addActionPlanBtn').show(); };
-
-  $('#objectiveForm').off('submit').on('submit',function(e){e.preventDefault(); saveObjective();});
-  window.saveObjective=function(){ var id=$('#objectiveId').val()||null; var data={table:'iqms_quality_objectives',id:id,analysis_id:analysisId,objective_code:(id?undefined:null),quality_objective:$('#qualityObjective').val(),target:$('#target').val(),output_indicator:$('#outputIndicator').val(),process_owner:$('#processOwner').val(),objective_status:'Not Started'}; $.post(ENDPOINT.SAVE,data,function(resp){var objId=id||resp.id; $.post(ENDPOINT.DEL_CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:objId},function(){ var aps=[]; $('#actionPlansContainer .iqms-action-plan-container').each(function(){ aps.push({table:'iqms_quality_objective_action_plans',objective_id:objId,action_text:$(this).find('.action-plan-text').val(),timeline:$(this).find('.action-plan-timeline').val(),responsibility:$(this).find('.action-plan-responsibility').val(),resources_needed:$(this).find('.action-plan-resources').val(),references:$(this).find('.action-plan-references').val(),action_status:$(this).find('.action-plan-status').val()});}); var i=0;(function next(){ if(i>=aps.length){ alert('Quality objective saved successfully!'); closeObjectiveModal(); return loadObjectives(); } $.post(ENDPOINT.SAVE,aps[i++],function(){ next(); }); })(); });},'json'); };
-
-  // Preserve existing search/filter behavior
-  $('#searchObjectives').on('input',function(){var term=this.value.toLowerCase(); $('#objectivesTable tbody tr').each(function(){var txt=$(this).text().toLowerCase(); $(this).toggle(txt.indexOf(term)!==-1);});});
-  $('#statusFilter,#timelineFilter,#ownerFilter').on('change',function(){var s=$('#statusFilter').val(),t=$('#timelineFilter').val().toLowerCase(),o=$('#ownerFilter').val().toLowerCase(); $('#objectivesTable tbody tr').each(function(){var status=$(this).find('.iqms-status').text().toLowerCase().replace(' ','-'); var timeline=$(this).find('td').eq(4).text().toLowerCase(); var owner=$(this).find('td').eq(5).text().toLowerCase(); var show=true; if(s&&status.indexOf(s)===-1) show=false; if(t&&timeline.indexOf(t)===-1) show=false; if(o&&owner.indexOf(o.replace('-',' '))===-1) show=false; $(this).toggle(show);});});
-
-  function esc(s){return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m];});}
-
-  // Action plan helper functions preserved from original UI below
-});
-</script>
+<script src="<?=base_url('assets/customjs/iqms_quality_objectives.js')?>"></script>
 
 <script>
-$(function(){
-  // Using jQuery data store to maintain sample objectives (placeholder; real data loads from backend)
-  window.objectivesData = [
+// Using jQuery data store to maintain sample objectives (placeholder; real data loads from backend)
+window.objectivesData = [
     {
         id: 'QO-001',
         qualityObjective: 'Build Productivity and Efficiency of MSMEs',
