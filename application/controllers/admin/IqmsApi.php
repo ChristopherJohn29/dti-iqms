@@ -113,6 +113,15 @@ class IqmsApi extends CI_Controller {
 	    }
 
 
+    public function categories(){
+        $this->db->from('iqms_stakeholder_categories');
+        $this->db->where('status', 1);
+        $this->db->order_by('sort_order', 'ASC');
+        $this->db->order_by('category_number', 'ASC');
+        $rows = $this->db->get()->result_array();
+        return $this->json($rows);
+    }
+
     public function export_csv(){
         $table = $this->input->get('table', true);
         $analysis_id = (int)$this->input->get('analysis_id');

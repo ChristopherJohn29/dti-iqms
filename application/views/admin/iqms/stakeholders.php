@@ -331,6 +331,29 @@ $(function(){
 
   var catMapCodeToId = { business_persons:1, development_partners:4, dti_staff:10 };
   var catIdToLabel   = { 1:'1. Business Persons', 4:'4. Development Partners', 10:'10. DTI-10 Staff/Contractual Services' };
+  var dynamicCategories = {};
+
+  function loadCategories(){
+    return $.getJSON('<?=base_url('admin/iqms-data/categories')?>', function(rows){
+      dynamicCategories = {};
+      // Rebuild maps and dropdown options
+      var $sel = $('#interestedParty');
+      var preserveOther = $sel.find('option[value="other"]').length>0;
+      $sel.empty().append('<option value="">Select Interested Party</option>');
+
+      rows.forEach(function(c){
+        dynamicCategories[c.id] = c;
+        var label = (c.category_number ? (c.category_number+'. ') : '') + c.category_name;
+        // For known system categories, keep existing codes; for others, use id as value
+        if(c.id===1){ catIdToLabel[1]=label; $sel.append('<option value="business_persons">'+label+'</option>'); }
+        else if(c.id===4){ catIdToLabel[4]=label; $sel.append('<option value="development_partners">'+label+'</option>'); }
+        else if(c.id===10){ catIdToLabel[10]=label; $sel.append('<option value="dti_staff">'+label+'</option>'); }
+        else { catIdToLabel[c.id]=label; $sel.append('<option value="'+c.id+'">'+label+'</option>'); }
+      });
+
+      if(!preserveOther){ $sel.append('<option value="other">Other (specify)</option>'); }
+    });
+  }
 
   function ensureAnalysis(){
     return $.post(ENDPOINT.ENSURE, {
@@ -342,7 +365,9 @@ $(function(){
   }
 
   function loadStakeholders(){
-    return $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, renderStakeholders);
+    return loadCategories().then(function(){
+      return $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, renderStakeholders);
+    });
   }
 
   function renderStakeholders(rows){
@@ -352,7 +377,10 @@ $(function(){
       var cid = parseInt(r.category_id,10); (grouped[cid] = grouped[cid] || []).push(r);
     });
     $.each(Object.keys(grouped).sort(function(a,b){return a-b;}), function(_, cid){
-      var items = grouped[cid], label = catIdToLabel[cid] || ('Category '+cid);
+      var items = grouped[cid];
+      // Build label from categories fetched
+      var catRow = dynamicCategories[cid];
+      var label = catRow ? ((catRow.category_number? (catRow.category_number+'. '):'') + catRow.category_name) : (catIdToLabel[cid] || ('Category '+cid));
       $.each(items, function(i, r){
         var $tr = $('<tr/>');
         if(i===0){ $tr.append($('<td/>',{rowspan: items.length, html:'<strong>'+label+'</strong>'})); }
@@ -409,6 +437,7 @@ $(function(){
       if(categoryId){
         var code = idToCode[parseInt(categoryId,10)] || '';
         if(code){ $('#interestedParty').val(code); }
+        else { $('#interestedParty').val(String(categoryId)); }
       }
       $('#stakeholderModal').show();
     }

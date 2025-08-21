@@ -83,3 +83,5 @@ $route['admin/iqms-data/export'] = 'admin/IqmsApi/export_csv';
 $route['admin/iqms-data/children'] = 'admin/IqmsApi/children';
 $route['admin/iqms-data/delete-children'] = 'admin/IqmsApi/delete_children';
 $route['admin/iqms-data/ensure-category'] = 'admin/IqmsApi/ensure_category';
+
+$route['admin/iqms-data/categories'] = 'admin/IqmsApi/categories';
