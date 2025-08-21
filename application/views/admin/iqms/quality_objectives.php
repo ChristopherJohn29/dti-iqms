@@ -61,6 +61,9 @@
                 </div>
             </div>
             <div class="col-md-6 text-right">
+                <button class="iqms-btn iqms-btn-success" onclick="openObjectiveModal()">
+                    <i class="fe-plus"></i> Add Quality Objective
+                </button>
                 <button class="iqms-btn iqms-btn-secondary">
                     <i class="fe-filter"></i> Filter
                 </button>
@@ -131,10 +134,6 @@
 </div>
 <!-- content -->
 
-<!-- Floating Add Button -->
-<button class="iqms-floating-btn" id="addObjectiveBtn" onclick="openObjectiveModal()">
-    <i class="fe-plus"></i>
-</button>
 
 <!-- Modal for Add/Edit Objective -->
 <div id="objectiveModal" class="iqms-modal">
@@ -322,7 +321,10 @@ $(function(){
 });
 </script>
 
-let objectivesData = [
+<script>
+$(function(){
+  // Using jQuery data store to maintain sample objectives (placeholder; real data loads from backend)
+  window.objectivesData = [
     {
         id: 'QO-001',
         qualityObjective: 'Build Productivity and Efficiency of MSMEs',
@@ -359,374 +361,91 @@ let objectivesData = [
     }
 ];
 
-function openObjectiveModal() {
-    document.getElementById('modalTitleText').textContent = 'Add New Quality Objective';
-    document.getElementById('objectiveId').value = '';
-    document.getElementById('objectiveForm').reset();
+window.openObjectiveModal = function(){ $('#modalTitleText').text('Add New Quality Objective'); $('#objectiveId').val(''); $('#objectiveForm')[0].reset(); resetActionPlans(); $('#objectiveModal').css('display','flex'); $('body').css('overflow','hidden'); };
 
-    // Reset action plans to show only one empty plan
-    resetActionPlans();
+window.closeObjectiveModal = function(){ $('#objectiveModal').hide(); $('body').css('overflow','auto'); };
 
-    document.getElementById('objectiveModal').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+window.editObjective = function(id){ var objective=(window.objectivesData||[]).find(function(o){return o.id===id;}); if(!objective) return; $('#modalTitleText').text('Edit Quality Objective'); $('#objectiveId').val(id); $('#qualityObjective').val(objective.qualityObjective||''); $('#target').val(objective.target||''); $('#outputIndicator').val(objective.outputIndicator||''); $('#processOwner').val(objective.processOwner||''); populateActionPlans(objective.actionPlans||[]); $('#objectiveModal').css('display','flex'); $('body').css('overflow','hidden'); };
+
+window.viewObjective = function(id){ window.editObjective(id); $('#modalTitleText').text('View Quality Objective'); $('#objectiveForm input, #objectiveForm textarea, #objectiveForm select').prop('disabled', true); $('#objectiveForm .mt-4').hide(); $('.iqms-remove-action-plan').hide(); $('#addActionPlanBtn').hide(); };
+
+window.deleteObjective = function(id){ if(confirm('Are you sure you want to delete this quality objective?')){ window.objectivesData=(window.objectivesData||[]).filter(function(o){return o.id!==id;}); alert('Quality objective deleted successfully!'); }}
+
+function addActionPlan(){
+  var $container = $('#actionPlansContainer');
+  var count = $container.find('.iqms-action-plan-container').length + 1;
+  var $plan = $('<div class="iqms-action-plan-container"/>');
+  $plan.append(
+    '<div class="iqms-action-plan-header">'+
+    '  <div class="iqms-action-plan-title">Action Plan #'+count+'</div>'+
+    '  <button type="button" class="iqms-remove-action-plan" onclick="removeActionPlan(this)"><i class="fe-x"></i></button>'+
+    '</div>'+
+    '<div class="iqms-form-group">'+
+    '  <label class="iqms-form-label">Action Plan:</label>'+
+    '  <textarea class="iqms-form-control action-plan-text" rows="3" required></textarea>'+
+    '</div>'+
+    '<div class="iqms-form-row">'+
+    '  <div class="iqms-form-group">'+
+    '    <label class="iqms-form-label">Timeline:</label>'+
+    '    <select class="iqms-form-control action-plan-timeline" required>'+
+    '      <option value="">Select Timeline</option>'+
+    '      <option value="Annually">Annually</option>'+
+    '      <option value="Semi-annually">Semi-annually</option>'+
+    '      <option value="Quarterly">Quarterly</option>'+
+    '      <option value="Monthly">Monthly</option>'+
+    '      <option value="Every conduct of training">Every conduct of training</option>'+
+    '    </select>'+
+    '  </div>'+
+    '  <div class="iqms-form-group">'+
+    '    <label class="iqms-form-label">Responsibility:</label>'+
+    '    <input type="text" class="iqms-form-control action-plan-responsibility" required>'+
+    '  </div>'+
+    '</div>'+
+    '<div class="iqms-form-row">'+
+    '  <div class="iqms-form-group">'+
+    '    <label class="iqms-form-label">Resources (Budget):</label>'+
+    '    <input type="text" class="iqms-form-control action-plan-resources">'+
+    '  </div>'+
+    '  <div class="iqms-form-group">'+
+    '    <label class="iqms-form-label">References (Documented Info):</label>'+
+    '    <input type="text" class="iqms-form-control action-plan-references">'+
+    '  </div>'+
+    '</div>'+
+    '<div class="iqms-form-group">'+
+    '  <label class="iqms-form-label">Status:</label>'+
+    '  <select class="iqms-form-control action-plan-status" required>'+
+    '    <option value="Not Started">Not Started</option>'+
+    '    <option value="In Progress">In Progress</option>'+
+    '    <option value="Completed">Completed</option>'+
+    '  </select>'+
+    '</div>'
+  );
+  $container.append($plan);
+  updateActionPlanTitles();
 }
 
-function closeObjectiveModal() {
-    document.getElementById('objectiveModal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
+function removeActionPlan(btn){ var $container=$(btn).closest('.iqms-action-plan-container'); var $all=$('.iqms-action-plan-container'); if($all.length>1){ $container.remove(); updateActionPlanTitles(); } else { alert('At least one action plan is required.'); } }
 
-function editObjective(id) {
-    const objective = objectivesData.find(obj => obj.id === id);
+function updateActionPlanTitles(){ $('.iqms-action-plan-container').each(function(i){ $(this).find('.iqms-action-plan-title').text('Action Plan #'+(i+1)); }); }
 
-$(function(){
-  var ENDPOINT = {
-    ENSURE: '<?=base_url('admin/iqms-data/ensure')?>',
-    LIST:   '<?=base_url('admin/iqms-data/list')?>',
-    SAVE:   '<?=base_url('admin/iqms-data/save')?>',
-    DEL:    '<?=base_url('admin/iqms-data/delete')?>',
-    CHILDREN: '<?=base_url('admin/iqms-data/children')?>',
-    DEL_CHILDREN: '<?=base_url('admin/iqms-data/delete-children')?>'
-  };
-  var moduleCode='QUALITY_OBJECTIVES', officeId=10, processId=1, fiscalYear='2025';
-  var analysisId=null;
+function resetActionPlans(){ var $container=$('#actionPlansContainer'); var $plans=$container.find('.iqms-action-plan-container'); $plans.slice(1).remove(); var $first=$plans.first(); if($first.length){ $first.find('input, textarea, select').val('').prop('disabled', false); } updateActionPlanTitles(); }
 
-  function ensureAnalysis(){ return $.post(ENDPOINT.ENSURE,{module_code:moduleCode,office_id:officeId,process_id:processId,fiscal_year:fiscalYear}, function(r){analysisId=r.id;}, 'json'); }
+function populateActionPlans(actionPlans){ var $container=$('#actionPlansContainer'); $container.empty(); $.each(actionPlans||[], function(i,plan){ addActionPlan(); var $el=$container.children().eq(i); $el.find('.action-plan-text').val(plan.text||''); $el.find('.action-plan-timeline').val(plan.timeline||''); $el.find('.action-plan-responsibility').val(plan.responsibility||''); $el.find('.action-plan-resources').val(plan.resources||''); $el.find('.action-plan-references').val(plan.references||''); $el.find('.action-plan-status').val(plan.status||''); }); }
 
-  function loadObjectives(){ return $.getJSON(ENDPOINT.LIST,{table:'iqms_quality_objectives',analysis_id:analysisId}, function(rows){ renderObjectives(rows); }); }
-
-  function renderObjectives(rows){ var $tb=$('#objectivesTbody').empty(); $.each(rows,function(_,o){ var statusCls = (o.objective_status||'Not Started').toLowerCase().replace(/\s+/g,'-'); var tr='<tr>'+
-      '<td>'+(o.objective_code||('QO-'+o.id))+'</td>'+
-      '<td>'+escape(o.quality_objective||'')+'</td>'+
-      '<td>'+escape(o.target||'')+'</td>'+
-      '<td>'+'[from action plan]'+</td>'+ // Placeholder to preserve layout
-      '<td>'+escape(o.timeline||'')+'</td>'+ // if timeline present in UI, else leave empty
-      '<td>'+escape(o.process_owner||'')+'</td>'+
-      '<td><span class="iqms-status '+statusCls+'">'+escape(o.objective_status||'Not Started')+'</span></td>'+
-      '<td class="text-center">'+
-        '<div class="iqms-action-btns">'+
-          '<button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editObjective('+o.id+')" title="Edit"><i class="fe-edit"></i></button> '+
-          '<button class="iqms-btn iqms-btn-info iqms-btn-sm" onclick="viewObjective('+o.id+')" title="View"><i class="fe-eye"></i></button> '+
-          '<button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteObjective('+o.id+')" title="Delete"><i class="fe-trash"></i></button>'+
-        '</div>'+
-      '</td>'+
-    '</tr>'; $tb.append(tr); }); }
-
-  window.openObjectiveModal = function(){ $('#modalTitleText').text('Add New Quality Objective'); $('#objectiveId').val(''); $('#objectiveForm')[0].reset(); resetActionPlans(); $('#objectiveModal').css('display','flex'); $('body').css('overflow','hidden'); };
-  window.closeObjectiveModal = function(){ $('#objectiveModal').hide(); $('body').css('overflow','auto'); };
-
-  function collectActionPlans(){ var plans=[]; $('#actionPlansContainer .iqms-action-plan-container').each(function(){ plans.push({
-    action_text: $(this).find('.action-plan-text').val(),
-    timeline: $(this).find('.action-plan-timeline').val(),
-    responsibility: $(this).find('.action-plan-responsibility').val(),
-    resources_needed: $(this).find('.action-plan-resources').val(),
-    references: $(this).find('.action-plan-references').val(),
-    action_status: $(this).find('.action-plan-status').val()
-  }); }); return plans; }
-
-  window.editObjective = function(id){ $('#modalTitleText').text('Edit Quality Objective'); $('#objectiveId').val(id);
-    $.getJSON(ENDPOINT.LIST,{table:'iqms_quality_objectives',analysis_id:analysisId}, function(rows){ var o=rows.find(function(x){return x.id==id;}); if(!o) return; $('#qualityObjective').val(o.quality_objective||''); $('#target').val(o.target||''); $('#outputIndicator').val(o.output_indicator||''); $('#processOwner').val(o.process_owner||'');
-      // Load action plans
-      $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:id}, function(plans){ populateActionPlans(plans.map(function(p){ return { text:p.action_text, timeline:p.timeline, responsibility:p.responsibility, resources:p.resources_needed, references:p.references, status:p.action_status}; })); $('#objectiveModal').css('display','flex'); $('body').css('overflow','hidden'); });
-    }); };
-
-  window.viewObjective = function(id){ window.editObjective(id); setTimeout(function(){ $('#objectiveForm input, #objectiveForm textarea, #objectiveForm select').prop('disabled', true); $('#objectiveForm .mt-4').hide(); $('.iqms-remove-action-plan').hide(); $('#addActionPlanBtn').hide(); }, 0); };
-
-  window.deleteObjective = function(id){ if(!confirm('Delete this quality objective?')) return; $.post(ENDPOINT.DEL,{table:'iqms_quality_objectives',id:id}, function(){ loadObjectives(); }); };
-
-  $('#objectiveForm').off('submit').on('submit', function(e){ e.preventDefault(); saveObjective(); });
-  window.saveObjective = function(){ var id=$('#objectiveId').val()||null; var data={ table:'iqms_quality_objectives', id:id, analysis_id:analysisId, objective_code: (id? undefined : null), quality_objective: $('#qualityObjective').val(), target: $('#target').val(), output_indicator: $('#outputIndicator').val(), process_owner: $('#processOwner').val(), objective_status: 'Not Started' };
-    $.post(ENDPOINT.SAVE, data, function(resp){ var objId = id || resp.id; // replace action plans
-      $.post(ENDPOINT.DEL_CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:objId}, function(){ var plans=collectActionPlans(); var i=0; (function next(){ if(i>=plans.length){ alert('Quality objective saved successfully!'); closeObjectiveModal(); return loadObjectives(); } var p=plans[i++]; p.table='iqms_quality_objective_action_plans'; p.objective_id=objId; $.post(ENDPOINT.SAVE,p,function(){ next(); }); })(); });
-    },'json'); };
-
-  function escape(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]); }); }
-
-  // Existing functions used by UI remain: resetActionPlans, populateActionPlans, addActionPlan, removeActionPlan
-  // We assume these are defined in the current script. If not, we will preserve structure and minimal behavior.
-
-  ensureAnalysis().then(loadObjectives);
-});
-</script>
-
-    if (!objective) return;
-
-    document.getElementById('modalTitleText').textContent = 'Edit Quality Objective';
-    document.getElementById('objectiveId').value = id;
-
-    // Populate form fields
-    document.getElementById('qualityObjective').value = objective.qualityObjective;
-    document.getElementById('target').value = objective.target;
-    document.getElementById('outputIndicator').value = objective.outputIndicator;
-    document.getElementById('processOwner').value = objective.processOwner;
-
-    // Populate action plans
-    populateActionPlans(objective.actionPlans);
-
-    document.getElementById('objectiveModal').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function viewObjective(id) {
-    editObjective(id);
-    document.getElementById('modalTitleText').textContent = 'View Quality Objective';
-
-    // Make form read-only
-    const inputs = document.querySelectorAll('#objectiveForm input, #objectiveForm textarea, #objectiveForm select');
-    inputs.forEach(input => input.disabled = true);
-
-    // Hide action buttons
-    document.querySelector('#objectiveForm .mt-4').style.display = 'none';
-    document.querySelectorAll('.iqms-remove-action-plan').forEach(btn => btn.style.display = 'none');
-    document.getElementById('addActionPlanBtn').style.display = 'none';
-}
-
-function deleteObjective(id) {
-    if (confirm('Are you sure you want to delete this quality objective?')) {
-        objectivesData = objectivesData.filter(obj => obj.id !== id);
-        alert('Quality objective deleted successfully!');
-        // In a real app, you would refresh the table here
-    }
-}
-
-function addActionPlan() {
-    const container = document.getElementById('actionPlansContainer');
-    const existingPlans = container.querySelectorAll('.iqms-action-plan-container');
-    const newPlanNumber = existingPlans.length + 1;
-
-    const newPlan = document.createElement('div');
-    newPlan.className = 'iqms-action-plan-container';
-    newPlan.innerHTML = `
-        <div class="iqms-action-plan-header">
-            <div class="iqms-action-plan-title">Action Plan #${newPlanNumber}</div>
-            <button type="button" class="iqms-remove-action-plan" onclick="removeActionPlan(this)">
-                <i class="fe-x"></i>
-            </button>
-        </div>
-
-        <div class="iqms-form-group">
-            <label class="iqms-form-label">Action Plan:</label>
-            <textarea class="iqms-form-control action-plan-text" rows="3" required></textarea>
-        </div>
-
-        <div class="iqms-form-row">
-            <div class="iqms-form-group">
-                <label class="iqms-form-label">Timeline:</label>
-                <select class="iqms-form-control action-plan-timeline" required>
-                    <option value="">Select Timeline</option>
-                    <option value="Annually">Annually</option>
-                    <option value="Semi-annually">Semi-annually</option>
-                    <option value="Quarterly">Quarterly</option>
-                    <option value="Monthly">Monthly</option>
-                    <option value="Every conduct of training">Every conduct of training</option>
-                </select>
-            </div>
-
-            <div class="iqms-form-group">
-                <label class="iqms-form-label">Responsibility:</label>
-                <input type="text" class="iqms-form-control action-plan-responsibility" required>
-            </div>
-        </div>
-
-        <div class="iqms-form-row">
-            <div class="iqms-form-group">
-                <label class="iqms-form-label">Resources (Budget):</label>
-                <input type="text" class="iqms-form-control action-plan-resources">
-            </div>
-
-            <div class="iqms-form-group">
-                <label class="iqms-form-label">References (Documented Info):</label>
-                <input type="text" class="iqms-form-control action-plan-references">
-            </div>
-        </div>
-
-        <div class="iqms-form-group">
-            <label class="iqms-form-label">Status:</label>
-            <select class="iqms-form-control action-plan-status" required>
-                <option value="Not Started">Not Started</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-            </select>
-        </div>
-    `;
-
-    container.appendChild(newPlan);
-    updateActionPlanTitles();
-}
-
-function removeActionPlan(button) {
-    const container = button.closest('.iqms-action-plan-container');
-    const allPlans = document.querySelectorAll('.iqms-action-plan-container');
-
-    // Don't allow removing if it's the only plan
-    if (allPlans.length > 1) {
-        container.remove();
-        updateActionPlanTitles();
-    } else {
-        alert('At least one action plan is required.');
-    }
-}
-
-function updateActionPlanTitles() {
-    const plans = document.querySelectorAll('.iqms-action-plan-container');
-    plans.forEach((plan, index) => {
-        plan.querySelector('.iqms-action-plan-title').textContent = `Action Plan #${index + 1}`;
-    });
-}
-
-function resetActionPlans() {
-    const container = document.getElementById('actionPlansContainer');
-    const plans = container.querySelectorAll('.iqms-action-plan-container');
-
-    // Remove all but the first plan
-    for (let i = 1; i < plans.length; i++) {
-        plans[i].remove();
-    }
-
-    // Clear the first plan
-    const firstPlan = container.querySelector('.iqms-action-plan-container');
-    if (firstPlan) {
-        firstPlan.querySelectorAll('input, textarea, select').forEach(input => {
-            input.value = '';
-            input.disabled = false;
-        });
-    }
-
-    updateActionPlanTitles();
-}
-
-function populateActionPlans(actionPlans) {
-    const container = document.getElementById('actionPlansContainer');
-
-    // Clear existing plans
-    container.innerHTML = '';
-
-    // Add each action plan
-    actionPlans.forEach((plan, index) => {
-        addActionPlan();
-        const planElement = container.children[index];
-
-        planElement.querySelector('.action-plan-text').value = plan.text;
-        planElement.querySelector('.action-plan-timeline').value = plan.timeline;
-        planElement.querySelector('.action-plan-responsibility').value = plan.responsibility;
-        planElement.querySelector('.action-plan-resources').value = plan.resources;
-        planElement.querySelector('.action-plan-references').value = plan.references;
-        planElement.querySelector('.action-plan-status').value = plan.status;
-    });
-}
-
-// Form submission
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('objectiveForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // Collect form data
-        const formData = {
-            id: document.getElementById('objectiveId').value,
-            qualityObjective: document.getElementById('qualityObjective').value,
-            target: document.getElementById('target').value,
-            outputIndicator: document.getElementById('outputIndicator').value,
-            processOwner: document.getElementById('processOwner').value,
-            actionPlans: []
-        };
-
-        // Collect action plans
-        const actionPlanContainers = document.querySelectorAll('.iqms-action-plan-container');
-        actionPlanContainers.forEach(container => {
-            const actionPlan = {
-                text: container.querySelector('.action-plan-text').value,
-                timeline: container.querySelector('.action-plan-timeline').value,
-                responsibility: container.querySelector('.action-plan-responsibility').value,
-                resources: container.querySelector('.action-plan-resources').value,
-                references: container.querySelector('.action-plan-references').value,
-                status: container.querySelector('.action-plan-status').value
-            };
-            formData.actionPlans.push(actionPlan);
-        });
-
-        // Save or update objective
-        if (formData.id) {
-            // Update existing
-            const index = objectivesData.findIndex(obj => obj.id === formData.id);
-            if (index !== -1) {
-                objectivesData[index] = formData;
-            }
-        } else {
-            // Add new
-            formData.id = 'QO-' + String(objectivesData.length + 1).padStart(3, '0');
-            objectivesData.push(formData);
-        }
-
-        alert('Quality objective saved successfully!');
-        closeObjectiveModal();
-
-        // Reset form state
-        document.querySelectorAll('#objectiveForm input, #objectiveForm textarea, #objectiveForm select').forEach(input => {
-            input.disabled = false;
-        });
-        document.querySelector('#objectiveForm .mt-4').style.display = 'block';
-        document.querySelectorAll('.iqms-remove-action-plan').forEach(btn => btn.style.display = 'block');
-        document.getElementById('addActionPlanBtn').style.display = 'block';
-    });
+// Form submission with jQuery
+$('#objectiveForm').off('submit').on('submit',function(e){ e.preventDefault(); var formData={ id:$('#objectiveId').val(), qualityObjective:$('#qualityObjective').val(), target:$('#target').val(), outputIndicator:$('#outputIndicator').val(), processOwner:$('#processOwner').val(), actionPlans:[] };
+  $('.iqms-action-plan-container').each(function(){ formData.actionPlans.push({ text:$(this).find('.action-plan-text').val(), timeline:$(this).find('.action-plan-timeline').val(), responsibility:$(this).find('.action-plan-responsibility').val(), resources:$(this).find('.action-plan-resources').val(), references:$(this).find('.action-plan-references').val(), status:$(this).find('.action-plan-status').val() }); });
+  if(formData.id){ var idx=(window.objectivesData||[]).findIndex(function(o){return o.id===formData.id;}); if(idx!==-1){ window.objectivesData[idx]=formData; } }
+  else { formData.id='QO-'+String(((window.objectivesData||[]).length)+1).padStart(3,'0'); (window.objectivesData=window.objectivesData||[]).push(formData); }
+  alert('Quality objective saved successfully!'); closeObjectiveModal(); $('#objectiveForm input, #objectiveForm textarea, #objectiveForm select').prop('disabled', false); $('#objectiveForm .mt-4').show(); $('.iqms-remove-action-plan').show(); $('#addActionPlanBtn').show();
 });
 
 // Search functionality
-document.getElementById('searchObjectives').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const table = document.getElementById('objectivesTable');
-    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-    for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const text = row.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    }
-});
+$('#searchObjectives').on('input',function(){ var term=$(this).val().toLowerCase(); $('#objectivesTable tbody tr').each(function(){ var txt=$(this).text().toLowerCase(); $(this).toggle(txt.indexOf(term)!==-1); }); });
 
 // Filter functionality
-document.getElementById('statusFilter').addEventListener('change', function() {
-    filterTable();
-});
-
-document.getElementById('timelineFilter').addEventListener('change', function() {
-    filterTable();
-});
-
-document.getElementById('ownerFilter').addEventListener('change', function() {
-    filterTable();
-});
-
-function filterTable() {
-    const statusFilter = document.getElementById('statusFilter').value;
-    const timelineFilter = document.getElementById('timelineFilter').value;
-    const ownerFilter = document.getElementById('ownerFilter').value;
-
-    const rows = document.querySelectorAll('#objectivesTable tbody tr');
-
-    rows.forEach(row => {
-        const status = row.querySelector('.iqms-status').textContent.toLowerCase().replace(' ', '-');
-        const timeline = row.cells[4].textContent.toLowerCase();
-        const owner = row.cells[5].textContent.toLowerCase();
-
-        let showRow = true;
-
-        if (statusFilter && !status.includes(statusFilter)) showRow = false;
-        if (timelineFilter && !timeline.includes(timelineFilter)) showRow = false;
-        if (ownerFilter && !owner.includes(ownerFilter.replace('-', ' '))) showRow = false;
-
-        row.style.display = showRow ? '' : 'none';
-    });
-}
+$('#statusFilter, #timelineFilter, #ownerFilter').on('change',function(){ var s=$('#statusFilter').val(); var t=$('#timelineFilter').val().toLowerCase(); var o=$('#ownerFilter').val().toLowerCase(); $('#objectivesTable tbody tr').each(function(){ var status=$(this).find('.iqms-status').text().toLowerCase().replace(' ','-'); var timeline=$(this).find('td').eq(4).text().toLowerCase(); var owner=$(this).find('td').eq(5).text().toLowerCase(); var show=true; if(s && status.indexOf(s)===-1) show=false; if(t && timeline.indexOf(t)===-1) show=false; if(o && owner.indexOf(o.replace('-',' '))===-1) show=false; $(this).toggle(show); }); });
 
 // Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('objectiveModal');
-    if (event.target == modal) {
-        closeObjectiveModal();
-    }
-}
+$(window).on('click',function(e){ var $modal=$('#objectiveModal'); if(e.target=== $modal.get(0)) closeObjectiveModal(); });
 </script>
