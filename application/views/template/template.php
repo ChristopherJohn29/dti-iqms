@@ -20,12 +20,19 @@
 
       <link href="<?=base_url()?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
       <link href="<?=base_url()?>assets/customcss/global.css" rel="stylesheet" type="text/css" />
-      <?php 
+      <?php
       if(isset($customcss)){
          echo '<link href="'.base_url().'assets/customcss/'.$customcss.'" rel="stylesheet" type="text/css" />';
       }
       ?>
-      
+      <!-- Ensure jQuery is available before inline view scripts -->
+      <script>
+        if(!window.jQuery){
+          document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"><\/script>');
+        }
+      </script>
+
+
 
    </head>
    <body>
@@ -79,11 +86,11 @@
                      <!-- Dropdown Menu -->
 
                      <!-- Mega Menu Dropdown -->
-               
+
                   </div>
                   <ul class="topbar-menu d-flex align-items-center">
                      <!-- Topbar Search Form -->
-               
+
                      <!-- Fullscreen Button -->
                      <li class="d-none d-md-inline-block">
                         <a class="nav-link waves-effect waves-light" href="" data-toggle="fullscreen">
@@ -102,9 +109,9 @@
                         </div>
                      </li>
                      <!-- App Dropdown -->
-                   
+
                      <!-- Language flag dropdown  -->
-        
+
                      <!-- Notofication dropdown -->
                      <li class="dropdown notification-list">
                         <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
@@ -259,7 +266,7 @@
                         </div>
                      </li>
                      <!-- Right Bar offcanvas button (Theme Customization Panel) -->
-      
+
                   </ul>
                </div>
             </div>
@@ -316,7 +323,7 @@
       <!-- third party js ends -->
       <!-- Datatables init -->
 
-      <?php 
+      <?php
       if(isset($customjs)){
          echo ' <script src="'.base_url().'assets/customjs/'.$customjs.'"></script>';
       }
