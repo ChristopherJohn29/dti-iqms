@@ -378,7 +378,32 @@ $(function(){
     $('#stakeholderId').val(rowId || '');
     $('#stakeholderForm')[0].reset();
     resetAnalysisSets();
-    $('#stakeholderModal').show();
+    var idToCode = { 1:'business_persons', 4:'development_partners', 10:'dti_staff' };
+
+    if(rowId){
+      // Load existing row and populate Set #1 for editing
+      $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, function(rows){
+        var r = rows.find(function(x){ return x.id == rowId; });
+        if(r){
+          var code = idToCode[parseInt(r.category_id,10)] || 'other';
+          $('#interestedParty').val(code).trigger('change');
+          $('#needs1').val(r.needs_expectations||'');
+          $('#potentialRisk1').val(r.potential_risks||'');
+          $('#potentialOpportunity1').val(r.potential_opportunities||'');
+          $('#toBeConsidered1').val(r.to_be_considered||'');
+          $('#riskReference1').val(r.risk_reference||'');
+          $('#opportunityReference1').val(r.opportunity_reference||'');
+        }
+        $('#stakeholderModal').show();
+      });
+    } else {
+      // Preselect interested party when adding via category button
+      if(categoryId){
+        var code = idToCode[parseInt(categoryId,10)] || '';
+        if(code){ $('#interestedParty').val(code); }
+      }
+      $('#stakeholderModal').show();
+    }
   };
 
   window.closeStakeholderModal = function(){
@@ -414,12 +439,34 @@ $(function(){
   };
 
   window.saveStakeholder = function(){
+    var id = $('#stakeholderId').val();
     var party = $('#interestedParty').val();
     if(!party){ alert('Please select an interested party'); return; }
     if(!$('#needs1').val()){ alert('Please enter needs and expectations for Set #1'); return; }
     var cid = (party==='other') ? null : (isNaN(party) ? (catMapCodeToId[party]||null) : parseInt(party,10));
-    var $sets = $('#analysisSets .analysis-set');
 
+    // If editing, update only the current row using Set #1 fields
+    if(id){
+      var updateData = {
+        table:'iqms_stakeholder_entries',
+        id: id,
+        analysis_id: analysisId,
+        category_id: cid,
+        custom_category_name: (party==='other') ? 'Other' : '',
+        needs_expectations: ($('#needs1').val()||'').trim(),
+        potential_risks: ($('#potentialRisk1').val()||'').trim(),
+        potential_opportunities: ($('#potentialOpportunity1').val()||'').trim(),
+        to_be_considered: $('#toBeConsidered1').val()||'',
+        risk_reference: ($('#riskReference1').val()||'').trim(),
+        opportunity_reference: ($('#opportunityReference1').val()||'').trim(),
+        analysis_set_number: 1
+      };
+      $.post(ENDPOINT.SAVE, updateData, function(){ alert('Stakeholder entry updated successfully!'); closeStakeholderModal(); loadStakeholders(); });
+      return;
+    }
+
+    // Adding: support multiple analysis sets
+    var $sets = $('#analysisSets .analysis-set');
     function saveOne(n, done){
       var data = {
         table:'iqms_stakeholder_entries',
