@@ -129,6 +129,8 @@
                 </tbody>
             </table>
         </div>
+    <link rel="stylesheet" href="<?=base_url('assets/customcss/iqms_quality_objectives_inline.css')?>" />
+
     </div>
     <!-- container -->
 </div>

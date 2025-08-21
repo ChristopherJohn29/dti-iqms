@@ -1,0 +1,6 @@
+.qo-ap-row{ padding:6px 0; border-bottom:1px dashed #e0e0e0; }
+.qo-ap-row:last-child{ border-bottom:none; }
+.qo-ap-text{ font-weight:500; }
+.qo-ap-meta{ color:#555; font-size:12px; margin-top:2px; }
+.qo-ap-meta span{ margin-right:8px; }
+

@@ -40,21 +40,33 @@
            .append('<td>'+esc(o.quality_objective||'')+'</td>')
            .append('<td>'+esc(o.target||'')+'</td>')
            .append('<td class="qo-action-plan">Loading...</td>')
-           .append('<td class="qo-timeline"></td>')
+           .append('<td class="qo-timeline">-</td>')
            .append('<td>'+esc(o.process_owner||'')+'</td>')
            .append('<td><span class="iqms-status '+statusCls+'">'+esc(o.objective_status||'Not Started')+'</span></td>')
            .append('<td class="text-center"><div class="iqms-action-btns">\
               <button class="iqms-btn iqms-btn-warning iqms-btn-sm" data-id="'+o.id+'" data-act="edit"><i class="fe-edit"></i></button>\
-              <button class="iqms-btn iqms-btn-info iqms-btn-sm" data-id="'+o.id+'" data-act="view"><i class="fe-eye"></i></button>\
               <button class="iqms-btn iqms-btn-danger iqms-btn-sm" data-id="'+o.id+'" data-act="del"><i class="fe-trash"></i></button>\
            </div></td>');
         $tb.append($tr);
-        // Load first action plan/timeline for table preview
+        // Load and render all action plans inline (Stakeholders-like layout)
         $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:o.id},function(plans){
-          if(!plans || !plans.length){ $tr.find('.qo-action-plan').text('-'); return; }
-          var p=plans[0];
-          $tr.find('.qo-action-plan').text(p.action_text||'');
-          $tr.find('.qo-timeline').text(p.timeline||'');
+          if(!plans || !plans.length){ $tr.find('.qo-action-plan').html('<em>-</em>'); $tr.find('.qo-timeline').text('-'); return; }
+          var html='';
+          $.each(plans,function(i,p){
+            html += '<div class="qo-ap-row">'
+                 +   '<div class="qo-ap-text">'+esc(p.action_text||'')+'</div>'
+                 +   '<div class="qo-ap-meta">'
+                 +     '<span class="qo-ap-timeline"><strong>Timeline:</strong> '+esc(p.timeline||'-')+'</span>'
+                 +     ' &middot; '
+                 +     '<span class="qo-ap-resp"><strong>Responsibility:</strong> '+esc(p.responsibility||'-')+'</span>'
+                 +     ' &middot; '
+                 +     '<span class="qo-ap-status"><strong>Status:</strong> '+esc(p.action_status||'-')+'</span>'
+                 +   '</div>'
+                 + '</div>';
+          });
+          $tr.find('.qo-action-plan').html(html);
+          // Leave timeline cell with first timeline value for filtering convenience
+          $tr.find('.qo-timeline').text(plans[0].timeline||'-');
         });
       });
       $('#objectivesTbody [data-act]').off('click').on('click',function(){
