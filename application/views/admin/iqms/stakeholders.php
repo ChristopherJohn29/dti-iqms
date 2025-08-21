@@ -401,21 +401,21 @@ $(function(){
     $('#stakeholderId').val(rowId || '');
     $('#stakeholderForm')[0].reset();
     resetAnalysisSets();
-    var idToCode = { 1:'business_persons', 4:'development_partners', 10:'dti_staff' };
 
     if(rowId){
       // Load existing row and populate Set #1 for editing
       $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, function(rows){
         var r = rows.find(function(x){ return x.id == rowId; });
         if(r){
-          var code = idToCode[parseInt(r.category_id,10)] || 'other';
-          $('#interestedParty').val(code).trigger('change');
-          if(code==='other'){
+          var cid = String(r.category_id);
+          // Try to select by id; if category is unknown, fall back to 'other'
+          if($('#interestedParty option[value="'+cid+'"]').length){
+            $('#interestedParty').val(cid).trigger('change');
+          } else {
+            $('#interestedParty').val('other').trigger('change');
             var $parent = $('#interestedParty').parent();
             var $inp = $('#otherPartyInput');
-            if(!$inp.length){
-              $inp = $('<input/>',{type:'text',id:'otherPartyInput','class':'form-control mt-2',placeholder:'Specify interested party'}).appendTo($parent);
-            }
+            if(!$inp.length){ $inp = $('<input/>',{type:'text',id:'otherPartyInput','class':'form-control mt-2',placeholder:'Specify interested party'}).appendTo($parent); }
             $inp.val(r.custom_category_name||'');
           }
           $('#needs1').val(r.needs_expectations||'');
@@ -456,8 +456,8 @@ $(function(){
     $.post(ENDPOINT.DEL, { table:'iqms_stakeholder_entries', id:id }, function(){ loadStakeholders(); });
   };
 
-  window.deleteStakeholder = function(codeOrId){
-    var cid = isNaN(codeOrId) ? (catMapCodeToId[codeOrId]||0) : parseInt(codeOrId,10);
+  window.deleteStakeholder = function(categoryId){
+    var cid = parseInt(categoryId,10) || 0;
     if(!cid){ alert('Unknown category'); return; }
     if(!confirm('Delete all entries for this stakeholder category?')) return;
     $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, function(rows){
@@ -477,21 +477,34 @@ $(function(){
 
     // If editing, update only the current row using Set #1 fields
     if(id){
-      var updateData = {
-        table:'iqms_stakeholder_entries',
-        id: id,
-        analysis_id: analysisId,
-        category_id: cid,
-        custom_category_name: (party==='other') ? otherName : '',
-        needs_expectations: ($('#needs1').val()||'').trim(),
-        potential_risks: ($('#potentialRisk1').val()||'').trim(),
-        potential_opportunities: ($('#potentialOpportunity1').val()||'').trim(),
-        to_be_considered: $('#toBeConsidered1').val()||'',
-        risk_reference: ($('#riskReference1').val()||'').trim(),
-        opportunity_reference: ($('#opportunityReference1').val()||'').trim(),
-        analysis_set_number: 1
-      };
-      $.post(ENDPOINT.SAVE, updateData, function(){ alert('Stakeholder entry updated successfully!'); closeStakeholderModal(); loadStakeholders(); });
+      function doUpdate(resolvedCid){
+        var updateData = {
+          table:'iqms_stakeholder_entries',
+          id: id,
+          analysis_id: analysisId,
+          category_id: resolvedCid,
+          custom_category_name: (party==='other') ? otherName : '',
+          needs_expectations: ($('#needs1').val()||'').trim(),
+          potential_risks: ($('#potentialRisk1').val()||'').trim(),
+          potential_opportunities: ($('#potentialOpportunity1').val()||'').trim(),
+          to_be_considered: $('#toBeConsidered1').val()||'',
+          risk_reference: ($('#riskReference1').val()||'').trim(),
+          opportunity_reference: ($('#opportunityReference1').val()||'').trim(),
+          analysis_set_number: 1
+        };
+        $.post(ENDPOINT.SAVE, updateData, function(){ alert('Stakeholder entry updated successfully!'); closeStakeholderModal(); loadStakeholders(); });
+      }
+      if(party==='other'){
+        $.post('<?=base_url('admin/iqms-data/ensure-category')?>', { category_code: otherName.toLowerCase().replace(/\s+/g,'_'), category_name: otherName }, function(cat){
+          var resolvedCid = cat && cat.id ? cat.id : null;
+          if(!resolvedCid){ alert('Unable to resolve category for Other'); return; }
+          doUpdate(resolvedCid);
+        }, 'json');
+      } else {
+        var resolvedCid = parseInt(party,10) || null;
+        if(!resolvedCid){ alert('Invalid category'); return; }
+        doUpdate(resolvedCid);
+      }
       return;
     }
 
