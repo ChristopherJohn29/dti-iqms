@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizational Outcomes</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+       header {
+    background-color: white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.agency-title h1 {
+    font-size: 1.4rem;
+    margin: 0 0 5px 0;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.agency-title h2 {
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+    font-weight: normal;
+}
+
+.fiscal-year {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.year-box {
+    display: inline-block;
+    min-width: 60px;
+    padding: 2px 5px;
+    margin-left: 5px;
+    border: 1px solid #333;
+    text-align: center;
+}
+
+.form-table {
+    border-collapse: collapse;
+    margin-left: 20px;
+}
+
+.form-table td {
+    padding: 3px 8px;
+    vertical-align: middle;
+}
+
+.form-label {
+    font-weight: bold;
+    text-align: center;
+    border-right: 1px solid #ddd;
+    padding-right: 10px !important;
+}
+
+.detail-label {
+    font-weight: bold;
+    padding-right: 15px;
+}
+
+.detail-value {
+    border: 1px solid #ddd;
+    min-width: 80px;
+    text-align: center;
+}
+
+.process-info {
+    border-top: 2px solid var(--primary-color);
+    padding-top: 10px;
+}
+
+.info-row {
+    margin-bottom: 5px;
+    display: flex;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-weight: bold;
+    min-width: 180px;
+}
+
+.info-value {
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .header-main {
+        flex-direction: column;
+    }
+    
+    .form-table {
+        margin: 10px 0 0 0;
+    }
+    
+    .info-label {
+        min-width: 160px;
+    }
+}
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 60px;
+            margin-right: 15px;
+        }
+        
+        .header-text h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .header-text h2 {
+            margin: 5px 0 0;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #004494;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning-color);
+            color: #212529;
+        }
+        
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+    <div class="header-container">
+        <div class="header-main">
+            <div class="agency-title">
+                <h1>DEPARTMENT OF TRADE AND INDUSTRY</h1>
+                <h2>ORGANIZATIONAL OUTCOMES</h2>
+                <div class="fiscal-year">FY<span class="year-box">2025</span></div>
+            </div>
+            
+            <div class="form-details">
+                <table class="form-table">
+                    <tr>
+                        <td rowspan="4" class="form-label">F<br>O<br>R<br>M</td>
+                        <td class="detail-label">Code</td>
+                        <td class="detail-value">FM-PL-04</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Rev.</td>
+                        <td class="detail-value">3</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label"></td>
+                        <td class="detail-value"></td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Date</td>
+                        <td class="detail-value">01-Apr-25</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="process-info">
+            <div class="info-row">
+                <span class="info-label">BUREAU/REGIONS/OFFICE:</span>
+                <span class="info-value">DTI-10 REGIONAL OFFICE</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">PROCESS:</span>
+                <span class="info-value">CONDUCT OF TRAINING</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">PROCESS OWNER:</span>
+                <span class="info-value">Training Coordinator</span>
+            </div>
+        </div>
+    </div>
+</header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="outcomes">Organizational Outcomes</div>
+            <div class="tab" data-tab="add-outcome">Add New Outcome</div>
+            <div class="tab" data-tab="reports">Reports</div>
+        </div>
+        
+        <div class="tab-content active" id="outcomes">
+            <div class="instructions">
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Process Owners shall determine the Outcomes related to the process. Sheet No. 4 of the Strategic Plan MS Excel Template will be used.</li>
+                    <li>These outcomes are organizational/provincial objectives of specific office that are indirect results of the Core Processes.</li>
+                    <li>While these are reviewed and monitored semi-annually upon submission to DBM, if these targets are not achieved, the Process Owner will review the process to determine what improvement needs to be made.</li>
+                    <li>Baseline means accomplishment of the previous year; Target – current year.</li>
+                </ol>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>FY 2025 Organizational Outcomes</h3>
+                    <div>
+                        <select id="filter-year">
+                            <option value="2025" selected>2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="outcomes-table">
+                        <thead>
+                            <tr>
+                                <th>OO Code</th>
+                                <th>Organizational Outcome</th>
+                                <th>Measure</th>
+                                <th>Baseline (2024)</th>
+                                <th>Target (2025)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OO1</td>
+                                <td>EXPORTS AND INVESTMENT DEVELOPED</td>
+                                <td>Amount of Exports</td>
+                                <td>c/o Head Office</td>
+                                <td>c/o Head Office</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>OO1</td>
+                                <td>EXPORTS AND INVESTMENT DEVELOPED</td>
+                                <td>Amount of Approved Investments</td>
+                                <td>c/o Head Office</td>
+                                <td>c/o Head Office</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>OO2</td>
+                                <td>INDUSTRIES DEVELOPED</td>
+                                <td>Employment Generated from the Industry Increased Annually</td>
+                                <td>c/o Head Office</td>
+                                <td>c/o Head Office</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>OO2</td>
+                                <td>INDUSTRIES DEVELOPED</td>
+                                <td>Employment Generated from the Services Sector Increased Annually</td>
+                                <td>c/o Head Office</td>
+                                <td>c/o Head Office</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>OO3</td>
+                                <td>MSME ASSISTED AND DEVELOPED</td>
+                                <td>Percentage of MSMEs assisted to the total number of MSMEs in manufacturing, retail trade, construction and services sectors</td>
+                                <td>79%</td>
+                                <td>70%</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>OO4</td>
+                                <td>CONSUMER WELFARE ENHANCED</td>
+                                <td>Consumer Resolution Rate</td>
+                                <td>100%</td>
+                                <td>99%</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>OO4</td>
+                                <td>CONSUMER WELFARE ENHANCED</td>
+                                <td>Level of Consumer Awareness Increased</td>
+                                <td>88%</td>
+                                <td>80%</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn btn-sm btn-edit">Edit</button>
+                                    <button class="btn btn-sm btn-secondary">History</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="add-outcome">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Add New Organizational Outcome</h3>
+                </div>
+                <div class="card-body">
+                    <form id="outcome-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="oo-code">OO Code</label>
+                                <input type="text" id="oo-code" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fiscal-year">Fiscal Year</label>
+                                <select id="fiscal-year" required>
+                                    <option value="">Select Year</option>
+                                    <option value="2025" selected>2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="outcome-title">Organizational Outcome</label>
+                            <input type="text" id="outcome-title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="measure">Measure</label>
+                            <input type="text" id="measure" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="baseline">Baseline (Previous Year)</label>
+                                <input type="text" id="baseline" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="target">Target (Current Year)</label>
+                                <input type="text" id="target" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notes">Notes/Instructions</label>
+                            <textarea id="notes"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save Outcome</button>
+                            <button type="reset" class="btn btn-secondary">Reset Form</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="reports">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Organizational Outcomes Reports</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="report-type">Report Type</label>
+                            <select id="report-type">
+                                <option value="annual">Annual Progress Report</option>
+                                <option value="semi-annual">Semi-Annual Review</option>
+                                <option value="achievement">Target Achievement</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="report-year">Fiscal Year</label>
+                            <select id="report-year">
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-primary">Generate Report</button>
+                        <button class="btn btn-secondary">Export to Excel</button>
+                    </div>
+                    
+                    <div id="report-results" style="margin-top: 30px;">
+                        <p>Select report parameters and click "Generate Report" to view results.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>DTI-10 Regional Office - Organizational Outcomes Management System | Version 1.0</p>
+            <p>© 2025 Department of Trade and Industry. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and content
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Form submission
+            const outcomeForm = document.getElementById('outcome-form');
+            if (outcomeForm) {
+                outcomeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const ooCode = document.getElementById('oo-code').value;
+                    const fiscalYear = document.getElementById('fiscal-year').value;
+                    const outcomeTitle = document.getElementById('outcome-title').value;
+                    const measure = document.getElementById('measure').value;
+                    const baseline = document.getElementById('baseline').value;
+                    const target = document.getElementById('target').value;
+                    const notes = document.getElementById('notes').value;
+                    
+                    // Here you would typically send this data to a server
+                    console.log('Form submitted:', {
+                        ooCode,
+                        fiscalYear,
+                        outcomeTitle,
+                        measure,
+                        baseline,
+                        target,
+                        notes
+                    });
+                    
+                    // Show success message
+                    alert('Organizational Outcome saved successfully!');
+                    
+                    // Reset form
+                    this.reset();
+                });
+            }
+            
+            // Edit button functionality
+            const editButtons = document.querySelectorAll('.btn-edit');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const cells = row.querySelectorAll('td');
+                    
+                    // Get data from the row
+                    const ooCode = cells[0].textContent;
+                    const outcomeTitle = cells[1].textContent;
+                    const measure = cells[2].textContent;
+                    const baseline = cells[3].textContent;
+                    const target = cells[4].textContent;
+                    
+                    // Fill the form with this data
+                    document.getElementById('oo-code').value = ooCode;
+                    document.getElementById('outcome-title').value = outcomeTitle;
+                    document.getElementById('measure').value = measure;
+                    document.getElementById('baseline').value = baseline;
+                    document.getElementById('target').value = target;
+                    
+                    // Switch to the add-outcome tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.querySelector('.tab[data-tab="add-outcome"]').classList.add('active');
+                    document.getElementById('add-outcome').classList.add('active');
+                    
+                    // Scroll to form
+                    document.getElementById('outcome-form').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            // Filter functionality
+            const filterYear = document.getElementById('filter-year');
+            if (filterYear) {
+                filterYear.addEventListener('change', function() {
+                    // In a real application, this would filter the table data
+                    console.log('Filtering by year:', this.value);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

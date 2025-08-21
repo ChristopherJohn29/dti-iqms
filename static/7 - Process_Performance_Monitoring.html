@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTI - Process Performance Monitoring</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ffc107;
+            --text-color: #333;
+            --border-color: #dee2e6;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+    background-color: white;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.agency-title h1 {
+    font-size: 1.4rem;
+    margin: 0 0 5px 0;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.agency-title h2 {
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+    font-weight: normal;
+}
+
+.fiscal-year {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.year-box {
+    display: inline-block;
+    min-width: 60px;
+    padding: 2px 5px;
+    margin-left: 5px;
+    border: 1px solid #333;
+    text-align: center;
+}
+
+.form-table {
+    border-collapse: collapse;
+    margin-left: 20px;
+}
+
+.form-table td {
+    padding: 3px 8px;
+    vertical-align: middle;
+}
+
+.form-label {
+    font-weight: bold;
+    text-align: center;
+    border-right: 1px solid #ddd;
+    padding-right: 10px !important;
+}
+
+.detail-label {
+    font-weight: bold;
+    padding-right: 15px;
+}
+
+.detail-value {
+    border: 1px solid #ddd;
+    min-width: 80px;
+    text-align: center;
+}
+
+.process-info {
+    border-top: 2px solid var(--primary-color);
+    padding-top: 10px;
+}
+
+.info-row {
+    margin-bottom: 5px;
+    display: flex;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-weight: bold;
+    min-width: 180px;
+}
+
+.info-value {
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .header-main {
+        flex-direction: column;
+    }
+    
+    .form-table {
+        margin: 10px 0 0 0;
+    }
+    
+    .info-label {
+        min-width: 160px;
+    }
+}
+        
+        .zoom-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .monitoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .monitoring-table th, .monitoring-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .monitoring-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: normal;
+            position: sticky;
+            top: 0;
+        }
+        
+        .monitoring-table tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        
+        .monitoring-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .objective-row {
+            font-weight: bold;
+            background-color: #e7f1ff !important;
+        }
+        
+        .target-row {
+            padding-left: 30px !important;
+        }
+        
+        .highlight {
+            background-color: var(--accent-color) !important;
+        }
+        
+        .input-cell {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        
+        .process-section {
+            margin-top: 40px;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .process-section h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 300px;
+        }
+        
+        .action-buttons button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .save-btn {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .export-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .reset-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .status-bar {
+            background-color: #e2e3e5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+       .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 80%;
+            max-width: 750px;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .form-section h4 {
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .form-col {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .form-col label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .form-actions button {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .input-hint {
+            font-size: 0.75rem;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+            font-size: 0.9rem;
+        }
+
+        /* Compact monthly targets grid */
+        .monthly-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .monthly-grid .form-col {
+            min-width: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .monthly-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .monthly-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .monitoring-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .action-buttons {
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .action-buttons button {
+                flex: 1;
+                margin: 0 5px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            .document-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.document-meta {
+    background-color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+
+.meta-row {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.meta-row:last-child {
+    margin-bottom: 0;
+}
+
+.meta-label {
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 40px;
+}
+
+.meta-value {
+    color: var(--primary-color);
+}
+
+
+.section-header {
+    background-color: #2c3e50 !important;
+    color: white !important;
+    text-align: center;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.monitoring-table th {
+    vertical-align: middle;
+}
+
+/* Keep existing header styles */
+.monitoring-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: normal;
+    position: sticky;
+    top: 0;
+}
+
+.form-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.form-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.form-col {
+    flex: 1;
+    min-width: 120px;
+    padding: 0 5px;
+    margin-bottom: 10px;
+}
+
+.form-col label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header>
+    <div class="header-container">
+        <div class="header-main">
+            <div class="agency-title">
+                
+                <h1>DEPARTMENT OF TRADE AND INDUSTRY</h1>
+                <h2>PROCESS PERFORMANCE MONITORING</h2>
+                <div class="fiscal-year">FY<span class="year-box">2025</span></div>
+            </div>
+            
+            <div class="form-details">
+                <table class="form-table">
+                    <tr>
+                        <td rowspan="4" class="form-label">F<br>O<br>R<br>M</td>
+                        <td class="detail-label">Code</td>
+                        <td class="detail-value">FIA-PL-06</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Rev.</td>
+                        <td class="detail-value">3</td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label"></td>
+                        <td class="detail-value"></td>
+                    </tr>
+                    <tr>
+                        <td class="detail-label">Date</td>
+                        <td class="detail-value">01-Apr-25</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="process-info">
+            <div class="info-row">
+                <span class="info-label">BUREAU/REGIONS/OFFICE:</span>
+                <span class="info-value">DTI-10 REGIONAL OFFICE</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">PROCESS:</span>
+                <span class="info-value">CONDUCT OF TRAINING</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">PROCESS OWNER:</span>
+                <span class="info-value">Training Coordinator</span>
+            </div>
+        </div>
+    </div>
+</header>
+        
+        
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Search objectives or targets..." id="searchInput">
+            <div class="action-buttons">
+                
+                <button class="add-btn" id="addBtn">Add New</button>
+                <button class="save-btn" id="saveBtn">Save Data</button>
+                <button class="export-btn" id="exportBtn">Export to Excel</button>
+                <button class="reset-btn" id="resetBtn">Reset</button>
+                <button class="zoom-btn" id="zoomBtn">Zoom In</button>
+            </div>
+        </div>
+        
+<table class="monitoring-table" id="monitoringTable">
+    <thead>
+        <tr>
+            <th rowspan="3">No</th>
+            <th rowspan="3">Quality Objective Statement</th>
+            <th rowspan="3">Quality Target = Quality Indicator/Output Indicator</th>
+            
+            <!-- Annual Monitoring Header -->
+            <th colspan="7" class="section-header">Annual Monitoring</th>
+            
+            <!-- Monthly Monitoring Header -->
+            <th colspan="12" class="section-header">Monthly Monitoring</th>
+            
+            <th rowspan="3">Actions</th>
+        </tr>
+        <tr>
+            <!-- Annual Monitoring Sub-columns -->
+            <th>Annual</th>
+            <th>Q1</th>
+            <th>Q2</th>
+            <th>1st Sem</th>
+            <th>Q3</th>
+            <th>Q4</th>
+            <th>2nd Sem</th>
+            
+            <!-- Monthly Monitoring Sub-columns -->
+            <th>Jan</th>
+            <th>Feb</th>
+            <th>Mar</th>
+            <th>Apr</th>
+            <th>May</th>
+            <th>Jun</th>
+            <th>Jul</th>
+            <th>Aug</th>
+            <th>Sep</th>
+            <th>Oct</th>
+            <th>Nov</th>
+            <th>Dec</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        <!-- Table rows will be dynamically added here -->
+    </tbody>
+</table>
+        
+        <div class="process-section">
+            <h3>PROCESS: CONDUCT OF TRAINING</h3>
+            <div id="processDetails">
+                <p>This section would contain detailed information about the training process, including timelines, responsible personnel, and additional metrics.</p>
+            </div>
+        </div>
+        
+        <div class="status-bar" id="statusBar">
+            Status message appears here...
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+<!-- Compact Add/Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Objective</h3>
+                <span class="close-btn" id="closeModal">&times;</span>
+            </div>
+            <form id="objectiveForm">
+                <input type="hidden" id="editId">
+                
+                <div class="form-section">
+                    <h4>Basic Information</h4>
+                    <div class="form-row">
+                        <div class="form-col" style="flex: 0 0 80px;">
+                            <label for="objectiveNumber" class="required-field">No.</label>
+                            <input type="text" class="form-control" id="objectiveNumber" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="objectiveStatement" class="required-field">Objective Statement</label>
+                        <textarea class="form-control" id="objectiveStatement" rows="2" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="qualityTarget" class="required-field">Quality Target</label>
+                        <textarea class="form-control" id="qualityTarget" rows="2" required></textarea>
+                    </div>
+                </div>
+                
+                <!-- Annual Monitoring Section -->
+                <div class="form-section">
+                    <h4>Annual Targets</h4>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>Annual</label>
+                            <input type="number" class="form-control" id="annualTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Q1</label>
+                            <input type="number" class="form-control" id="q1Target" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Q2</label>
+                            <input type="number" class="form-control" id="q2Target" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>1st Sem</label>
+                            <input type="number" class="form-control" id="sem1Target" value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>Q3</label>
+                            <input type="number" class="form-control" id="q3Target" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Q4</label>
+                            <input type="number" class="form-control" id="q4Target" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>2nd Sem</label>
+                            <input type="number" class="form-control" id="sem2Target" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Monthly Monitoring Section -->
+                <div class="form-section">
+                    <h4>Monthly Targets</h4>
+                    <div class="monthly-grid">
+                        <div class="form-col">
+                            <label>Jan</label>
+                            <input type="number" class="form-control" id="janTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Feb</label>
+                            <input type="number" class="form-control" id="febTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Mar</label>
+                            <input type="number" class="form-control" id="marTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Apr</label>
+                            <input type="number" class="form-control" id="aprTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>May</label>
+                            <input type="number" class="form-control" id="mayTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Jun</label>
+                            <input type="number" class="form-control" id="junTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Jul</label>
+                            <input type="number" class="form-control" id="julTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Aug</label>
+                            <input type="number" class="form-control" id="augTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Sep</label>
+                            <input type="number" class="form-control" id="sepTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Oct</label>
+                            <input type="number" class="form-control" id="octTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Nov</label>
+                            <input type="number" class="form-control" id="novTarget" value="0" min="0">
+                        </div>
+                        <div class="form-col">
+                            <label>Dec</label>
+                            <input type="number" class="form-control" id="decTarget" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="reset-btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - in a real app, this would come from a database
+        let objectives = [
+            {
+                id: 1,
+                number: "1",
+                statement: "Build Productivity and Efficiency of MSMEs",
+                target: "90% of trainings conducted as scheduled/planned per semester based on the approved Annual Work and Financial Plan",
+                targets: {
+                    annual: 0,
+                    q1: 0,
+                    q2: 0,
+                    sem1: 0,
+                    q3: 0,
+                    q4: 0,
+                    sem2: 0,
+                    jan: 0,
+                    feb: 0,
+                    mar: 0,
+                    apr: 0,
+                    may: 0,
+                    jun: 0,
+                    jul: 0,
+                    aug: 0,
+                    sep: 0,
+                    oct: 0,
+                    nov: 0,
+                    dec: 0
+                },
+                isObjective: true
+            },
+            {
+                id: 2,
+                number: "",
+                statement: "",
+                target: "Number of trainings conducted as scheduled based on the approved Annual Work and Financial Plan",
+                targets: {
+                    annual: 0,
+                    q1: 0,
+                    q2: 0,
+                    sem1: 0,
+                    q3: 0,
+                    q4: 0,
+                    sem2: 0,
+                    jan: 0,
+                    feb: 0,
+                    mar: 0,
+                    apr: 0,
+                    may: 0,
+                    jun: 0,
+                    jul: 0,
+                    aug: 0,
+                    sep: 0,
+                    oct: 0,
+                    nov: 0,
+                    dec: 0
+                },
+                isObjective: false
+            },
+            {
+                id: 3,
+                number: "",
+                statement: "",
+                target: "Number of trainings scheduled/planned based on the approved Annual Work and Financial Plan",
+                targets: {
+                    annual: 0,
+                    q1: 0,
+                    q2: 0,
+                    sem1: 0,
+                    q3: 0,
+                    q4: 0,
+                    sem2: 0,
+                    jan: 0,
+                    feb: 0,
+                    mar: 0,
+                    apr: 0,
+                    may: 0,
+                    jun: 0,
+                    jul: 0,
+                    aug: 0,
+                    sep: 0,
+                    oct: 0,
+                    nov: 0,
+                    dec: 0
+                },
+                isObjective: false
+            },
+            {
+                id: 4,
+                number: "",
+                statement: "",
+                target: "100% of MSMEs (participants) who rate the conduct of training process as satisfactory or better",
+                targets: {
+                    annual: 0,
+                    q1: 0,
+                    q2: 0,
+                    sem1: 0,
+                    q3: 0,
+                    q4: 0,
+                    sem2: 0,
+                    jan: 0,
+                    feb: 0,
+                    mar: 0,
+                    apr: 0,
+                    may: 0,
+                    jun: 0,
+                    jul: 0,
+                    aug: 0,
+                    sep: 0,
+                    oct: 0,
+                    nov: 0,
+                    dec: 0
+                },
+                isObjective: false,
+                isHighlighted: true
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.getElementById('tableBody');
+            const modal = document.getElementById('editModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const closeModal = document.getElementById('closeModal');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const objectiveForm = document.getElementById('objectiveForm');
+            const addBtn = document.getElementById('addBtn');
+            const editId = document.getElementById('editId');
+            
+            // Render the table with initial data
+            renderTable();
+            
+            // Zoom functionality
+            const zoomBtn = document.getElementById('zoomBtn');
+            const table = document.getElementById('monitoringTable');
+            
+            zoomBtn.addEventListener('click', function() {
+                table.classList.toggle('zoomed');
+                zoomBtn.textContent = table.classList.contains('zoomed') ? 'Zoom Out' : 'Zoom In';
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('.monitoring-table tbody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Save button functionality
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.addEventListener('click', function() {
+                showStatus('Data saved successfully!', 'success');
+                // In a real application, this would send data to a server
+            });
+            
+            // Export button functionality
+            const exportBtn = document.getElementById('exportBtn');
+            exportBtn.addEventListener('click', function() {
+                showStatus('Exporting to Excel...', 'info');
+                // In a real application, this would generate an Excel file
+                setTimeout(() => {
+                    showStatus('Export completed!', 'success');
+                }, 1500);
+            });
+            
+            // Reset button functionality
+            const resetBtn = document.getElementById('resetBtn');
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset all values to zero?')) {
+                    objectives.forEach(obj => {
+                        Object.keys(obj.targets).forEach(key => {
+                            obj.targets[key] = 0;
+                        });
+                    });
+                    renderTable();
+                    showStatus('All values have been reset.', 'info');
+                }
+            });
+            
+            // Add button functionality
+            addBtn.addEventListener('click', function() {
+                openModal(null);
+            });
+            
+            // Modal close functionality
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            cancelBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // Form submission
+            objectiveForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const id = editId.value ? parseInt(editId.value) : Date.now();
+                const isNew = !editId.value;
+                
+                const newObjective = {
+                    id: id,
+                    number: document.getElementById('objectiveNumber').value,
+                    statement: document.getElementById('objectiveStatement').value,
+                    target: document.getElementById('qualityTarget').value,
+                    targets: {
+                        annual: 0,
+                        q1: 0,
+                        q2: 0,
+                        sem1: 0,
+                        q3: 0,
+                        q4: 0,
+                        sem2: 0,
+                        jan: parseInt(document.getElementById('janTarget').value) || 0,
+                        feb: parseInt(document.getElementById('febTarget').value) || 0,
+                        mar: parseInt(document.getElementById('marTarget').value) || 0,
+                        apr: parseInt(document.getElementById('aprTarget').value) || 0,
+                        may: parseInt(document.getElementById('mayTarget').value) || 0,
+                        jun: parseInt(document.getElementById('junTarget').value) || 0,
+                        jul: parseInt(document.getElementById('julTarget').value) || 0,
+                        aug: parseInt(document.getElementById('augTarget').value) || 0,
+                        sep: parseInt(document.getElementById('sepTarget').value) || 0,
+                        oct: parseInt(document.getElementById('octTarget').value) || 0,
+                        nov: parseInt(document.getElementById('novTarget').value) || 0,
+                        dec: parseInt(document.getElementById('decTarget').value) || 0
+                    },
+                    isObjective: true
+                };
+                
+                if (isNew) {
+                    objectives.push(newObjective);
+                } else {
+                    const index = objectives.findIndex(obj => obj.id === id);
+                    if (index !== -1) {
+                        objectives[index] = newObjective;
+                    }
+                }
+                
+                renderTable();
+                modal.style.display = 'none';
+                showStatus(`Objective ${isNew ? 'added' : 'updated'} successfully!`, 'success');
+            });
+            
+            function openModal(objective) {
+    if (objective) {
+        modalTitle.textContent = 'Edit Objective';
+        editId.value = objective.id;
+        document.getElementById('objectiveNumber').value = objective.number;
+        document.getElementById('objectiveStatement').value = objective.statement;
+        document.getElementById('qualityTarget').value = objective.target;
+        
+        // Annual Monitoring
+        document.getElementById('annualTarget').value = objective.targets.annual;
+        document.getElementById('q1Target').value = objective.targets.q1;
+        document.getElementById('q2Target').value = objective.targets.q2;
+        document.getElementById('sem1Target').value = objective.targets.sem1;
+        document.getElementById('q3Target').value = objective.targets.q3;
+        document.getElementById('q4Target').value = objective.targets.q4;
+        document.getElementById('sem2Target').value = objective.targets.sem2;
+        
+        // Monthly Monitoring
+        document.getElementById('janTarget').value = objective.targets.jan;
+        document.getElementById('febTarget').value = objective.targets.feb;
+        document.getElementById('marTarget').value = objective.targets.mar;
+        document.getElementById('aprTarget').value = objective.targets.apr;
+        document.getElementById('mayTarget').value = objective.targets.may;
+        document.getElementById('junTarget').value = objective.targets.jun;
+        document.getElementById('julTarget').value = objective.targets.jul;
+        document.getElementById('augTarget').value = objective.targets.aug;
+        document.getElementById('sepTarget').value = objective.targets.sep;
+        document.getElementById('octTarget').value = objective.targets.oct;
+        document.getElementById('novTarget').value = objective.targets.nov;
+        document.getElementById('decTarget').value = objective.targets.dec;
+    } else {
+        modalTitle.textContent = 'Add New Objective';
+        editId.value = '';
+        objectiveForm.reset();
+    }
+    modal.style.display = 'block';
+}
+            
+            // Function to render the table
+            function renderTable() {
+                tableBody.innerHTML = '';
+                
+                objectives.forEach((objective, index) => {
+                    const row = document.createElement('tr');
+                    
+                    if (objective.isObjective) {
+                        row.classList.add('objective-row');
+                    } else {
+                        row.classList.add('target-row');
+                    }
+                    
+                    if (objective.isHighlighted) {
+                        row.classList.add('highlight');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${objective.number}</td>
+                        <td>${objective.statement}</td>
+                        <td>${objective.target}</td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.annual}" data-id="${objective.id}" data-field="annual"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.q1}" data-id="${objective.id}" data-field="q1"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.q2}" data-id="${objective.id}" data-field="q2"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.sem1}" data-id="${objective.id}" data-field="sem1"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.q3}" data-id="${objective.id}" data-field="q3"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.q4}" data-id="${objective.id}" data-field="q4"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.sem2}" data-id="${objective.id}" data-field="sem2"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.jan}" data-id="${objective.id}" data-field="jan"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.feb}" data-id="${objective.id}" data-field="feb"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.mar}" data-id="${objective.id}" data-field="mar"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.apr}" data-id="${objective.id}" data-field="apr"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.may}" data-id="${objective.id}" data-field="may"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.jun}" data-id="${objective.id}" data-field="jun"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.jul}" data-id="${objective.id}" data-field="jul"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.aug}" data-id="${objective.id}" data-field="aug"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.sep}" data-id="${objective.id}" data-field="sep"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.oct}" data-id="${objective.id}" data-field="oct"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.nov}" data-id="${objective.id}" data-field="nov"></td>
+                        <td><input type="number" class="input-cell" value="${objective.targets.dec}" data-id="${objective.id}" data-field="dec"></td>
+                        <td>
+                            ${objective.isObjective ? `<button class="edit-btn" data-id="${objective.id}">Edit</button>` : ''}
+                            <button class="delete-btn" data-id="${objective.id}">Delete</button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // Add event listeners to all input cells
+                document.querySelectorAll('.input-cell').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const field = this.getAttribute('data-field');
+                        const value = parseInt(this.value) || 0;
+                        
+                        const objective = objectives.find(obj => obj.id === id);
+                        if (objective) {
+                            objective.targets[field] = value;
+                        }
+                    });
+                });
+                
+                // Add event listeners to edit buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const objective = objectives.find(obj => obj.id === id);
+                        if (objective) {
+                            openModal(objective);
+                        }
+                    });
+                });
+                
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        if (confirm('Are you sure you want to delete this item?')) {
+                            objectives = objectives.filter(obj => obj.id !== id);
+                            renderTable();
+                            showStatus('Item deleted successfully!', 'success');
+                        }
+                    });
+                });
+            }
+
+
+
+objectiveForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const id = editId.value ? parseInt(editId.value) : Date.now();
+    const isNew = !editId.value;
+    
+    const newObjective = {
+        id: id,
+        number: document.getElementById('objectiveNumber').value,
+        statement: document.getElementById('objectiveStatement').value,
+        target: document.getElementById('qualityTarget').value,
+        targets: {
+            // Annual Monitoring
+            annual: parseInt(document.getElementById('annualTarget').value) || 0,
+            q1: parseInt(document.getElementById('q1Target').value) || 0,
+            q2: parseInt(document.getElementById('q2Target').value) || 0,
+            sem1: parseInt(document.getElementById('sem1Target').value) || 0,
+            q3: parseInt(document.getElementById('q3Target').value) || 0,
+            q4: parseInt(document.getElementById('q4Target').value) || 0,
+            sem2: parseInt(document.getElementById('sem2Target').value) || 0,
+            
+            // Monthly Monitoring
+            jan: parseInt(document.getElementById('janTarget').value) || 0,
+            feb: parseInt(document.getElementById('febTarget').value) || 0,
+            mar: parseInt(document.getElementById('marTarget').value) || 0,
+            apr: parseInt(document.getElementById('aprTarget').value) || 0,
+            may: parseInt(document.getElementById('mayTarget').value) || 0,
+            jun: parseInt(document.getElementById('junTarget').value) || 0,
+            jul: parseInt(document.getElementById('julTarget').value) || 0,
+            aug: parseInt(document.getElementById('augTarget').value) || 0,
+            sep: parseInt(document.getElementById('sepTarget').value) || 0,
+            oct: parseInt(document.getElementById('octTarget').value) || 0,
+            nov: parseInt(document.getElementById('novTarget').value) || 0,
+            dec: parseInt(document.getElementById('decTarget').value) || 0
+        },
+        isObjective: true
+    };
+    
+    // Rest of the form handling code...
+});
+
+
+
+
+
+
+
+            
+            // Input validation
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('input-cell')) {
+                    if (isNaN(e.target.value) || e.target.value < 0) {
+                        e.target.value = '0';
+                        showStatus('Please enter a valid positive number', 'error');
+                    }
+                }
+            });
+            
+            // Helper function to show status messages
+            function showStatus(message, type) {
+                const statusBar = document.getElementById('statusBar');
+                statusBar.textContent = message;
+                statusBar.style.display = 'block';
+                
+                // Reset classes
+                statusBar.className = 'status-bar';
+                
+                // Add type class
+                if (type === 'success') {
+                    statusBar.style.backgroundColor = '#d4edda';
+                    statusBar.style.color = '#155724';
+                } else if (type === 'error') {
+                    statusBar.style.backgroundColor = '#f8d7da';
+                    statusBar.style.color = '#721c24';
+                } else {
+                    statusBar.style.backgroundColor = '#e2e3e5';
+                    statusBar.style.color = '#383d41';
+                }
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    statusBar.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

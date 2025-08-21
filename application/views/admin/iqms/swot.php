@@ -44,6 +44,12 @@
             </div>
         </div>
 
+<input type="hidden" id="iqmsModuleCode" value="SWOT">
+<input type="hidden" id="iqmsOfficeId" value="10">
+<input type="hidden" id="iqmsProcessId" value="1">
+<input type="hidden" id="iqmsFiscalYear" value="2025">
+
+
 
 
         <!-- Search and Filter -->
@@ -161,313 +167,138 @@
 </div>
 
 <script>
-// Sample data - in a real app, this would come from a database
-let swotData = {
-    strengths: [
-        {
-            id: 's1',
-            number: 'S-1',
-            text: 'Presence of dedicated, reliable and competent staff',
-            opportunity: 'Pool of in-house resource persons to conduct the training effectively and efficiently',
-            reference: 'OR-6'
-        },
-        {
-            id: 's2',
-            number: 'S-2',
-            text: 'Inclusive growth programs in place (e.g. training programs)',
-            opportunity: 'Effective and efficient conduct of relevant trainings',
-            reference: 'OR-1'
-        },
-        {
-            id: 's3',
-            number: 'S-3',
-            text: 'Availability of ICT infrastructure (hardware, software, systems)',
-            opportunity: 'Use of new methodology in conducting trainings online such as thru zoom, googlemeet, webex, teams',
-            reference: 'OR-7'
-        }
-    ],
-    weaknesses: [
-        {
-            id: 'w1',
-            number: 'W-1',
-            text: 'Limited manpower',
-            opportunity: '',
-            reference: ''
-        },
-        {
-            id: 'w5',
-            number: 'W-5',
-            text: 'Lack of integrated database and data management system',
-            opportunity: '',
-            reference: ''
-        }
-    ],
-    opportunities: [
-        {
-            id: 'o1',
-            number: 'O-1',
-            text: 'Availability of external training programs',
-            opportunity: 'Pool of in-house resource persons to conduct the training effectively and efficiently',
-            reference: 'OR-6'
-        },
-        {
-            id: 'o3',
-            number: 'O-3',
-            text: 'Availability and advancement of ICT infra and systems',
-            opportunity: 'More MSMEs can be reached to participate in the training program',
-            reference: 'OR-8'
-        }
-    ],
-    threats: [
-        {
-            id: 't1',
-            number: 'T-1',
-            text: 'Negative Political Interventions',
-            opportunity: '',
-            reference: ''
-        },
-        {
-            id: 't2',
-            number: 'T-2',
-            text: 'Power interruptions',
-            opportunity: '',
-            reference: ''
-        }
-    ]
-};
+$(function(){
+  var ENDPOINT = {
+    ENSURE: '<?=base_url('admin/iqms-data/ensure')?>',
+    LIST:   '<?=base_url('admin/iqms-data/list')?>',
+    SAVE:   '<?=base_url('admin/iqms-data/save')?>',
+    DEL:    '<?=base_url('admin/iqms-data/delete')?>',
+    EXPORT: '<?=base_url('admin/iqms-data/export')?>'
+  };
+  var moduleCode = $('#iqmsModuleCode').val();
+  var officeId   = parseInt($('#iqmsOfficeId').val(),10) || null;
+  var processId  = $('#iqmsProcessId').val() ? parseInt($('#iqmsProcessId').val(),10) : null;
+  var fiscalYear = $('#iqmsFiscalYear').val() || (new Date().getFullYear());
+  var analysisId = null;
 
-// Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    renderSWOTItems();
+  function ensureAnalysis(){
+    return $.post(ENDPOINT.ENSURE, { module_code: moduleCode, office_id: officeId, process_id: processId, fiscal_year: fiscalYear }, function(resp){ analysisId = resp.id; }, 'json');
+  }
 
-    // Form submission handler
-    document.getElementById('swotForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        saveSWOTItem();
+  function loadSwot(){
+    return $.getJSON(ENDPOINT.LIST, { table:'iqms_swot_entries', analysis_id: analysisId }, function(rows){
+      var dataByType = { strengths:[], weaknesses:[], opportunities:[], threats:[] };
+      $.each(rows, function(_, r){
+        var cat = r.swot_type+'s';
+        dataByType[cat].push({ id:r.id, number:r.item_number||'', text:r.item_description||'', risk:r.potential_risk||'', opportunity:r.potential_opportunity||'', reference:r.reference_links||'' });
+      });
+      renderCategory('strengths', dataByType.strengths);
+      renderCategory('weaknesses', dataByType.weaknesses);
+      renderCategory('opportunities', dataByType.opportunities);
+      renderCategory('threats', dataByType.threats);
     });
+  }
 
-    // Search functionality
-    document.querySelector('.search-input').addEventListener('input', function() {
-        filterSWOTItems();
+  function renderCategory(category, items){
+    var $c = $('#'+category+'-content'); $c.empty();
+    if(!items.length){ $c.html('<div class="no-items">No items found</div>'); return; }
+    $.each(items, function(_, item){
+      var oppHtml = item.opportunity ? '<div class="item-opportunity"><strong>Opportunity:</strong> '+escapeHtml(item.opportunity)+'</div>' : '';
+      var refHtml = item.reference ? '<div class="item-reference"><strong>Reference:</strong> '+escapeHtml(item.reference)+'</div>' : '';
+      var $el = $('<div class="swot-item"/>').attr('data-id', item.id).html(
+        '<div class="swot-item-header">'+
+        '  <span class="item-number">'+escapeHtml(item.number)+'</span>'+
+        '  <div class="item-actions">'+
+        '    <button class="edit-btn" onclick="editItem(\''+category+'\','+item.id+')">Edit</button>'+
+        '    <button class="delete-btn" onclick="deleteItem(\''+category+'\','+item.id+')">Delete</button>'+
+        '  </div>'+
+        '</div>'+
+        '<div class="item-text">'+escapeHtml(item.text)+'</div>'+
+        oppHtml + refHtml
+      );
+      $c.append($el);
     });
+  }
 
-    // Filter functionality
-    document.querySelector('.filter-select').addEventListener('change', function() {
-        filterSWOTItems();
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]); }); }
+
+  window.openModal = function(type, id){
+    var typeNames = { strength:'Strength', weakness:'Weakness', opportunity:'Opportunity', threat:'Threat' };
+    $('#modalTitle').text((id?'Edit ':'Add ')+typeNames[type]+' Item');
+    $('#itemType').val(type);
+    if(id){
+      // Load row for editing
+      $.getJSON(ENDPOINT.LIST, { table:'iqms_swot_entries', analysis_id: analysisId }, function(rows){
+        var r = rows.find(function(x){ return x.id==id; });
+        if(r){
+          $('#itemId').val(id);
+          $('#itemNumber').val(r.item_number||'');
+          $('#itemText').val(r.item_description||'');
+          $('#potentialRisk').val(r.potential_risk||'');
+          $('#potentialOpportunity').val(r.potential_opportunity||'');
+          $('#reference').val(r.reference_links||'');
+        }
+        $('#swotModal').css('display','flex');
+      });
+    } else {
+      $('#swotForm')[0].reset();
+      $('#itemId').val('');
+      var prefix = (type==='strength'?'S-': type==='weakness'?'W-': type==='opportunity'?'O-':'T-');
+      $.getJSON(ENDPOINT.LIST, { table:'iqms_swot_entries', analysis_id: analysisId }, function(rows){
+        var nextNum = rows.filter(function(r){ return r.swot_type===type; }).length + 1;
+        $('#itemNumber').val(prefix+nextNum);
+        $('#swotModal').css('display','flex');
+      });
+    }
+  };
+
+  window.closeModal = function(){ $('#swotModal').hide(); };
+
+  window.saveSWOTItem = function(){
+    var type = $('#itemType').val();
+    var id   = $('#itemId').val();
+    var data = {
+      table:'iqms_swot_entries',
+      id: id,
+      analysis_id: analysisId,
+      swot_type: type,
+      item_number: $('#itemNumber').val(),
+      item_description: $('#itemText').val(),
+      potential_risk: $('#potentialRisk').val(),
+      potential_opportunity: $('#potentialOpportunity').val(),
+      reference_links: $('#reference').val()
+    };
+    $.post(ENDPOINT.SAVE, data, function(){ loadSwot().then(function(){ closeModal(); }); });
+  };
+
+  window.editItem = function(category, id){ var type = category.slice(0,-1); openModal(type, id); };
+
+  window.deleteItem = function(category, id){
+    if(!confirm('Are you sure you want to delete this item?')) return;
+    $.post(ENDPOINT.DEL, { table:'iqms_swot_entries', id:id }, function(){ renderCategory(category); loadSwot(); });
+  };
+
+  function filterSWOTItems(){
+    var term = $('.search-input').val().toLowerCase();
+    var filter = $('.filter-select').val();
+    ['strengths','weaknesses','opportunities','threats'].forEach(function(cat){
+      var $box = $('.swot-box.'+cat);
+      if(filter!=='all' && filter!==cat){ $box.hide(); return; } else { $box.show(); }
+      var $items = $('#'+cat+'-content .swot-item');
+      var any=false; $items.each(function(){
+        var vis = $(this).text().toLowerCase().indexOf(term) >= 0; $(this).toggle(vis); any = any||vis; });
+      var $c = $('#'+cat+'-content'); var $no = $c.find('.no-items');
+      if(!any && $items.length>0){ if(!$no.length) $c.append('<div class="no-items">No items match your search</div>'); }
+      else if($no.length){ $no.remove(); }
     });
+  }
+
+  // Bind form submit
+  $('#swotForm').on('submit', function(e){ e.preventDefault(); saveSWOTItem(); });
+  $('.search-input').on('input', filterSWOTItems);
+  $('.filter-select').on('change', filterSWOTItems);
+
+  // Initialize
+  ensureAnalysis().then(loadSwot);
 });
-
-// Render all SWOT items
-function renderSWOTItems() {
-    renderCategoryItems('strengths');
-    renderCategoryItems('weaknesses');
-    renderCategoryItems('opportunities');
-    renderCategoryItems('threats');
-}
-
-// Render items for a specific category
-function renderCategoryItems(category) {
-    const container = document.getElementById(`${category}-content`);
-    container.innerHTML = '';
-
-    if (swotData[category].length === 0) {
-        container.innerHTML = '<div class="no-items">No items found</div>';
-        return;
-    }
-
-    swotData[category].forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'swot-item';
-        itemElement.dataset.id = item.id;
-
-        let opportunityHtml = '';
-        if (item.opportunity) {
-            opportunityHtml = `<div class="item-opportunity"><strong>Opportunity:</strong> ${item.opportunity}</div>`;
-        }
-
-        let referenceHtml = '';
-        if (item.reference) {
-            referenceHtml = `<div class="item-reference"><strong>Reference:</strong> ${item.reference}</div>`;
-        }
-
-        itemElement.innerHTML = `
-            <div class="swot-item-header">
-                <span class="item-number">${item.number}</span>
-                <div class="item-actions">
-                    <button class="edit-btn" onclick="editItem('${category}', '${item.id}')">Edit</button>
-                    <button class="delete-btn" onclick="deleteItem('${category}', '${item.id}')">Delete</button>
-                </div>
-            </div>
-            <div class="item-text">${item.text}</div>
-            ${opportunityHtml}
-            ${referenceHtml}
-        `;
-
-        container.appendChild(itemElement);
-    });
-}
-
-// Open modal for adding/editing items
-function openModal(type, id = null) {
-    const modal = document.getElementById('swotModal');
-    const modalTitle = document.getElementById('modalTitle');
-
-    // Set modal title based on type
-    const typeNames = {
-        'strength': 'Strength',
-        'weakness': 'Weakness',
-        'opportunity': 'Opportunity',
-        'threat': 'Threat'
-    };
-
-    if (id) {
-        modalTitle.textContent = `Edit ${typeNames[type]} Item`;
-    } else {
-        modalTitle.textContent = `Add ${typeNames[type]} Item`;
-    }
-
-    // Set item type
-    document.getElementById('itemType').value = type;
-
-    // If editing, populate form with existing data
-    if (id) {
-        const category = type + 's'; // Convert to plural
-        const item = swotData[category].find(item => item.id === id);
-
-        if (item) {
-            document.getElementById('itemId').value = id;
-            document.getElementById('itemNumber').value = item.number;
-            document.getElementById('itemText').value = item.text;
-            document.getElementById('potentialRisk').value = item.risk || '';
-            document.getElementById('potentialOpportunity').value = item.opportunity || '';
-            document.getElementById('reference').value = item.reference || '';
-        }
-    } else {
-        // Reset form for new item
-        document.getElementById('swotForm').reset();
-        document.getElementById('itemId').value = '';
-
-        // Set default item number based on category
-        let prefix = '';
-        switch(type) {
-            case 'strength': prefix = 'S-'; break;
-            case 'weakness': prefix = 'W-'; break;
-            case 'opportunity': prefix = 'O-'; break;
-            case 'threat': prefix = 'T-'; break;
-        }
-
-        // Find the next available number
-        const category = type + 's';
-        const nextNum = swotData[category].length + 1;
-        document.getElementById('itemNumber').value = `${prefix}${nextNum}`;
-    }
-
-    modal.style.display = 'flex';
-}
-
-// Close modal
-function closeModal() {
-    document.getElementById('swotModal').style.display = 'none';
-}
-
-// Save SWOT item (add new or update existing)
-function saveSWOTItem() {
-    const type = document.getElementById('itemType').value;
-    const id = document.getElementById('itemId').value;
-    const category = type + 's';
-
-    const itemData = {
-        number: document.getElementById('itemNumber').value,
-        text: document.getElementById('itemText').value,
-        risk: document.getElementById('potentialRisk').value,
-        opportunity: document.getElementById('potentialOpportunity').value,
-        reference: document.getElementById('reference').value
-    };
-
-    if (id) {
-        // Update existing item
-        const index = swotData[category].findIndex(item => item.id === id);
-        if (index !== -1) {
-            swotData[category][index] = { ...swotData[category][index], ...itemData };
-        }
-    } else {
-        // Add new item
-        const newId = type.charAt(0) + (swotData[category].length + 1);
-        itemData.id = newId;
-        swotData[category].push(itemData);
-    }
-
-    // Re-render the category
-    renderCategoryItems(category);
-    closeModal();
-}
-
-// Edit item
-function editItem(category, id) {
-    const type = category.slice(0, -1); // Convert to singular (e.g., strengths -> strength)
-    openModal(type, id);
-}
-
-// Delete item
-function deleteItem(category, id) {
-    if (confirm('Are you sure you want to delete this item?')) {
-        swotData[category] = swotData[category].filter(item => item.id !== id);
-        renderCategoryItems(category);
-    }
-}
-
-// Filter SWOT items based on search and category filter
-function filterSWOTItems() {
-    const searchTerm = document.querySelector('.search-input').value.toLowerCase();
-    const filterValue = document.querySelector('.filter-select').value;
-
-    // For each category, show/hide items based on filters
-    const categories = ['strengths', 'weaknesses', 'opportunities', 'threats'];
-
-    categories.forEach(category => {
-        const swotBox = document.querySelector(`.swot-box.${category}`);
-
-        // Skip this category if filter is set to another category
-        if (filterValue !== 'all' && filterValue !== category) {
-            swotBox.style.display = 'none';
-            return;
-        }
-
-        swotBox.style.display = 'block';
-
-        const items = document.querySelectorAll(`#${category}-content .swot-item`);
-        let hasVisibleItems = false;
-
-        items.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            const isVisible = text.includes(searchTerm);
-            item.style.display = isVisible ? 'block' : 'none';
-
-            if (isVisible) hasVisibleItems = true;
-        });
-
-        // Show "no items" message if no items match the filter
-        const container = document.getElementById(`${category}-content`);
-        const noItemsMsg = container.querySelector('.no-items');
-
-        if (!hasVisibleItems && items.length > 0) {
-            if (!noItemsMsg) {
-                const msg = document.createElement('div');
-                msg.className = 'no-items';
-                msg.textContent = 'No items match your search';
-                container.appendChild(msg);
-            }
-        } else if (noItemsMsg) {
-            container.removeChild(noItemsMsg);
-        }
-    });
-}
-
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('swotModal');
-    if (event.target == modal) {
-        closeModal();
-    }
-}
 </script>

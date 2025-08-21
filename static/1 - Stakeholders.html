@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTI - Process Stakeholders Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            background-color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .agency-title h1 {
+            font-size: 1.4rem;
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .agency-title h2 {
+            font-size: 1.2rem;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+            font-weight: normal;
+        }
+        .fiscal-year {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .year-box {
+            display: inline-block;
+            min-width: 60px;
+            padding: 2px 5px;
+            margin-left: 5px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .form-table {
+            border-collapse: collapse;
+            margin-left: 20px;
+        }
+        .form-table td {
+            padding: 3px 8px;
+            vertical-align: middle;
+        }
+        .form-label {
+            font-weight: bold;
+            text-align: center;
+            border-right: 1px solid #ddd;
+            padding-right: 10px !important;
+        }
+        .detail-label {
+            font-weight: bold;
+            padding-right: 15px;
+        }
+        .detail-value {
+            border: 1px solid #ddd;
+            min-width: 80px;
+            text-align: center;
+        }
+        .process-info {
+            border-top: 2px solid var(--primary-color);
+            padding-top: 10px;
+        }
+        .info-row {
+            margin-bottom: 5px;
+            display: flex;
+        }
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+        .info-label {
+            font-weight: bold;
+            min-width: 180px;
+        }
+        .info-value {
+            color: var(--primary-color);
+        }
+        @media (max-width: 768px) {
+            .header-main {
+                flex-direction: column;
+            }
+            .form-table {
+                margin: 10px 0 0 0;
+            }
+            .info-label {
+                min-width: 160px;
+            }
+        }
+        .metadata {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .metadata-item {
+            flex: 1;
+        }
+        .process-info {
+            background-color: #f0f7ff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0066cc;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .stakeholder-section {
+            margin-bottom: 30px;
+        }
+        .stakeholder-header {
+            background-color: #003366;
+            color: white;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-secondary {
+            background-color: #666;
+        }
+        .btn-add {
+            background-color: #28a745;
+            margin-bottom: 20px;
+        }
+        .btn-edit {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+        .action-btns .btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        .add-stakeholder-form {
+            background-color: #f0f7ff;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], 
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .analysis-set {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .reference-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .reference-inputs input {
+            flex: 1;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .stakeholder-name-col {
+            width: 25%;
+            min-width: 200px;
+        }
+        .actions-col {
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-container">
+                <div class="header-main">
+                    <div class="agency-title">
+                        <h1>DEPARTMENT OF TRADE AND INDUSTRY</h1>
+                        <h2>PROCESS STAKEHOLDER ANALYSIS</h2>
+                        <div class="fiscal-year">FY<span class="year-box">2025</span></div>
+                    </div>
+                    <div class="form-details">
+                        <table class="form-table">
+                            <tr>
+                                <td rowspan="4" class="form-label">F<br>O<br>R<br>M</td>
+                                <td class="detail-label">Code</td>
+                                <td class="detail-value">FM-PL-02</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">Rev.</td>
+                                <td class="detail-value">3</td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label"></td>
+                                <td class="detail-value"></td>
+                            </tr>
+                            <tr>
+                                <td class="detail-label">Date</td>
+                                <td class="detail-value">01-Apr-25</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="process-info">
+                    <div class="info-row">
+                        <span class="info-label">BUREAU/REGIONS/OFFICE:</span>
+                        <span class="info-value">DTI-10 REGIONAL OFFICE</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">PROCESS:</span>
+                        <span class="info-value">CONDUCT OF TRAINING</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">PROCESS OWNER:</span>
+                        <span class="info-value">Training Coordinator</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <input type="text" class="search-bar" placeholder="Search stakeholders...">
+        <button class="btn btn-add" id="openModal">+ Add New Stakeholder Entry</button>
+        <div class="stakeholder-section">
+            <div class="stakeholder-header">
+                <h3>INTERESTED PARTY</h3>
+            </div>
+            <h4>NEEDS & EXPECTATIONS</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="stakeholder-name-col">STAKEHOLDER</th>
+                        <th>NEEDS & EXPECTATIONS</th>
+                        <th>POTENTIAL RISKS</th>
+                        <th>POTENTIAL OPPORTUNITIES</th>
+                        <th>TO BE CONSIDERED</th>
+                        <th>REFERENCE / LINKs</th>
+                        <th class="actions-col">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="stakeholderTableBody">
+                    <!-- Stakeholder entries will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="stakeholderModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h3 id="modalTitle">Add New Stakeholder Entry</h3>
+            <h4>DEPARTMENT OF TRADE AND INDUSTRY - PROCESS STAKEHOLDERS ANALYSIS</h4>
+            <div class="add-stakeholder-form">
+                <input type="hidden" id="stakeholderId">
+                <h5>Basic Information</h5>
+                <div class="form-group">
+                    <label for="process">Process:</label>
+                    <input type="text" id="process" value="CONDUCT OF TRAINING" readonly>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="processOwner">Process Owner:</label>
+                        <input type="text" id="processOwner" value="Training Coordinators">
+                    </div>
+                    <div class="form-group">
+                        <label for="office">Office:</label>
+                        <input type="text" id="office" value="DTI-10 Regional Office">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fiscalYear">Fiscal Year:</label>
+                    <input type="text" id="fiscalYear" value="2025">
+                </div>
+                <h5>Stakeholder Details</h5>
+                <div class="form-group">
+                    <label for="interestedParty">Interested Party:</label>
+                    <select id="interestedParty">
+                        <option value="">Select Interested Party</option>
+                        <option value="business_persons">1. Business Persons</option>
+                        <option value="development_partners">4. Development Partners</option>
+                        <option value="dti_staff">10. DTI-10 Staff/Contractual Services</option>
+                        <option value="other">Other (specify)</option>
+                    </select>
+                </div>
+                <div id="analysisSets">
+                    <div class="analysis-set">
+                        <h6>Set #1</h6>
+                        <h6>Needs & Expectations</h6>
+                        <div class="form-group">
+                            <label for="needs1">What does the interested party need or expect from DTI related to the process?</label>
+                            <textarea id="needs1" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="potentialRisk1">Potential Risk</label>
+                            <p>What potential NEGATIVE incident/event can happen if requirements are not met?</p>
+                            <textarea id="potentialRisk1" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="potentialOpportunity1">Potential Opportunity</label>
+                            <p>What potential POSITIVE incident/event can happen if requirements are met or exceeded?</p>
+                            <textarea id="potentialOpportunity1" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="toBeConsidered1">To Be Considered</label>
+                            <select id="toBeConsidered1">
+                                <option value="">Select Option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>References</label>
+                            <div class="reference-inputs">
+                                <input type="text" id="riskReference1" placeholder="Risk Reference # e.g., RR-1">
+                                <input type="text" id="opportunityReference1" placeholder="Opportunity Reference # e.g., OR-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-add" id="addAnalysisSet">+ Add Analysis Set</button>
+                <div style="margin-top: 20px;">
+                    <button class="btn" id="saveEntry">Save Entry</button>
+                    <button class="btn btn-secondary" id="cancelEntry">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let stakeholders = [
+            {
+                id: 1,
+                category: "Business Persons",
+                description: "(Inclusions: business owners, entrepreneurs, MSMEs, product/service providers, investors)",
+                entries: [
+                    {
+                        id: 1,
+                        needs: "1.5 Proper, comfortable and Minimum Public Health Standards Protocol-compliant venue with decent food",
+                        risks: "",
+                        opportunities: "",
+                        toBeConsidered: "Yes",
+                        riskRef: "",
+                        oppRef: "OR-2"
+                    },
+                    {
+                        id: 2,
+                        needs: "1.6 Organized / systematized conduct of various DTI training activities",
+                        risks: "Training not implemented as planned",
+                        opportunities: "Increase participants retention and improve learning",
+                        toBeConsidered: "No",
+                        riskRef: "",
+                        oppRef: "OR-8"
+                    },
+                    {
+                        id: 3,
+                        needs: "1.18 Expected learning objectives achieved",
+                        risks: "Training not implemented as planned",
+                        opportunities: "Improved business outcomes",
+                        toBeConsidered: "Yes",
+                        riskRef: "",
+                        oppRef: "OR-4"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                category: "Development Partners",
+                description: "(NGAs, LGUs, NGOs, Coaches/Mentors/Designers, MSME Council, Local Chambers, and Industry Associations, Province)",
+                entries: [
+                    {
+                        id: 4,
+                        needs: "4.2 Clear and judicious MOA or MOU",
+                        risks: "Misalignment of goals and objectives",
+                        opportunities: "Efficient resource allocation and availability of competent Resource Speakers",
+                        toBeConsidered: "Yes",
+                        riskRef: "RR-3",
+                        oppRef: "OR-3"
+                    },
+                    {
+                        id: 5,
+                        needs: "4.3 Prompt and fair compensation of services rendered",
+                        risks: "Legal and Contractual Implications",
+                        opportunities: "long-term collaboration and trust among development partners",
+                        toBeConsidered: "No",
+                        riskRef: "RR-4",
+                        oppRef: "OR-4"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                category: "DTI-10 Staff/Contractual Services",
+                description: "(technical and non-technical)",
+                entries: [
+                    {
+                        id: 6,
+                        needs: "10.1 Ready provision of appropriate resources and logistical support in the implementation of PAPs",
+                        risks: "Training not implemented as planned",
+                        opportunities: "Improved training delivery",
+                        toBeConsidered: "Yes",
+                        riskRef: "RR-2",
+                        oppRef: ""
+                    },
+                    {
+                        id: 7,
+                        needs: "10.2 Provision of capability building activities as well as physical and mental wellness program",
+                        risks: "Demotivated personnel",
+                        opportunities: "Efficient resource utilization and improved staff performance",
+                        toBeConsidered: "No",
+                        riskRef: "RR-5",
+                        oppRef: "OR-5"
+                    }
+                ]
+            }
+        ];
+        document.addEventListener('DOMContentLoaded', function() {
+            renderStakeholderTable();
+            const modal = document.getElementById("stakeholderModal");
+            const openBtn = document.getElementById("openModal");
+            const closeBtn = document.getElementsByClassName("close")[0];
+            const cancelBtn = document.getElementById("cancelEntry");
+            const modalTitle = document.getElementById("modalTitle");
+            const saveBtn = document.getElementById("saveEntry");
+            let isEditing = false;
+            let currentStakeholderId = null;
+            let currentEntryId = null;
+            openBtn.onclick = function() {
+                isEditing = false;
+                modalTitle.textContent = "Add New Stakeholder Entry";
+                document.getElementById("stakeholderId").value = "";
+                modal.style.display = "block";
+                resetForm();
+            }
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+                resetForm();
+            }
+            cancelBtn.onclick = function() {
+                if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
+                    modal.style.display = "none";
+                    resetForm();
+                }
+            }
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    if (confirm('Are you sure you want to close? All unsaved changes will be lost.')) {
+                        modal.style.display = "none";
+                        resetForm();
+                    }
+                }
+            }
+            const searchBar = document.querySelector('.search-bar');
+            searchBar.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#stakeholderTableBody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            let setCount = 1;
+            document.getElementById('addAnalysisSet').addEventListener('click', function() {
+                setCount++;
+                const newSet = document.createElement('div');
+                newSet.className = 'analysis-set';
+                newSet.innerHTML = `
+                    <h6>Set #${setCount}</h6>
+                    <h6>Needs & Expectations</h6>
+                    <div class="form-group">
+                        <label for="needs${setCount}">What does the interested party need or expect from DTI related to the process?</label>
+                        <textarea id="needs${setCount}" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="potentialRisk${setCount}">Potential Risk</label>
+                        <p>What potential NEGATIVE incident/event can happen if requirements are not met?</p>
+                        <textarea id="potentialRisk${setCount}" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="potentialOpportunity${setCount}">Potential Opportunity</label>
+                        <p>What potential POSITIVE incident/event can happen if requirements are met or exceeded?</p>
+                        <textarea id="potentialOpportunity${setCount}" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="toBeConsidered${setCount}">To Be Considered</label>
+                        <select id="toBeConsidered${setCount}">
+                            <option value="">Select Option</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>References</label>
+                        <div class="reference-inputs">
+                            <input type="text" id="riskReference${setCount}" placeholder="Risk Reference # e.g., RR-1">
+                            <input type="text" id="opportunityReference${setCount}" placeholder="Opportunity Reference # e.g., OR-1">
+                        </div>
+                    </div>
+                `;
+                document.getElementById('analysisSets').appendChild(newSet);
+            });
+            saveBtn.addEventListener('click', function() {
+                const interestedParty = document.getElementById('interestedParty').value;
+                if (!interestedParty) {
+                    alert('Please select an interested party');
+                    return;
+                }
+                const needs = document.getElementById('needs1').value;
+                if (!needs) {
+                    alert('Please enter needs and expectations');
+                    return;
+                }
+                const toBeConsidered = document.getElementById('toBeConsidered1').value;
+                if (!toBeConsidered) {
+                    alert('Please select an option for To Be Considered');
+                    return;
+                }
+                const entryData = {
+                    needs: needs,
+                    risks: document.getElementById('potentialRisk1').value,
+                    opportunities: document.getElementById('potentialOpportunity1').value,
+                    toBeConsidered: toBeConsidered,
+                    riskRef: document.getElementById('riskReference1').value,
+                    oppRef: document.getElementById('opportunityReference1').value
+                };
+                if (isEditing) {
+                    const stakeholder = stakeholders.find(s => s.id == currentStakeholderId);
+                    if (stakeholder) {
+                        const entryIndex = stakeholder.entries.findIndex(e => e.id == currentEntryId);
+                        if (entryIndex !== -1) {
+                            stakeholder.entries[entryIndex] = {
+                                id: currentEntryId,
+                                ...entryData
+                            };
+                        }
+                    }
+                    alert('Stakeholder entry updated successfully!');
+                } else {
+                    const newId = stakeholders[0].entries.length > 0 ? 
+                        Math.max(...stakeholders[0].entries.map(e => e.id)) + 1 : 1;
+                    stakeholders[0].entries.push({
+                        id: newId,
+                        ...entryData
+                    });
+                    alert('Stakeholder entry added successfully!');
+                }
+                modal.style.display = "none";
+                resetForm();
+                renderStakeholderTable();
+            });
+            document.getElementById('interestedParty').addEventListener('change', function() {
+                if (this.value === 'other') {
+                    const otherInput = document.createElement('input');
+                    otherInput.type = 'text';
+                    otherInput.placeholder = 'Specify interested party';
+                    otherInput.style.marginTop = '5px';
+                    otherInput.style.width = '100%';
+                    otherInput.style.padding = '8px';
+                    const container = this.parentNode;
+                    if (!document.getElementById('otherPartyInput')) {
+                        otherInput.id = 'otherPartyInput';
+                        container.appendChild(otherInput);
+                    }
+                } else {
+                    const otherInput = document.getElementById('otherPartyInput');
+                    if (otherInput) {
+                        otherInput.parentNode.removeChild(otherInput);
+                    }
+                }
+            });
+            function resetForm() {
+                document.querySelector('.add-stakeholder-form').reset();
+                const analysisSets = document.getElementById('analysisSets');
+                while (analysisSets.children.length > 1) {
+                    analysisSets.removeChild(analysisSets.lastChild);
+                }
+                setCount = 1;
+                const otherInput = document.getElementById('otherPartyInput');
+                if (otherInput) {
+                    otherInput.parentNode.removeChild(otherInput);
+                }
+                isEditing = false;
+                currentStakeholderId = null;
+                currentEntryId = null;
+            }
+            function renderStakeholderTable() {
+                const tbody = document.getElementById('stakeholderTableBody');
+                tbody.innerHTML = '';
+                stakeholders.forEach(stakeholder => {
+                    stakeholder.entries.forEach((entry, index) => {
+                        const tr = document.createElement('tr');
+                        if (index === 0) {
+                            const tdCategory = document.createElement('td');
+                            tdCategory.className = 'stakeholder-name-col';
+                            tdCategory.rowSpan = stakeholder.entries.length;
+                            tdCategory.innerHTML = `<strong>${stakeholder.id}. ${stakeholder.category}</strong><br>${stakeholder.description}`;
+                            tr.appendChild(tdCategory);
+                        }
+                        const tdNeeds = document.createElement('td');
+                        tdNeeds.textContent = entry.needs;
+                        tr.appendChild(tdNeeds);
+                        const tdRisks = document.createElement('td');
+                        tdRisks.textContent = entry.risks;
+                        tr.appendChild(tdRisks);
+                        const tdOpportunities = document.createElement('td');
+                        tdOpportunities.textContent = entry.opportunities;
+                        tr.appendChild(tdOpportunities);
+                        const tdToBeConsidered = document.createElement('td');
+                        tdToBeConsidered.textContent = entry.toBeConsidered || '';
+                        tr.appendChild(tdToBeConsidered);
+                        const tdRefs = document.createElement('td');
+                        tdRefs.textContent = entry.riskRef ? 
+                            (entry.oppRef ? `${entry.riskRef}, ${entry.oppRef}` : entry.riskRef) : 
+                            entry.oppRef;
+                        tr.appendChild(tdRefs);
+                        const tdActions = document.createElement('td');
+                        tdActions.className = 'actions-col';
+                        const btnGroup = document.createElement('div');
+                        btnGroup.className = 'action-btns';
+                        const editBtn = document.createElement('button');
+                        editBtn.className = 'btn btn-edit';
+                        editBtn.textContent = 'Edit';
+                        editBtn.onclick = function() {
+                            editEntry(stakeholder.id, entry.id);
+                        };
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'btn btn-delete';
+                        deleteBtn.textContent = 'Delete';
+                        deleteBtn.onclick = function() {
+                            deleteEntry(stakeholder.id, entry.id);
+                        };
+                        btnGroup.appendChild(editBtn);
+                        btnGroup.appendChild(deleteBtn);
+                        tdActions.appendChild(btnGroup);
+                        if (index === 0) {
+                            tdActions.rowSpan = stakeholder.entries.length;
+                            tr.appendChild(tdActions);
+                        }
+                        tbody.appendChild(tr);
+                    });
+                });
+            }
+            function editEntry(stakeholderId, entryId) {
+                isEditing = true;
+                currentStakeholderId = stakeholderId;
+                currentEntryId = entryId;
+                modalTitle.textContent = "Edit Stakeholder Entry";
+                const stakeholder = stakeholders.find(s => s.id == stakeholderId);
+                if (stakeholder) {
+                    const entry = stakeholder.entries.find(e => e.id == entryId);
+                    if (entry) {
+                        document.getElementById("stakeholderId").value = stakeholderId;
+                        document.getElementById("interestedParty").value = "business_persons";
+                        document.getElementById("needs1").value = entry.needs;
+                        document.getElementById("potentialRisk1").value = entry.risks;
+                        document.getElementById("potentialOpportunity1").value = entry.opportunities;
+                        document.getElementById("toBeConsidered1").value = entry.toBeConsidered;
+                        document.getElementById("riskReference1").value = entry.riskRef;
+                        document.getElementById("opportunityReference1").value = entry.oppRef;
+                        modal.style.display = "block";
+                    }
+                }
+            }
+            function deleteEntry(stakeholderId, entryId) {
+                if (confirm('Are you sure you want to delete this entry?')) {
+                    const stakeholderIndex = stakeholders.findIndex(s => s.id == stakeholderId);
+                    if (stakeholderIndex !== -1) {
+                        const entryIndex = stakeholders[stakeholderIndex].entries.findIndex(e => e.id == entryId);
+                        if (entryIndex !== -1) {
+                            stakeholders[stakeholderIndex].entries.splice(entryIndex, 1);
+                            if (stakeholders[stakeholderIndex].entries.length === 0) {
+                                stakeholders.splice(stakeholderIndex, 1);
+                            }
+                            renderStakeholderTable();
+                            alert('Entry deleted successfully!');
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

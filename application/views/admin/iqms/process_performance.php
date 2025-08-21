@@ -44,6 +44,12 @@
             </div>
         </div>
 
+
+<input type="hidden" id="iqmsModuleCode" value="PROCESS_PERFORMANCE">
+<input type="hidden" id="iqmsOfficeId" value="10">
+<input type="hidden" id="iqmsProcessId" value="1">
+<input type="hidden" id="iqmsFiscalYear" value="2025">
+
         <!-- Controls -->
         <div class="row mb-3">
             <div class="col-md-6">
@@ -532,3 +538,64 @@ window.onclick = function(event) {
     }
 }
 </script>
+
+<script>
+$(function(){
+  var ENDPOINT={
+    ENSURE:'<?=base_url('admin/iqms-data/ensure')?>',LIST:'<?=base_url('admin/iqms-data/list')?>',SAVE:'<?=base_url('admin/iqms-data/save')?>',DEL:'<?=base_url('admin/iqms-data/delete')?>',CHILDREN:'<?=base_url('admin/iqms-data/children')?>'
+  };
+  var moduleCode='PROCESS_PERFORMANCE', officeId=10, processId=1, fiscalYear='2025';
+  var analysisId=null;
+
+  function ensureAnalysis(){return $.post(ENDPOINT.ENSURE,{module_code:moduleCode,office_id:officeId,process_id:processId,fiscal_year:fiscalYear},function(r){analysisId=r.id;},'json');}
+
+  function loadProcesses(){ $.getJSON(ENDPOINT.LIST,{table:'iqms_process_performance',analysis_id:analysisId}, function(rows){ renderProcesses(rows); }); }
+
+  function renderProcesses(rows){ var $tbody=$('#processObjectivesTable tbody').empty(); $.each(rows,function(_,p){ var tr='<tr>'+
+      '<td>'+(p.process_code||('PP-'+p.id))+'</td>'+
+      '<td>'+esc(p.process_name||'')+'</td>'+
+      '<td>'+esc(p.objective||'')+'</td>'+
+      '<td>'+esc(p.target||'')+'</td>'+
+      '<td>'+esc(p.kpi||'')+'</td>'+
+      '<td>'+esc(p.process_owner||'')+'</td>'+
+      '<td><span class="status-badge '+statusClass(p.status)+'">'+esc(p.status||'not-started')+'</span></td>'+
+      '<td class="text-center">'+
+        '<button class="btn btn-warning btn-sm" onclick="openEditProcess('+p.id+')"><i class="fe-edit"></i></button> '+
+        '<button class="btn btn-danger btn-sm" onclick="deleteProcess('+p.id+')"><i class="fe-trash"></i></button>'+
+      '</td>'+
+    '</tr>'; $tbody.append(tr);
+  }); }
+
+  function statusClass(s){ s=(s||'not-started').toLowerCase(); if(s==='completed') return 'completed'; if(s==='in-progress') return 'in-progress'; return 'not-started'; }
+
+  window.openAddProcess = function(){ $('#processModalTitle').text('Add New Process Objective'); $('#processId').val(''); $('#processForm')[0].reset(); $('#processModal').show(); };
+  window.closeProcessModal = function(){ $('#processModal').hide(); };
+
+  window.openEditProcess = function(id){ $('#processModalTitle').text('Edit Process Objective'); $('#processId').val(id); $.getJSON(ENDPOINT.LIST,{table:'iqms_process_performance',analysis_id:analysisId}, function(rows){ var p=rows.find(function(x){return x.id==id;}); if(!p) return; $('#processCode').val(p.process_code||''); $('#processName').val(p.process_name||''); $('#objective').val(p.objective||''); $('#target').val(p.target||''); $('#kpi').val(p.kpi||''); $('#owner').val(p.process_owner||''); $('#status').val((p.status||'not-started')); $('#processModal').show(); }); };
+
+  window.saveProcess = function(){ var id=$('#processId').val()||null; var data={table:'iqms_process_performance', id:id, analysis_id:analysisId, process_code:$('#processCode').val(), process_name:$('#processName').val(), objective:$('#objective').val(), target:$('#target').val(), kpi:$('#kpi').val(), process_owner:$('#owner').val(), status:$('#status').val()}; $.post(ENDPOINT.SAVE,data,function(){ alert('Process objective saved!'); closeProcessModal(); loadProcesses(); }); };
+
+  window.deleteProcess = function(id){ if(!confirm('Delete this process objective?')) return; $.post(ENDPOINT.DEL,{table:'iqms_process_performance',id:id}, function(){ loadProcesses(); }); };
+
+  // Monitoring Tab
+  function loadMonitoring(){ $.getJSON(ENDPOINT.LIST,{table:'iqms_process_performance',analysis_id:analysisId}, function(rows){ renderMonitoring(rows); }); }
+  function renderMonitoring(rows){ var $tbody=$('#monitoringTable tbody').empty(); $.each(rows,function(_,p){ $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_process_performance_monitoring',fk:'process_id',id:p.id}, function(ms){ var q={Q1:'',Q2:'',Q3:'',Q4:''}; $.each(ms,function(_,m){ q[m.quarter]=m.monitoring_result||''; }); var tr='<tr>'+
+      '<td>'+(p.process_code||('PP-'+p.id))+'</td>'+
+      '<td>'+esc(p.kpi||'')+'</td>'+
+      '<td>'+esc(q.Q1)+'</td>'+
+      '<td>'+esc(q.Q2)+'</td>'+
+      '<td>'+esc(q.Q3)+'</td>'+
+      '<td>'+esc(q.Q4)+'</td>'+
+      '<td class="text-center"><button class="btn btn-primary btn-sm" onclick="openMonitoring('+p.id+')"><i class="fe-edit"></i> Update</button></td>'+
+    '</tr>'; $tbody.append(tr); }); }); }
+
+  window.openMonitoring = function(pid){ var $m=$('#monitoringModal'); $('#monitoringForm')[0].reset(); $('#monitoringProcessId').val(pid); $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_process_performance_monitoring',fk:'process_id',id:pid}, function(ms){ var map={}; $.each(ms,function(_,m){ map[m.quarter]=m; }); $('#q1').val(map.Q1? map.Q1.monitoring_result:''); $('#q2').val(map.Q2? map.Q2.monitoring_result:''); $('#q3').val(map.Q3? map.Q3.monitoring_result:''); $('#q4').val(map.Q4? map.Q4.monitoring_result:''); $m.show(); }); };
+  window.closeMonitoring = function(){ $('#monitoringModal').hide(); };
+  window.saveMonitoring = function(){ var pid=$('#monitoringProcessId').val(); var qs=['Q1','Q2','Q3','Q4'], i=0; (function next(){ if(i>=qs.length){ alert('Monitoring updated!'); closeMonitoring(); return loadMonitoring(); } var q=qs[i++]; var val=$('#'+q.toLowerCase()).val(); $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_process_performance_monitoring',fk:'process_id',id:pid,extra_key:'quarter',extra_val:q}, function(rows){ var payload={table:'iqms_process_performance_monitoring', process_id:pid, quarter:q, monitoring_result:val}; if(rows.length) payload.id=rows[0].id; $.post(ENDPOINT.SAVE,payload,function(){ next(); }); }); })(); };
+
+  function esc(s){return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m];});}
+
+  ensureAnalysis().then(function(){ loadProcesses(); loadMonitoring(); });
+});
+</script>
+

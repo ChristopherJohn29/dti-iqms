@@ -38,6 +38,12 @@
                     <span class="info-value">CONDUCT OF TRAINING</span>
                 </div>
                 <div class="info-row">
+
+<input type="hidden" id="iqmsModuleCode" value="IMPROVEMENT_ACTION">
+<input type="hidden" id="iqmsOfficeId" value="10">
+<input type="hidden" id="iqmsProcessId" value="1">
+<input type="hidden" id="iqmsFiscalYear" value="2025">
+
                     <span class="info-label">PROCESS OWNER:</span>
                     <span class="info-value">Training Coordinator</span>
                 </div>
@@ -367,3 +373,45 @@ window.onclick = function(event) {
     }
 }
 </script>
+
+<script>
+$(function(){
+  var ENDPOINT={
+    ENSURE:'<?=base_url('admin/iqms-data/ensure')?>',LIST:'<?=base_url('admin/iqms-data/list')?>',SAVE:'<?=base_url('admin/iqms-data/save')?>',DEL:'<?=base_url('admin/iqms-data/delete')?>'
+  };
+  var moduleCode='IMPROVEMENT_ACTION', officeId=10, processId=1, fiscalYear='2025';
+  var analysisId=null;
+
+  function ensureAnalysis(){return $.post(ENDPOINT.ENSURE,{module_code:moduleCode,office_id:officeId,process_id:processId,fiscal_year:fiscalYear},function(r){analysisId=r.id;},'json');}
+
+  function loadImprovements(){ $.getJSON(ENDPOINT.LIST,{table:'iqms_improvement_actions',analysis_id:analysisId}, function(rows){ renderImprovements(rows); }); }
+  function renderImprovements(rows){ var $tb=$('#improvementTable tbody'); if(!$tb.length){return;} $tb.empty(); $.each(rows,function(_,a){ var row='<tr>'+
+    '<td>'+(a.action_code||('IA-'+a.id))+'</td>'+
+    '<td>'+esc(a.nonconformity||'')+'</td>'+
+    '<td>'+esc(a.root_cause||'')+'</td>'+
+    '<td>'+esc(a.corrective_action||'')+'</td>'+
+    '<td>'+esc(a.responsible_person||'')+'</td>'+
+    '<td>'+fmt(a.target_date)+'</td>'+
+    '<td>'+statusBadge(a.status)+'</td>'+
+    '<td>'+esc(a.timeline||'')+'</td>'+
+    '<td class="text-center">'+
+      '<button class="btn btn-warning btn-sm" onclick="openEdit('+a.id+')"><i class="fe-edit"></i></button> '+
+      '<button class="btn btn-danger btn-sm" onclick="del('+a.id+')"><i class="fe-trash"></i></button>'+
+    '</td>'+
+  '</tr>'; $tb.append(row); }); }
+
+  function statusBadge(s){ s=(s||'planned').toLowerCase(); var cls=s==='completed'?'bg-success': s==='in-progress'?'bg-info':'bg-warning'; return '<span class="badge '+cls+'">'+esc(s.replace(/\b\w/g,function(c){return c.toUpperCase();}))+'</span>'; }
+
+  window.openAdd = function(){ $('#actionModalTitle').text('Add Improvement Action'); $('#actionId').val(''); $('#actionForm')[0].reset(); $('#actionModal').show(); };
+  window.closeActionModal = function(){ $('#actionModal').hide(); };
+  window.openEdit = function(id){ $('#actionModalTitle').text('Edit Improvement Action'); $('#actionId').val(id); $.getJSON(ENDPOINT.LIST,{table:'iqms_improvement_actions',analysis_id:analysisId}, function(rows){ var a=rows.find(function(x){return x.id==id;}); if(!a) return; $('#nonconformity').val(a.nonconformity||''); $('#rootCause').val(a.root_cause||''); $('#correctiveAction').val(a.corrective_action||''); $('#responsiblePerson').val(a.responsible_person||''); $('#targetDate').val(a.target_date||''); $('#status').val((a.status||'planned')); $('#timeline').val(a.timeline||''); $('#actionModal').show(); }); };
+  window.saveImprovement = function(){ var id=$('#actionId').val()||null; var data={table:'iqms_improvement_actions', id:id, analysis_id:analysisId, action_code:(id?undefined:null), nonconformity:$('#nonconformity').val(), root_cause:$('#rootCause').val(), corrective_action:$('#correctiveAction').val(), responsible_person:$('#responsiblePerson').val(), target_date:$('#targetDate').val(), status:$('#status').val(), timeline:$('#timeline').val()}; $.post(ENDPOINT.SAVE,data,function(){ alert('Improvement action saved!'); closeActionModal(); loadImprovements(); }); };
+  window.del = function(id){ if(!confirm('Delete this improvement action?')) return; $.post(ENDPOINT.DEL,{table:'iqms_improvement_actions',id:id},function(){ loadImprovements(); }); };
+
+  function esc(s){return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m];});}
+  function fmt(d){ if(!d) return ''; try{var dt=new Date(d); return dt.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});}catch(e){return d;} }
+
+  ensureAnalysis().then(loadImprovements);
+});
+</script>
+

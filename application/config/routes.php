@@ -73,3 +73,12 @@ $route['admin/allPublished/(:num)/(:num)/(:num)(/(:num))?'] = 'admin/published/d
 
 $route['admin/portal/(:num)/(:num)/(:num)/(:num)'] = 'admin/published/portal/$1/$2/$3/$4';
 $route['admin/portal/file/(:num)/(:num)/(:num)'] = 'admin/filedetails/portalDetails/$1/$2/$3';
+
+// IQMS API (backend only, views remain static)
+$route['admin/iqms-data/ensure'] = 'admin/IqmsApi/ensure_analysis';
+$route['admin/iqms-data/list']   = 'admin/IqmsApi/list';
+$route['admin/iqms-data/save']   = 'admin/IqmsApi/save';
+$route['admin/iqms-data/delete'] = 'admin/IqmsApi/delete';
+$route['admin/iqms-data/export'] = 'admin/IqmsApi/export_csv';
+$route['admin/iqms-data/children'] = 'admin/IqmsApi/children';
+$route['admin/iqms-data/delete-children'] = 'admin/IqmsApi/delete_children';

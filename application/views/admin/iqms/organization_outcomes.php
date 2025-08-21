@@ -45,6 +45,12 @@
         </div>
 
 
+<input type="hidden" id="iqmsModuleCode" value="ORGANIZATION_OUTCOMES">
+<input type="hidden" id="iqmsOfficeId" value="10">
+<input type="hidden" id="iqmsProcessId" value="1">
+<input type="hidden" id="iqmsFiscalYear" value="2025">
+
+
 
         <!-- Instructions -->
         <div class="instructions">
@@ -93,115 +99,8 @@
                         <th style="width: 7%;">Actions</th>
                     </tr>
                 </thead>
-                    <tbody>
-                        <tr>
-                            <td>OO1</td>
-                            <td>EXPORTS AND INVESTMENT DEVELOPED</td>
-                            <td>Amount of Exports</td>
-                            <td>c/o Head Office</td>
-                            <td>c/o Head Office</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td class="text-center">
-                                <div class="iqms-action-btns">
-                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(1)">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(1)">
-                                        <i class="fe-clock"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>OO1</td>
-                            <td>EXPORTS AND INVESTMENT DEVELOPED</td>
-                            <td>Amount of Approved Investments</td>
-                            <td>c/o Head Office</td>
-                            <td>c/o Head Office</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td class="text-center">
-                                <div class="iqms-action-btns">
-                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(2)">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(2)">
-                                        <i class="fe-clock"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>OO2</td>
-                            <td>INDUSTRIES DEVELOPED</td>
-                            <td>Employment Generated from the Industry Increased Annually</td>
-                            <td>c/o Head Office</td>
-                            <td>c/o Head Office</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td class="text-center">
-                                <div class="iqms-action-btns">
-                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(3)">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(3)">
-                                        <i class="fe-clock"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>OO3</td>
-                            <td>MSME ASSISTED AND DEVELOPED</td>
-                            <td>Percentage of MSMEs assisted to the total number of MSMEs in manufacturing, retail trade, construction and services sectors</td>
-                            <td>79%</td>
-                            <td>70%</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td class="text-center">
-                                <div class="iqms-action-btns">
-                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(4)">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(4)">
-                                        <i class="fe-clock"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>OO4</td>
-                            <td>CONSUMER WELFARE ENHANCED</td>
-                            <td>Consumer Resolution Rate</td>
-                            <td>100%</td>
-                            <td>99%</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td class="text-center">
-                                <div class="iqms-action-btns">
-                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(5)">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(5)">
-                                        <i class="fe-clock"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>OO4</td>
-                            <td>CONSUMER WELFARE ENHANCED</td>
-                            <td>Level of Consumer Awareness Increased</td>
-                            <td>88%</td>
-                            <td>80%</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td class="text-center">
-                                <div class="iqms-action-btns">
-                                    <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome(6)">
-                                        <i class="fe-edit"></i>
-                                    </button>
-                                    <button class="iqms-btn iqms-btn-secondary iqms-btn-sm" onclick="viewHistory(6)">
-                                        <i class="fe-clock"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="outcomesTbody">
+                        <!-- Data populated dynamically -->
                     </tbody>
             </table>
         </div>
@@ -312,93 +211,59 @@
 </div>
 
 <script>
-// Modal Functions
-function openOutcomeModal() {
-    document.getElementById('outcomeModalTitle').textContent = 'Add New Organizational Outcome';
-    document.getElementById('outcomeId').value = '';
-    document.getElementById('outcomeForm').reset();
-    document.getElementById('outcomeModal').style.display = 'block';
-}
+$(function(){
+  var ENDPOINT = {
+    ENSURE: '<?=base_url('admin/iqms-data/ensure')?>',
+    LIST:   '<?=base_url('admin/iqms-data/list')?>',
+    SAVE:   '<?=base_url('admin/iqms-data/save')?>',
+    DEL:    '<?=base_url('admin/iqms-data/delete')?>'
+  };
+  var moduleCode='ORGANIZATION_OUTCOMES', officeId=10, processId=1, fiscalYear='2025';
+  var analysisId=null;
 
-function closeOutcomeModal() {
-    document.getElementById('outcomeModal').style.display = 'none';
-}
+  function ensureAnalysis(){ return $.post(ENDPOINT.ENSURE,{module_code:moduleCode,office_id:officeId,process_id:processId,fiscal_year:fiscalYear}, function(r){analysisId=r.id;}, 'json'); }
 
-function openReportsModal() {
-    document.getElementById('reportsModal').style.display = 'block';
-}
+  function loadOutcomes(){ return $.getJSON(ENDPOINT.LIST,{table:'iqms_organization_outcomes',analysis_id:analysisId}, renderOutcomes); }
 
-function closeReportsModal() {
-    document.getElementById('reportsModal').style.display = 'none';
-}
+  function renderOutcomes(rows){
+    var $tbody=$('#outcomesTbody').empty();
+    $.each(rows,function(_,o){ var badge = o.outcome_status==='Active'? 'bg-success': (o.outcome_status==='Completed'? 'bg-primary': 'bg-secondary');
+      var $tr=$('<tr/>').html(
+        '<td>'+escape(o.outcome_code||'')+'</td>'+
+        '<td>'+escape(o.organizational_outcome||'')+'</td>'+
+        '<td>'+escape(o.measure||'')+'</td>'+
+        '<td>'+escape(o.baseline||'')+'</td>'+
+        '<td>'+escape(o.target||'')+'</td>'+
+        '<td><span class="badge '+badge+'">'+escape(o.outcome_status||'Active')+'</span></td>'+
+        '<td class="text-center">'+
+          '<div class="iqms-action-btns">'+
+          '  <button class="iqms-btn iqms-btn-warning iqms-btn-sm" onclick="editOutcome('+o.id+')"><i class="fe-edit"></i></button>'+
+          '  <button class="iqms-btn iqms-btn-danger iqms-btn-sm" onclick="deleteOutcome('+o.id+')"><i class="fe-trash"></i></button>'+
+          '</div>'+
+        '</td>'
+      ); $tbody.append($tr); });
+  }
 
-function editOutcome(id) {
-    // Get the row data
-    const row = event.target.closest('tr');
-    const cells = row.querySelectorAll('td');
+  window.openOutcomeModal = function(){ $('#outcomeModalTitle').text('Add New Organizational Outcome'); $('#outcomeId').val(''); $('#outcomeForm')[0].reset(); $('#outcomeModal').show(); };
+  window.closeOutcomeModal = function(){ $('#outcomeModal').hide(); };
+  window.openReportsModal = function(){ $('#reportsModal').show(); };
+  window.closeReportsModal = function(){ $('#reportsModal').hide(); };
 
-    // Get data from the row
-    const ooCode = cells[0].textContent;
-    const outcomeTitle = cells[1].textContent;
-    const measure = cells[2].textContent;
-    const baseline = cells[3].textContent;
-    const target = cells[4].textContent;
+  window.editOutcome = function(id){ $('#outcomeModalTitle').text('Edit Organizational Outcome'); $('#outcomeId').val(id);
+    $.getJSON(ENDPOINT.LIST,{table:'iqms_organization_outcomes',analysis_id:analysisId}, function(rows){ var o=rows.find(function(x){return x.id==id;}); if(!o) return; $('#ooCode').val(o.outcome_code||''); $('#fiscalYear').val(fiscalYear); $('#outcomeTitle').val(o.organizational_outcome||''); $('#measure').val(o.measure||''); $('#baseline').val(o.baseline||''); $('#target').val(o.target||''); $('#notes').val(o.remarks||''); $('#outcomeModal').show(); }); };
 
-    // Fill the form with this data
-    document.getElementById('ooCode').value = ooCode;
-    document.getElementById('outcomeTitle').value = outcomeTitle;
-    document.getElementById('measure').value = measure;
-    document.getElementById('baseline').value = baseline;
-    document.getElementById('target').value = target;
+  window.deleteOutcome = function(id){ if(!confirm('Delete this outcome?')) return; $.post(ENDPOINT.DEL,{table:'iqms_organization_outcomes',id:id}, function(){ loadOutcomes(); }); };
 
-    // Set modal title and ID for editing
-    document.getElementById('outcomeModalTitle').textContent = 'Edit Organizational Outcome';
-    document.getElementById('outcomeId').value = id;
+  window.saveOutcome = function(){ var id=$('#outcomeId').val()||null; var data={ table:'iqms_organization_outcomes', id:id, analysis_id:analysisId,
+    outcome_code: $('#ooCode').val(), organizational_outcome: $('#outcomeTitle').val(), measure: $('#measure').val(), baseline: $('#baseline').val(), target: $('#target').val(), remarks: $('#notes').val(), outcome_status: 'Active' };
+    if(!data.outcome_code || !data.organizational_outcome || !data.measure){ alert('Please fill in all required fields.'); return; }
+    $.post(ENDPOINT.SAVE, data, function(){ alert('Organizational Outcome saved successfully!'); closeOutcomeModal(); loadOutcomes(); }); };
 
-    // Open the modal
-    document.getElementById('outcomeModal').style.display = 'block';
-}
+  function escape(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]); }); }
 
-function saveOutcome() {
-    // Get form values
-    const ooCode = document.getElementById('ooCode').value;
-    const fiscalYear = document.getElementById('fiscalYear').value;
-    const outcomeTitle = document.getElementById('outcomeTitle').value;
-    const measure = document.getElementById('measure').value;
-    const baseline = document.getElementById('baseline').value;
-    const target = document.getElementById('target').value;
-    const notes = document.getElementById('notes').value;
-    const outcomeId = document.getElementById('outcomeId').value;
-
-    // Validate required fields
-    if (!ooCode || !fiscalYear || !outcomeTitle || !measure || !baseline || !target) {
-        alert('Please fill in all required fields.');
-        return;
-    }
-
-    // Here you would typically send this data to a server
-    console.log('Form submitted:', {
-        outcomeId,
-        ooCode,
-        fiscalYear,
-        outcomeTitle,
-        measure,
-        baseline,
-        target,
-        notes
-    });
-
-    // Show success message
-    alert('Organizational Outcome saved successfully!');
-
-    // Close modal and reset form
-    closeOutcomeModal();
-    document.getElementById('outcomeForm').reset();
-}
-
-function viewHistory(id) {
-    alert('History functionality would be implemented here for outcome ID: ' + id);
-}
+  ensureAnalysis().then(loadOutcomes);
+});
+</script>
 
 function generateReport() {
     const reportType = document.getElementById('reportType').value;

@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Register System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --success-color: #27ae60;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .agency-title h1 {
+            font-size: 1.4rem;
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .agency-title h2 {
+            font-size: 1.2rem;
+            margin: 0 0 10px 0;
+            color: var(--dark-color);
+            font-weight: normal;
+        }
+
+        .fiscal-year {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .year-box {
+            display: inline-block;
+            min-width: 60px;
+            padding: 2px 5px;
+            margin-left: 5px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .form-table {
+            border-collapse: collapse;
+            margin-left: 20px;
+        }
+
+        .form-table td {
+            padding: 3px 8px;
+            vertical-align: middle;
+        }
+
+        .form-label {
+            font-weight: bold;
+            text-align: center;
+            border-right: 1px solid #ddd;
+            padding-right: 10px !important;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            padding-right: 15px;
+        }
+
+        .detail-value {
+            border: 1px solid #ddd;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .process-info {
+            border-top: 2px solid var(--primary-color);
+            padding-top: 10px;
+        }
+
+        .info-row {
+            margin-bottom: 5px;
+            display: flex;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            min-width: 180px;
+        }
+
+        .info-value {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-main {
+                flex-direction: column;
+            }
+            
+            .form-table {
+                margin: 10px 0 0 0;
+            }
+            
+            .info-label {
+                min-width: 160px;
+            }
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .badge-high {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .badge-medium {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .badge-low {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #219955;
+        }
+
+        .filter-section {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .priority-1 {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .priority-2 {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .priority-3 {
+            border-left: 3px solid var(--success-color);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-open {
+            background-color: var(--danger-color);
+        }
+
+        .status-in-progress {
+            background-color: var(--warning-color);
+        }
+
+        .status-closed {
+            background-color: var(--success-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .cause-entry {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .cause-entry textarea {
+            flex: 1;
+        }
+
+        .remove-cause-btn {
+            background-color: var(--danger-color);
+            padding: 5px 10px;
+        }
+
+        .remove-cause-btn:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .filter-section {
+                width: auto;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        #monitoring-table th {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            text-align: center;
+        }
+
+        #monitoring-table td {
+            border: 1px solid #000000;
+            text-align: center;
+        }
+
+        #monitoring-table thead tr th {
+            border-top: 2px solid #e74c3c;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .quarter-chart {
+            flex: 1 1 30%; /* Reduced from 45% to 30% for smaller size */
+            max-width: 200px; /* Reduced from 300px to 200px for smaller size */
+            margin: 5px; /* Reduced margin for tighter spacing */
+        }
+
+        .monitoring-header {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        .summary-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .summary-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .summary-table th:first-child {
+            border-left: none;
+        }
+
+        .summary-table th:last-child {
+            border-right: none;
+        }
+
+        .summary-table td:first-child {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 600px) {
+            .chart-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+
+            .quarter-chart {
+                max-width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="container">
+        <div class="header-container">
+            <div class="header-main">
+                <div class="agency-title">
+                    <h1>DEPARTMENT OF TRADE AND INVENTORY</h1>
+                    <h2>RISK REGISTER</h2>
+                    <div class="fiscal-year">FY<span class="year-box">2025</span></div>
+                </div>
+                
+                <div class="form-details">
+                    <table class="form-table">
+                        <tr>
+                            <td rowspan="4" class="form-label">F<br>O<br>R<br>M</td>
+                            <td class="detail-label">CodeCol:</td>
+                            <td class="detail-value">FM-PL-06</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label">Rev.:</td>
+                            <td class="detail-value">3</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label"></td>
+                            <td class="detail-value"></td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label">Date:</td>
+                            <td class="detail-value">17-Jun-25</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="process-info">
+                <div class="info-row">
+                    <span class="info-label">BUREAU/REGIONS/OFFICE:</span>
+                    <span class="info-value">DTI-10 REGIONAL OFFICE</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">PROCESS:</span>
+                    <span class="info-value">CONDUCT OF TRAINING</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">PROCESS OWNER:</span>
+                    <span class="info-value">Training Coordinator</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="risk-register">Risk Register</div>
+            <div class="tab" data-tab="risk-treatment">Risk Treatment</div>
+            <div class="tab" data-tab="risk-monitoring">Risk Monitoring</div>
+            <div class="tab" data-tab="risk-criteria">Rating Criteria</div>
+        </div>
+        
+        <!-- Risk Register Tab -->
+        <div id="risk-register" class="tab-content active">
+            <div class="filter-section">
+                <h3>Filter Risks</h3>
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="filter-priority">Priority</label>
+                        <select id="filter-priority">
+                            <option value="">All Priorities</option>
+                            <option value="1">1st Priority</option>
+                            <option value="2">2nd Priority</option>
+                            <option value="3">3rd Priority</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="filter-score">Risk Score</label>
+                        <select id="filter-score">
+                            <option value="">All Scores</option>
+                            <option value="6">6 (High)</option>
+                            <option value="5">5 (Medium-High)</option>
+                            <option value="4">4 (Medium)</option>
+                            <option value="3">3 (Low)</option>
+                            <option value="2">2 (Very Low)</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="filter-status">Status</label>
+                        <select id="filter-status">
+                            <option value="">All Status</option>
+                            <option value="open">Open</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="search-risk">Search</label>
+                        <input type="text" id="search-risk" placeholder="Search risks...">
+                    </div>
+                    <div class="filter-item">
+                        <label></label>
+                        <button id="apply-filters-btn">Apply Filters</button>
+                        <button id="reset-filters-btn">Reset</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="add-risk-btn">Add New Risk</button>
+                <button id="export-risks">Export to Excel</button>
+                <button id="download-report-btn">Download Report</button>
+            </div>
+            
+            <table id="risks-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Risk Description</th>
+                        <th>Potential Cause</th>
+                        <th>Potential Impact</th>
+                        <th>Category</th>
+                        <th>Probability</th>
+                        <th>Impact</th>
+                        <th>Score</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <!-- Risk Treatment Tab -->
+        <div id="risk-treatment" class="tab-content">
+            <h2>Risk Treatment Plan</h2>
+            <p>Define and track actions to mitigate identified risks.</p>
+            
+            <div class="filter-section">
+                <h3>Filter Treatment Plans</h3>
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="treatment-risk-id">Risk ID</label>
+                        <select id="treatment-risk-id">
+                            <option value="">All Risks</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="treatment-status-select">Status</label>
+                        <select id="treatment-status-select">
+                            <option value="">Select Status</option>
+                            <option value="not-started">Not Started</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="apply-treatment-btn">Apply Filters</button>
+                <button id="add-treatment-btn">Add Treatment Plan</button>
+            </div>
+            
+            <table id="treatment-table">
+                <thead>
+                    <tr>
+                        <th>Risk ID</th>
+                        <th>Risk Description</th>
+                        <th>Potential Cause</th>
+                        <th>Treatment Description</th>
+                        <th>Responsible</th>
+                        <th>Start Date</th>
+                        <th>Due Date</th>
+                        <th>Progress</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <!-- Risk Monitoring Tab -->
+        <div id="risk-monitoring" class="tab-content">
+            <h2>Risk Monitoring</h2>
+            <div class="monitoring-header">Report Generated: Thursday, June 19, 2025, 03:49 PM PST</div>
+            <h3>Quarterly Status Summary</h3>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Q1</th>
+                        <th>Q2</th>
+                        <th>Q3</th>
+                        <th>Q4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Yes (Y)</td>
+                        <td>6</td>
+                        <td>4</td>
+                        <td>3</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>No (N)</td>
+                        <td>3</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>4</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="action-buttons">
+                <button id="refresh-monitoring-btn">Refresh</button>
+            </div>
+            <div class="chart-container">
+                <div class="quarter-chart">
+                    <canvas id="q1-chart"></canvas>
+                </div>
+                <div class="quarter-chart">
+                    <canvas id="q2-chart"></canvas>
+                </div>
+                <div class="quarter-chart">
+                    <canvas id="q3-chart"></canvas>
+                </div>
+                <div class="quarter-chart">
+                    <canvas id="q4-chart"></canvas>
+                </div>
+            </div>
+            <table id="monitoring-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Risk ID</th>
+                        <th rowspan="2">Effectiveness Indicator (M)</th>
+                        <th colspan="4">Y/N</th>
+                        <th rowspan="2">Actions</th>
+                    </tr>
+                    <tr>
+                        <th>Q1</th>
+                        <th>Q2</th>
+                        <th>Q3</th>
+                        <th>Q4</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <!-- Risk Criteria Tab -->
+        <div id="risk-criteria" class="tab-content">
+            <h2>Risk Rating Criteria</h2>
+            
+            <h3>Probability Criteria</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Score</th>
+                        <th>Probability</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>3</td>
+                        <td>High (10-50%)</td>
+                        <td>Known occurrence within a 2 year period</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Medium (10-50%)</td>
+                        <td>Known occurrence more than 3 years ago</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Low (<10%)</td>
+                        <td>Never happened before</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Impact Criteria</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Score</th>
+                        <th>Impact Area</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>3</td>
+                        <td>Service Delivery</td>
+                        <td>Critical service disruption affecting objectives</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Financial</td>
+                        <td>Significant effect on budget utilization (>50% unutilized funds)</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Reputation</td>
+                        <td>More than 10 complaints, significant customer impact</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Risk Evaluation Rating</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Total Score</th>
+                        <th>Priority Rating</th>
+                        <th>Recommended Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>6</td>
+                        <td>1st Priority</td>
+                        <td>Risk Elimination or Mitigation</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>1st Priority</td>
+                        <td>Risk Mitigation</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>2nd Priority</td>
+                        <td>Risk Mitigation</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2nd Priority</td>
+                        <td>Risk Mitigation or Transfer</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>3rd Priority</td>
+                        <td>Risk Mitigation or Transfer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Risk Modal -->
+    <div id="risk-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 id="modal-title">Add New Risk</h2>
+            <form id="risk-form">
+                <input type="hidden" id="risk-id">
+                <div class="form-group">
+                    <label for="risk-description">Risk Description*</label>
+                    <input type="text" id="risk-description" required>
+                </div>
+                <div class="form-group">
+                    <label>Potential Causes*</label>
+                    <div id="cause-container">
+                        <div class="cause-entry">
+                            <textarea class="potential-cause" required></textarea>
+                            <button type="button" class="btn-danger remove-cause-btn">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-cause-btn">Add Cause</button>
+                </div>
+                <div class="form-group">
+                    <label for="potential-impact">Potential Impact*</label>
+                    <textarea id="potential-impact" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="risk-category">Risk Category*</label>
+                    <select id="risk-category" required>
+                        <option value="">Select Category</option>
+                        <option value="service-delivery">Service Delivery</option>
+                        <option value="financial">Financial</option>
+                        <option value="reputation">Reputation</option>
+                        <option value="legal-compliance">Legal Compliance</option>
+                        <option value="compliance">Compliance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="risk-probability-select">Probability Score*</label>
+                    <select id="risk-probability-select" required>
+                        <option value="">Select</option>
+                        <option value="3">High (10-50%) - Known occurrence within a 2 year period</option>
+                        <option value="2">Medium (10-30%) - Known occurrence more than 3 years ago</option>
+                        <option value="1">Low - Never occurred</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="risk-impact-select">Impact Score*</label>
+                    <select id="risk-impact-select" required>
+                        <option value="">Select</option>
+                        <option value="3">High - Critical impact on objectives</option>
+                        <option value="2">Medium - Moderate impact</option>
+                        <option value="1">Low - Minimal impact</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="risk-score">Risk Score</label>
+                    <input type="number" id="risk-score" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="risk-priority">Priority</label>
+                    <input type="text" id="risk-priority" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="lead-id">Lead Owner</label>
+                    <input type="text" id="lead-id">
+                </div>
+                <div class="form-group">
+                    <label for="risk-status-select">Status</label>
+                    <select id="risk-status-select">
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="effectiveness-indicator">Effectiveness Indicator (E)</label>
+                    <input type="text" id="effectiveness-indicator">
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn-success">Submit</button>
+                    <button type="button" class="btn-danger" id="cancel-risk-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Treatment Modal -->
+    <div id="treatment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 id="treatment-modal-title">Add Treatment Plan</h2>
+            <form id="treatment-form">
+                <input type="hidden" id="treatment-id">
+                <div class="form-group">
+                    <label for="treatment-risk-id-select">Risk ID*</label>
+                    <select id="treatment-risk-id-select" required>
+                        <option value="">Select Risk</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-action-select">Action*</label>
+                    <select id="treatment-action-select" required>
+                        <option value="">Select Action</option>
+                        <option value="elimination">Risk Elimination</option>
+                        <option value="mitigation">Risk Mitigation</option>
+                        <option value="transfer">Risk Transfer</option>
+                        <option value="acceptance">Risk Acceptance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-description">Description*</label>
+                    <textarea id="treatment-description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-responsible">Responsible*</label>
+                    <input type="text" id="treatment-responsible" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-start-date">Start Date*</label>
+                    <input type="date" id="treatment-start-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-due-date">Due Date*</label>
+                    <input type="date" id="treatment-due-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-progress">Progress (%)*</label>
+                    <input type="number" id="treatment-progress" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="treatment-status-select">Status*</label>
+                    <select id="treatment-status-select" required>
+                        <option value="">Select Status</option>
+                        <option value="not-started">Not Started</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn-success">Save</button>
+                    <button type="button" class="btn-danger" id="cancel-treatment">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Update Monitoring Modal -->
+    <div id="monitoring-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 id="monitoring-modal-title">Update Monitoring RR-1</h2>
+            <form id="monitoring-form">
+                <input type="hidden" id="monitoring-risk-id" value="RR-1">
+                <div class="form-group">
+                    <label for="q1-status">Q1 Status (Y/N)*</label>
+                    <select id="q1-status" required>
+                        <option value="">Select</option>
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="q2-status">Q2 Status (Y/N)</label>
+                    <select id="q2-status">
+                        <option value="">Select</option>
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="q3-status">Q3 Status (Y/N)</label>
+                    <select id="q3-status">
+                        <option value="">Select</option>
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="q4-status">Q4 Status (Y/N)</label>
+                    <select id="q4-status">
+                        <option value="">Select</option>
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn-success">Save</button>
+                    <button type="button" class="btn-danger" id="cancel-monitoring">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Data
+        let risks = JSON.parse(localStorage.getItem('risks')) || [
+            {
+                id: "RR-1",
+                description: "Dissatisfied clients",
+                potentialCause: [
+                    { id: "1.1", description: "Training not applicable to business level" },
+                    { id: "1.2", description: "Poor trainer engagement" }
+                ],
+                potentialImpact: "Low CSF rating",
+                category: "Service Delivery",
+                probability: 2,
+                impact: 3,
+                score: 6,
+                priority: "1st",
+                status: "open",
+                date: "2025-06-05",
+                owner: "Training Coordinator",
+                effectivenessIndicator: "100% Satisfactory CSF rating",
+                monitoring: { q1: "Y", q2: "N", q3: "", q4: "" },
+                monitoringColor: "#d3e6f5"
+            },
+            {
+                id: "RR-2",
+                description: "Spread of communicable diseases",
+                potentialCause: [
+                    { id: "2.1", description: "Cramped training venue" },
+                    { id: "2.2", description: "Poor ventilation" }
+                ],
+                potentialImpact: "Low CSF rating",
+                category: "Service Delivery",
+                probability: 2,
+                impact: 3,
+                score: 6,
+                priority: "1st",
+                status: "open",
+                date: "2025-06-04",
+                owner: "Training Coordinator",
+                effectivenessIndicator: "100% Satisfactory CSF rating",
+                monitoring: { q1: "Y", q2: "Y", q3: "N", q4: "" },
+                monitoringColor: "#e6f5e1"
+            },
+            {
+                id: "RR-3",
+                description: "Misalignment of goals and objectives",
+                potentialCause: [
+                    { id: "3.1", description: "Unclear MOA/MOU terms" },
+                    { id: "3.2", description: "Lack of stakeholder consultation" }
+                ],
+                potentialImpact: "Lack of impact on objectives",
+                category: "Reputation",
+                probability: 1,
+                impact: 2,
+                score: 2,
+                priority: "3rd",
+                status: "open",
+                date: "2025-06-05",
+                owner: "Training Coordinator",
+                effectivenessIndicator: "Number of MOAs/MOUs signed",
+                monitoring: { q1: "N", q2: "", q3: "", q4: "Y" },
+                monitoringColor: "#fff3cd"
+            },
+            {
+                id: "RR-4",
+                description: "Legal and Contractual Implications",
+                potentialCause: [
+                    { id: "4.1", description: "Delayed document submission" },
+                    { id: "4.2", description: "Incomplete contracts" }
+                ],
+                potentialImpact: "Damaged reputation and trust",
+                category: "Legal Compliance",
+                probability: 2,
+                impact: 2,
+                score: 4,
+                priority: "2nd",
+                status: "open",
+                date: "2025-06-05",
+                owner: "Training Coordinator",
+                effectivenessIndicator: "Zero incidence of risk occurrence",
+                monitoring: { q1: "", q2: "", q3: "", q4: "" },
+                monitoringColor: "#f8d7d8"
+            },
+            {
+                id: "RR-5",
+                description: "Irrelevant training programs",
+                potentialCause: [
+                    { id: "5.1", description: "Inadequate TNA" },
+                    { id: "5.2", description: "Outdated training content" }
+                ],
+                potentialImpact: "Low CSF rating",
+                category: "Service Delivery",
+                probability: 2,
+                impact: 3,
+                score: 6,
+                priority: "1st",
+                status: "open",
+                date: "2025-06-05",
+                owner: "Training Coordinator",
+                effectivenessIndicator: "100% Satisfactory CSF rating",
+                monitoring: { q1: "", q2: "", q3: "", q4: "" },
+                monitoringColor: "#d3e6f5"
+            },
+            {
+                id: "RR-6",
+                description: "Trainings not implemented as planned",
+                potentialCause: [
+                    { id: "6.1", description: "Delayed project approval" },
+                    { id: "6.2", description: "Resource unavailability" }
+                ],
+                potentialImpact: "Unmet targets",
+                category: "Service Delivery",
+                probability: 2,
+                impact: 2,
+                score: 4,
+                priority: "2nd",
+                status: "open",
+                date: "2025-06-05",
+                owner: "Training Coordinator",
+                effectivenessIndicator: "100% training implementation rate",
+                monitoring: { q1: "", q2: "", q3: "", q4: "" },
+                monitoringColor: "#e6f5e1"
+            }
+        ];
+
+        let treatments = JSON.parse(localStorage.getItem('treatments')) || [
+            {
+                id: 1,
+                riskId: "RR-1",
+                action: "mitigation",
+                description: "Conduct a thorough Training Needs Assessment (TNA)",
+                responsible: "Training Coordinator",
+                dateStart: "2023-05-01",
+                dueDate: "2024-06-15",
+                progress: 30,
+                status: "in-progress"
+            },
+            {
+                id: 2,
+                riskId: "RR-2",
+                action: "mitigation",
+                description: "Ensure spacious training venues",
+                responsible: "Training Coordinator",
+                dateStart: "2023-05-06",
+                dueDate: "2024-06-30",
+                progress: 10,
+                status: "not-started"
+            },
+            {
+                id: 3,
+                riskId: "RR-3",
+                action: "mitigation",
+                description: "Define clear MOA/MOU terms",
+                responsible: "Training Coordinator",
+                dateStart: "2023-05-01",
+                dueDate: "2024-06-15",
+                progress: 75,
+                status: "in-progress"
+            },
+            {
+                id: 4,
+                riskId: "RR-4",
+                action: "mitigation",
+                description: "Streamline document submission process",
+                responsible: "Training Coordinator",
+                dateStart: "2023-05-06",
+                dueDate: "2024-07-30",
+                progress: 0,
+                status: "not-started"
+            },
+            {
+                id: 5,
+                riskId: "RR-5",
+                action: "mitigation",
+                description: "Implement comprehensive TNA",
+                responsible: "Training Coordinator",
+                dateStart: "2023-04-05",
+                dueDate: "2024-05-30",
+                progress: 100,
+                status: "completed"
+            }
+        ];
+
+        // DOM Elements
+        const riskModal = document.getElementById('risk-modal');
+        const treatmentModal = document.getElementById('treatment-modal');
+        const monitoringModal = document.getElementById('monitoring-modal');
+        const riskForm = document.getElementById('risk-form');
+        const treatmentForm = document.getElementById('treatment-form');
+        const monitoringForm = document.getElementById('monitoring-form');
+        const risksTableBody = document.querySelector('#risks-table tbody');
+        const treatmentsTableBody = document.querySelector('#treatment-table tbody');
+        const monitoringTableBody = document.querySelector('#monitoring-table tbody');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const addRiskBtn = document.getElementById('add-risk-btn');
+        const addTreatmentBtn = document.getElementById('add-treatment-btn');
+        const refreshMonitoringBtn = document.getElementById('refresh-monitoring-btn');
+        const cancelRiskBtn = document.getElementById('cancel-risk-btn');
+        const cancelTreatmentBtn = document.getElementById('cancel-treatment');
+        const cancelMonitoringBtn = document.getElementById('cancel-monitoring');
+        const applyFiltersBtn = document.getElementById('apply-filters-btn');
+        const resetFiltersBtn = document.getElementById('reset-filters-btn');
+        const applyTreatmentBtn = document.getElementById('apply-treatment-btn');
+        const downloadReportBtn = document.getElementById('download-report-btn');
+        const addCauseBtn = document.getElementById('add-cause-btn');
+        const causeContainer = document.getElementById('cause-container');
+        const probabilitySelect = document.getElementById('risk-probability-select');
+        const impactSelect = document.getElementById('risk-impact-select');
+        const riskScoreInput = document.getElementById('risk-score');
+        const riskPriorityInput = document.getElementById('risk-priority');
+        const treatmentRiskIdSelect = document.getElementById('treatment-risk-id-select');
+        const filterRiskIdSelect = document.getElementById('treatment-risk-id');
+        const closeButtons = document.querySelectorAll('.close');
+
+        let charts = {
+            q1: null,
+            q2: null,
+            q3: null,
+            q4: null
+        };
+
+        // Initialize
+        function init() {
+            renderRisksTable();
+            renderTreatmentsTable();
+            renderMonitoringTable();
+            populateRiskIdDropdowns();
+            attachEventListeners();
+        }
+
+        // Event Listeners
+        function attachEventListeners() {
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                    if (tab.dataset.tab === 'risk-monitoring') {
+                        renderMonitoringTable();
+                    }
+                });
+            });
+
+            addRiskBtn.addEventListener('click', () => openRiskModal());
+            addTreatmentBtn.addEventListener('click', () => openTreatmentModal());
+            refreshMonitoringBtn.addEventListener('click', renderMonitoringTable);
+            cancelRiskBtn.addEventListener('click', () => closeModal(riskModal));
+            cancelTreatmentBtn.addEventListener('click', () => closeModal(treatmentModal));
+            cancelMonitoringBtn.addEventListener('click', () => closeModal(monitoringModal));
+            applyFiltersBtn.addEventListener('click', applyRiskFilters);
+            resetFiltersBtn.addEventListener('click', resetRiskFilters);
+            applyTreatmentBtn.addEventListener('click', applyTreatmentFilters);
+            downloadReportBtn.addEventListener('click', generateReport);
+            addCauseBtn.addEventListener('click', addCauseInput);
+
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', () => closeModal(btn.closest('.modal')));
+            });
+
+            window.addEventListener('click', e => {
+                if (e.target.classList.contains('modal')) {
+                    closeModal(e.target);
+                }
+            });
+
+            riskForm.addEventListener('submit', handleRiskSubmit);
+            treatmentForm.addEventListener('submit', handleTreatmentSubmit);
+            monitoringForm.addEventListener('submit', handleMonitoringSubmit);
+
+            probabilitySelect.addEventListener('change', calculateRiskScore);
+            impactSelect.addEventListener('change', calculateRiskScore);
+
+            causeContainer.addEventListener('click', e => {
+                if (e.target.classList.contains('remove-cause-btn')) {
+                    const causeEntry = e.target.closest('.cause-entry');
+                    if (causeContainer.querySelectorAll('.cause-entry').length > 1) {
+                        causeEntry.remove();
+                    } else {
+                        alert('At least one cause is required.');
+                    }
+                }
+            });
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Modal Functions
+        function openRiskModal(risk = null) {
+            document.getElementById('modal-title').textContent = risk ? `Edit Risk ${risk.id}` : 'Add New Risk';
+            riskForm.reset();
+            riskScoreInput.value = '';
+            riskPriorityInput.value = '';
+            document.getElementById('risk-id').value = '';
+            causeContainer.innerHTML = `
+                <div class="cause-entry">
+                    <textarea class="potential-cause" required></textarea>
+                    <button type="button" class="btn-danger remove-cause-btn">Remove</button>
+                </div>
+            `;
+
+            if (risk) {
+                document.getElementById('risk-id').value = risk.id;
+                document.getElementById('risk-description').value = risk.description;
+                document.getElementById('potential-impact').value = risk.potentialImpact;
+                document.getElementById('risk-category').value = risk.category.toLowerCase().replace(' ', '-');
+                probabilitySelect.value = risk.probability;
+                impactSelect.value = risk.impact;
+                riskScoreInput.value = risk.score;
+                riskPriorityInput.value = risk.priority;
+                document.getElementById('lead-id').value = risk.owner;
+                document.getElementById('risk-status-select').value = risk.status;
+                document.getElementById('effectiveness-indicator').value = risk.effectivenessIndicator || '';
+                causeContainer.innerHTML = risk.potentialCause.map(cause => `
+                    <div class="cause-entry">
+                        <textarea class="potential-cause" required>${cause.description}</textarea>
+                        <button type="button" class="btn-danger remove-cause-btn">Remove</button>
+                    </div>
+                `).join('');
+            }
+
+            riskModal.style.display = 'block';
+        }
+
+        function openTreatmentModal(treatment = null) {
+            document.getElementById('treatment-modal-title').textContent = treatment ? `Edit Treatment ${treatment.id}` : 'Add Treatment Plan';
+            treatmentForm.reset();
+            document.getElementById('treatment-id').value = '';
+
+            if (treatment) {
+                document.getElementById('treatment-id').value = treatment.id;
+                treatmentRiskIdSelect.value = treatment.riskId;
+                document.getElementById('treatment-action-select').value = treatment.action;
+                document.getElementById('treatment-description').value = treatment.description;
+                document.getElementById('treatment-responsible').value = treatment.responsible;
+                document.getElementById('treatment-start-date').value = treatment.dateStart;
+                document.getElementById('treatment-due-date').value = treatment.dueDate;
+                document.getElementById('treatment-progress').value = treatment.progress;
+                document.getElementById('treatment-status-select').value = treatment.status;
+            }
+
+            treatmentModal.style.display = 'block';
+        }
+
+        function openMonitoringModal(riskId) {
+            const risk = risks.find(r => r.id === riskId);
+            if (!risk) {
+                alert('Error: Risk not found');
+                return;
+            }
+            document.getElementById('monitoring-modal-title').textContent = `Update Monitoring ${riskId}`;
+            document.getElementById('monitoring-risk-id').value = riskId;
+            document.getElementById('q1-status').value = risk.monitoring.q1 || '';
+            document.getElementById('q2-status').value = risk.monitoring.q2 || '';
+            document.getElementById('q3-status').value = risk.monitoring.q3 || '';
+            document.getElementById('q4-status').value = risk.monitoring.q4 || '';
+            monitoringModal.style.display = 'block';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        // Form Handlers
+        function handleRiskSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('risk-id').value || `RR-${risks.length + 1}`;
+            const description = document.getElementById('risk-description').value;
+            const causes = Array.from(document.querySelectorAll('.potential-cause')).map(c => c.value.trim()).filter(c => c);
+            const potentialImpact = document.getElementById('potential-impact').value;
+            const category = document.getElementById('risk-category').value;
+            const probability = parseInt(probabilitySelect.value);
+            const impact = parseInt(impactSelect.value);
+            const score = probability * impact;
+            const priority = score >= 5 ? "1st" : score >= 3 ? "2nd" : "3rd";
+            const owner = document.getElementById('lead-id').value;
+            const status = document.getElementById('risk-status-select').value;
+            const effectivenessIndicator = document.getElementById('effectiveness-indicator').value;
+
+            if (!causes.length) {
+                alert('Please provide at least one cause');
+                return;
+            }
+
+            const categoryDisplay = {
+                'service-delivery': 'Service Delivery',
+                'financial': 'Financial',
+                'reputation': 'Reputation',
+                'legal-compliance': 'Legal Compliance',
+                'compliance': 'Compliance'
+            }[category];
+
+            const causeObjects = causes.map((desc, index) => ({
+                id: `${id.split('-')[1]}.${index + 1}`,
+                description: desc
+            }));
+
+            const riskIndex = risks.findIndex(r => r.id === id);
+            if (riskIndex > -1) {
+                risks[riskIndex] = {
+                    id,
+                    description,
+                    potentialCause: causeObjects,
+                    potentialImpact,
+                    category: categoryDisplay,
+                    probability,
+                    impact,
+                    score,
+                    priority,
+                    owner,
+                    status,
+                    effectivenessIndicator,
+                    monitoring: risks[riskIndex].monitoring,
+                    monitoringColor: risks[riskIndex].monitoringColor,
+                    date: risks[riskIndex].date
+                };
+            } else {
+                risks.push({
+                    id,
+                    description,
+                    potentialCause: causeObjects,
+                    potentialImpact,
+                    category: categoryDisplay,
+                    probability,
+                    impact,
+                    score,
+                    priority,
+                    status,
+                    date: new Date().toISOString().split('T')[0],
+                    owner,
+                    effectivenessIndicator,
+                    monitoring: { q1: "", q2: "", q3: "", q4: "" },
+                    monitoringColor: getRandomColor()
+                });
+            }
+
+            localStorage.setItem('risks', JSON.stringify(risks));
+            renderRisksTable();
+            populateRiskIdDropdowns();
+            closeModal(riskModal);
+            alert('Risk saved successfully');
+        }
+
+        function handleTreatmentSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('treatment-id').value || (treatments.length > 0 ? Math.max(...treatments.map(t => t.id)) + 1 : 1);
+            const riskId = treatmentRiskIdSelect.value;
+            const action = document.getElementById('treatment-action-select').value;
+            const description = document.getElementById('treatment-description').value;
+            const responsible = document.getElementById('treatment-responsible').value;
+            const dateStart = document.getElementById('treatment-start-date').value;
+            const dueDate = document.getElementById('treatment-due-date').value;
+            const progress = parseInt(document.getElementById('treatment-progress').value);
+            const status = document.getElementById('treatment-status-select').value;
+
+            if (new Date(dateStart) > new Date(dueDate)) {
+                alert("Start date cannot be after due date.");
+                return;
+            }
+            if (status === "completed" && progress !== 100) {
+                alert("Progress must be 100% for completed status.");
+                return;
+            }
+            if (status !== "completed" && progress === 100) {
+                alert("Progress cannot be 100% unless status is completed.");
+                return;
+            }
+
+            const treatmentIndex = treatments.findIndex(t => t.id === parseInt(id));
+            if (treatmentIndex > -1) {
+                treatments[treatmentIndex] = { id: parseInt(id), riskId, action, description, responsible, dateStart, dueDate, progress, status };
+            } else {
+                treatments.push({ id: parseInt(id), riskId, action, description, responsible, dateStart, dueDate, progress, status });
+            }
+
+            localStorage.setItem('treatments', JSON.stringify(treatments));
+            renderTreatmentsTable();
+            closeModal(treatmentModal);
+            alert('Treatment saved successfully');
+        }
+
+        function handleMonitoringSubmit(e) {
+            e.preventDefault();
+            const riskId = document.getElementById('monitoring-risk-id').value;
+            const q1 = document.getElementById('q1-status').value;
+            const q2 = document.getElementById('q2-status').value;
+            const q3 = document.getElementById('q3-status').value;
+            const q4 = document.getElementById('q4-status').value;
+
+            if (!q1) {
+                alert('Q1 Status is required');
+                return;
+            }
+
+            const riskIndex = risks.findIndex(r => r.id === riskId);
+            if (riskIndex === -1) {
+                alert('Error: Risk not found');
+                return;
+            }
+
+            risks[riskIndex].monitoring = { q1, q2, q3, q4 };
+            localStorage.setItem('risks', JSON.stringify(risks));
+            renderMonitoringTable();
+            closeModal(monitoringModal);
+            alert('Monitoring data saved successfully');
+        }
+
+        // Rendering Functions
+        function renderRisksTable(filteredRisks = risks) {
+            risksTableBody.innerHTML = '';
+            filteredRisks.forEach(r => {
+                const row = document.createElement('tr');
+                row.className = `priority-${r.priority.charAt(0)}`;
+                const priorityBadgeClass = { '1st': 'badge-high', '2nd': 'badge-medium', '3rd': 'badge-low' }[r.priority] || 'badge-low';
+                const statusBadgeClass = { open: 'status-open', 'in-progress': 'status-in-progress', closed: 'status-closed' }[r.status] || 'status-open';
+                const causesList = r.potentialCause.map(c => `<div>${c.id}: ${c.description}</div>`).join('');
+
+                row.innerHTML = `
+                    <td>${r.id}</td>
+                    <td>${r.description}</td>
+                    <td>${causesList}</td>
+                    <td>${r.potentialImpact}</td>
+                    <td>${r.category}</td>
+                    <td>${r.probability}</td>
+                    <td>${r.impact}</td>
+                    <td>${r.score}</td>
+                    <td><span class="badge ${priorityBadgeClass}">${r.priority}</span></td>
+                    <td><span class="status-indicator ${statusBadgeClass}"></span>${r.status}</td>
+                    <td>
+                        <button class="edit-risk-btn" data-id="${r.id}">Edit</button>
+                        <button class="view-treatment-btn" data-id="${r.id}">Treatments</button>
+                    </td>
+                `;
+                risksTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.edit-risk-btn').forEach(btn => {
+                btn.addEventListener('click', () => openRiskModal(risks.find(r => r.id === btn.dataset.id)));
+            });
+            document.querySelectorAll('.view-treatment-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    switchTab('risk-treatment');
+                    filterRiskIdSelect.value = btn.dataset.id;
+                    applyTreatmentFilters();
+                });
+            });
+        }
+
+        function renderTreatmentsTable(filteredTreatments = treatments) {
+            treatmentsTableBody.innerHTML = '';
+            filteredTreatments.forEach(t => {
+                const risk = risks.find(r => r.id === t.riskId);
+                const riskDescription = risk ? risk.description : 'N/A';
+                const potentialCause = risk ? risk.potentialCause.map(cause => `${cause.id}: ${cause.description}`).join('\n') : 'N/A';
+                const statusBadgeClass = { 'not-started': 'badge-high', 'in-progress': 'badge-medium', completed: 'badge-low' }[t.status] || 'badge-high';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${t.riskId}</td>
+                    <td>${riskDescription}</td>
+                    <td>${potentialCause}</td>
+                    <td>${t.description}</td>
+                    <td>${t.responsible}</td>
+                    <td>${formatDate(t.dateStart)}</td>
+                    <td>${formatDate(t.dueDate)}</td>
+                    <td>${t.progress}%</td>
+                    <td><span class="badge ${statusBadgeClass}">${t.status}</span></td>
+                    <td>
+                        <button class="edit-treatment-btn" data-id="${t.id}">Edit</button>
+                    </td>
+                `;
+                treatmentsTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.edit-treatment-btn').forEach(btn => {
+                btn.addEventListener('click', () => openTreatmentModal(treatments.find(t => t.id === parseInt(btn.dataset.id))));
+            });
+        }
+
+        function renderMonitoringTable() {
+            monitoringTableBody.innerHTML = '';
+            risks.forEach(r => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="background-color: ${r.monitoringColor};">${r.id}</td>
+                    <td>${r.effectivenessIndicator || ''}</td>
+                    <td>${r.monitoring.q1}</td>
+                    <td>${r.monitoring.q2}</td>
+                    <td>${r.monitoring.q3}</td>
+                    <td>${r.monitoring.q4}</td>
+                    <td>
+                        <button class="update-monitoring-btn" data-id="${r.id}">Update</button>
+                    </td>
+                `;
+                monitoringTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.update-monitoring-btn').forEach(btn => {
+                btn.addEventListener('click', () => openMonitoringModal(btn.dataset.id));
+            });
+
+            renderMonitoringChart();
+        }
+
+        function renderMonitoringChart() {
+            const summaryData = {
+                Q1: { Yes: 6, No: 3 },
+                Q2: { Yes: 4, No: 5 },
+                Q3: { Yes: 3, No: 6 },
+                Q4: { Yes: 5, No: 4 }
+            };
+
+            const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+            quarters.forEach(quarter => {
+                const ctx = document.getElementById(`${quarter.toLowerCase()}-chart`).getContext('2d');
+                const yesCount = summaryData[quarter].Yes;
+                const noCount = summaryData[quarter].No;
+                const total = yesCount + noCount;
+                const yesPercent = ((yesCount / total) * 100).toFixed(1);
+                const noPercent = ((noCount / total) * 100).toFixed(1);
+
+                if (charts[quarter.toLowerCase()]) {
+                    charts[quarter.toLowerCase()].destroy();
+                }
+
+                charts[quarter.toLowerCase()] = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Yes (Y)', 'No (N)'],
+                        datasets: [{
+                            data: [yesCount, noCount],
+                            backgroundColor: ['#27ae60', '#e74c3c'],
+                            borderColor: ['#219653', '#c0392b'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `${quarter} Status Distribution`,
+                                font: { size: 12 } // Reduced font size for smaller chart
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    generateLabels: function(chart) {
+                                        const data = chart.data;
+                                        return data.labels.map((label, i) => ({
+                                            text: `${label} (${i === 0 ? yesPercent : noPercent}%)`,
+                                            fillStyle: data.datasets[0].backgroundColor[i],
+                                            strokeStyle: data.datasets[0].borderColor[i],
+                                            lineWidth: data.datasets[0].borderWidth,
+                                            hidden: isNaN(data.datasets[0].data[i]) || data.datasets[0].data[i] === 0,
+                                            index: i
+                                        }));
+                                    }
+                                }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        aspectRatio: 1.5 // Adjusted aspect ratio to make the chart more compact
+                    }
+                });
+            });
+        }
+
+        // Helper Functions
+        function getMonitoringCounts() {
+            const counts = {
+                q1: { yes: 0, no: 0 },
+                q2: { yes: 0, no: 0 },
+                q3: { yes: 0, no: 0 },
+                q4: { yes: 0, no: 0 }
+            };
+
+            risks.forEach(risk => {
+                if (risk.monitoring.q1 === 'Y') counts.q1.yes++;
+                else if (risk.monitoring.q1 === 'N') counts.q1.no++;
+                if (risk.monitoring.q2 === 'Y') counts.q2.yes++;
+                else if (risk.monitoring.q2 === 'N') counts.q2.no++;
+                if (risk.monitoring.q3 === 'Y') counts.q3.yes++;
+                else if (risk.monitoring.q3 === 'N') counts.q3.no++;
+                if (risk.monitoring.q4 === 'Y') counts.q4.yes++;
+                else if (risk.monitoring.q4 === 'N') counts.q4.no++;
+            });
+
+            return counts;
+        }
+
+        function populateRiskIdDropdowns() {
+            treatmentRiskIdSelect.innerHTML = '<option value="">Select Risk</option>';
+            filterRiskIdSelect.innerHTML = '<option value="">All Risks</option>';
+            risks.forEach(r => {
+                const option1 = document.createElement('option');
+                option1.value = r.id;
+                option1.textContent = r.id;
+                const option2 = document.createElement('option');
+                option2.value = r.id;
+                option2.textContent = r.id;
+                treatmentRiskIdSelect.appendChild(option1);
+                filterRiskIdSelect.appendChild(option2);
+            });
+        }
+
+        function calculateRiskScore() {
+            const probability = parseInt(probabilitySelect.value) || 0;
+            const impact = parseInt(impactSelect.value) || 0;
+            const score = probability * impact;
+            riskScoreInput.value = score;
+            riskPriorityInput.value = score >= 5 ? "1st" : score >= 3 ? "2nd" : "3rd";
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function getRandomColor() {
+            const colors = ['#d3e6f5', '#e6f5e1', '#fff3cd', '#f8d7d8'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function addCauseInput() {
+            const causeEntry = document.createElement('div');
+            causeEntry.className = 'cause-entry';
+            causeEntry.innerHTML = `
+                <textarea class="potential-cause" required></textarea>
+                <button type="button" class="btn-danger remove-cause-btn">Remove</button>
+            `;
+            causeContainer.appendChild(causeEntry);
+        }
+
+        // Filter Functions
+        function applyRiskFilters() {
+            const priority = document.getElementById('filter-priority').value;
+            const score = document.getElementById('filter-score').value;
+            const status = document.getElementById('filter-status').value;
+            const search = document.getElementById('search-risk').value.toLowerCase();
+
+            const filtered = risks.filter(r => {
+                const causesMatch = r.potentialCause.some(c => c.description.toLowerCase().includes(search));
+                return (!priority || (priority === '1' && r.priority === '1st') || (priority === '2' && r.priority === '2nd') || (priority === '3' && r.priority === '3rd')) &&
+                       (!score || r.score === parseInt(score)) &&
+                       (!status || r.status === status) &&
+                       (!search || r.description.toLowerCase().includes(search) || r.id.toLowerCase().includes(search) || r.category.toLowerCase().includes(search) || causesMatch);
+            });
+
+            renderRisksTable(filtered);
+        }
+
+        function resetRiskFilters() {
+            document.getElementById('filter-priority').value = '';
+            document.getElementById('filter-score').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('search-risk').value = '';
+            renderRisksTable();
+        }
+
+        function applyTreatmentFilters() {
+            const riskId = filterRiskIdSelect.value;
+            const status = document.getElementById('treatment-status-select').value;
+
+            const filtered = treatments.filter(t => (!riskId || t.riskId === riskId) && (!status || t.status === status));
+            renderTreatmentsTable(filtered);
+        }
+
+        // Report Generation
+        function generateReport() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+
+            let yOffset = 10;
+
+            doc.setFontSize(16);
+            doc.text('DEPARTMENT OF TRADE AND INVENTORY', 10, yOffset);
+            yOffset += 7;
+            doc.setFontSize(14);
+            doc.text('RISK REGISTER', 10, yOffset);
+            yOffset += 7;
+            doc.setFontSize(12);
+            doc.text('FY 2025', 10, yOffset);
+            yOffset += 7;
+            doc.text('Form Code: FM-PL-06  Rev: 3  Date: 17-Jun-25', 200, yOffset);
+            yOffset += 7;
+            doc.text('BUREAU/REGIONS/OFFICE: DTI-10 REGIONAL OFFICE', 10, yOffset);
+            yOffset += 7;
+            doc.text('PROCESS: CONDUCT OF TRAINING', 10, yOffset);
+            yOffset += 7;
+            doc.text('PROCESS OWNER: Training Coordinator', 10, yOffset);
+            yOffset += 10;
+
+            doc.setFontSize(14);
+            doc.text('Risk Register', 10, yOffset);
+            yOffset += 7;
+            doc.autoTable({
+                startY: yOffset,
+                head: [['ID', 'Description', 'Cause', 'Impact', 'Category', 'Probability', 'Impact', 'Score', 'Priority', 'Status']],
+                body: risks.map(risk => [
+                    risk.id,
+                    risk.description,
+                    risk.potentialCause.map(cause => `${cause.id}: ${cause.description}`).join('\n'),
+                    risk.potentialImpact,
+                    risk.category,
+                    risk.probability,
+                    risk.impact,
+                    risk.score,
+                    risk.priority,
+                    risk.status
+                ]),
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [44, 62, 80] },
+                margin: { left: 10, right: 10 },
+                columnStyles: { 1: { cellWidth: 40 }, 2: { cellWidth: 40 }, 3: { cellWidth: 40 } }
+            });
+            yOffset = doc.lastAutoTable.finalY + 10;
+
+            doc.addPage();
+            yOffset = 10;
+            doc.setFontSize(14);
+            doc.text('Risk Treatment Plan', 10, yOffset);
+            yOffset += 7;
+            doc.autoTable({
+                startY: yOffset,
+                head: [['Risk ID', 'Description', 'Cause', 'Treatment', 'Responsible', 'Start', 'Due', 'Progress', 'Status']],
+                body: treatments.map(treatment => {
+                    const risk = risks.find(r => r.id === treatment.riskId);
+                    return [
+                        treatment.riskId,
+                        risk ? risk.description : 'N/A',
+                        risk ? risk.potentialCause.map(cause => `${cause.id}: ${cause.description}`).join('\n') : 'N/A',
+                        treatment.description,
+                        treatment.responsible,
+                        formatDate(treatment.dateStart),
+                        formatDate(treatment.dueDate),
+                        `${treatment.progress}%`,
+                        treatment.status
+                    ];
+                }),
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [44, 62, 80] },
+                margin: { left: 10, right: 10 },
+                columnStyles: { 1: { cellWidth: 40 }, 2: { cellWidth: 40 }, 3: { cellWidth: 40 } }
+            });
+            yOffset = doc.lastAutoTable.finalY + 10;
+
+            doc.addPage();
+            yOffset = 10;
+            doc.setFontSize(14);
+            doc.text('Risk Monitoring', 10, yOffset);
+            yOffset += 7;
+            doc.autoTable({
+                startY: yOffset,
+                head: [['Risk ID', 'Effectiveness Indicator', 'Q1', 'Q2', 'Q3', 'Q4']],
+                body: risks.map(risk => [
+                    risk.id,
+                    risk.effectivenessIndicator || '',
+                    risk.monitoring.q1,
+                    risk.monitoring.q2,
+                    risk.monitoring.q3,
+                    risk.monitoring.q4
+                ]),
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [44, 62, 80] },
+                margin: { left: 10, right: 10 },
+                columnStyles: { 1: { cellWidth: 80 } }
+            });
+            yOffset = doc.lastAutoTable.finalY + 10;
+
+            doc.addPage();
+            yOffset = 10;
+            doc.setFontSize(14);
+            doc.text('Risk Rating Criteria', 10, yOffset);
+            yOffset += 7;
+
+            doc.setFontSize(12);
+            doc.text('Probability Criteria', 10, yOffset);
+            yOffset += 7;
+            doc.autoTable({
+                startY: yOffset,
+                head: [['Score', 'Probability', 'Description']],
+                body: [['3', 'High (10-50%)', 'Known occurrence within a 2 year period'], ['2', 'Medium (10-50%)', 'Known occurrence more than 3 years ago'], ['1', 'Low (<10%)', 'Never happened before']],
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [44, 62, 80] },
+                margin: { left: 10, right: 10 },
+                columnStyles: { 2: { cellWidth: 80 } }
+            });
+            yOffset = doc.lastAutoTable.finalY + 10;
+
+            doc.setFontSize(12);
+            doc.text('Impact Criteria', 10, yOffset);
+            yOffset += 7;
+            doc.autoTable({
+                startY: yOffset,
+                head: [['Score', 'Impact Area', 'Description']],
+                body: [['3', 'Service Delivery', 'Critical service disruption affecting objectives'], ['2', 'Financial', 'Significant effect on budget utilization (>50% unutilized funds)'], ['1', 'Reputation', 'More than 10 complaints, significant customer impact']],
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [44, 62, 80] },
+                margin: { left: 10, right: 10 },
+                columnStyles: { 2: { cellWidth: 80 } }
+            });
+            yOffset = doc.lastAutoTable.finalY + 10;
+
+            doc.setFontSize(12);
+            doc.text('Risk Evaluation Rating', 10, yOffset);
+            yOffset += 7;
+            doc.autoTable({
+                startY: yOffset,
+                head: [['Total Score', 'Priority Rating', 'Recommended Actions']],
+                body: [['6', '1st Priority', 'Risk Elimination or Mitigation'], ['5', '1st Priority', 'Risk Mitigation'], ['4', '2nd Priority', 'Risk Mitigation'], ['3', '2nd Priority', 'Risk Mitigation or Transfer'], ['2', '3rd Priority', 'Risk Mitigation or Transfer']],
+                styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [44, 62, 80] },
+                margin: { left: 10, right: 10 },
+                columnStyles: { 2: { cellWidth: 80 } }
+            });
+
+            doc.save('Risk_Register_Report_2025.pdf');
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

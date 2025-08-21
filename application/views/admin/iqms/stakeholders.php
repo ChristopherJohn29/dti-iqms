@@ -45,6 +45,12 @@
         </div>
 
 
+<input type="hidden" id="iqmsModuleCode" value="STAKEHOLDERS">
+<input type="hidden" id="iqmsOfficeId" value="10">
+<input type="hidden" id="iqmsProcessId" value="1">
+<input type="hidden" id="iqmsFiscalYear" value="2025">
+
+
 
         <!-- Search and Add Button -->
         <div class="row mb-3">
@@ -80,94 +86,8 @@
                         <th style="width: 5%;">ACTIONS</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Business Persons -->
-                    <tr>
-                        <td rowspan="3"><strong>1. Business Persons</strong><br><small>(Inclusions: business owners, entrepreneurs, MSMEs, product/service providers, investors)</small></td>
-                        <td>1.5 Proper, comfortable and Minimum Public Health Standards Protocol-compliant venue with decent food</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td class="text-center">Yes</td>
-                        <td class="text-center">OR-2</td>
-                        <td rowspan="3" class="text-center">
-                            <div class="btn-group">
-                                <button class="btn btn-warning btn-sm" onclick="editStakeholder('business_persons')" title="Edit Business Persons">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteStakeholder('business_persons')" title="Delete Business Persons">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1.6 Organized / systematized conduct of various DTI training activities</td>
-                        <td>Training not implemented as planned</td>
-                        <td>Increase participants retention and improve learning</td>
-                        <td class="text-center">No</td>
-                        <td class="text-center">OR-8</td>
-                    </tr>
-                    <tr>
-                        <td>1.18 Expected learning objectives achieved</td>
-                        <td>Training not implemented as planned</td>
-                        <td>Improved business outcomes</td>
-                        <td class="text-center">Yes</td>
-                        <td class="text-center">OR-4</td>
-                    </tr>
-
-                    <!-- Development Partners -->
-                    <tr>
-                        <td rowspan="2"><strong>4. Development Partners</strong><br><small>(NGAs, LGUs, NGOs, Coaches/Mentors/Designers, MSME Council, Local Chambers, and Industry Associations, Province)</small></td>
-                        <td>4.2 Clear and judicious MOA or MOU</td>
-                        <td>Misalignment of goals and objectives</td>
-                        <td>Efficient resource allocation and availability of competent Resource Speakers</td>
-                        <td class="text-center">Yes</td>
-                        <td class="text-center">RR-3, OR-3</td>
-                        <td rowspan="2" class="text-center">
-                            <div class="btn-group">
-                                <button class="btn btn-warning btn-sm" onclick="editStakeholder('development_partners')" title="Edit Development Partners">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteStakeholder('development_partners')" title="Delete Development Partners">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4.3 Prompt and fair compensation of services rendered</td>
-                        <td>Legal and Contractual Implications</td>
-                        <td>long-term collaboration and trust among development partners</td>
-                        <td class="text-center">No</td>
-                        <td class="text-center">RR-4, OR-4</td>
-                    </tr>
-
-                    <!-- DTI Staff -->
-                    <tr>
-                        <td rowspan="2"><strong>10. DTI-10 Staff/Contractual Services</strong><br><small>(technical and non-technical)</small></td>
-                        <td>10.1 Ready provision of appropriate resources and logistical support in the implementation of PAPs</td>
-                        <td>Training not implemented as planned</td>
-                        <td>Improved training delivery</td>
-                        <td class="text-center">Yes</td>
-                        <td class="text-center">RR-2</td>
-                        <td rowspan="2" class="text-center">
-                            <div class="btn-group">
-                                <button class="btn btn-warning btn-sm" onclick="editStakeholder('dti_staff')" title="Edit DTI Staff">
-                                    <i class="fe-edit"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteStakeholder('dti_staff')" title="Delete DTI Staff">
-                                    <i class="fe-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>10.2 Provision of capability building activities as well as physical and mental wellness program</td>
-                        <td>Demotivated personnel</td>
-                        <td>Efficient resource utilization and improved staff performance</td>
-                        <td class="text-center">No</td>
-                        <td class="text-center">RR-5, OR-5</td>
-                    </tr>
+                <tbody id="stakeholdersTbody">
+                    <!-- Data populated dynamically via jQuery -->
                 </tbody>
             </table>
                     </div>
@@ -190,12 +110,12 @@
             <h3 class="iqms-modal-title" id="modalTitle">Add New Stakeholder Entry</h3>
             <span class="iqms-close" onclick="closeStakeholderModal()">&times;</span>
         </div>
-        
+
         <h5>DEPARTMENT OF TRADE AND INDUSTRY - PROCESS STAKEHOLDERS ANALYSIS</h5>
-        
+
         <form class="iqms-form" id="stakeholderForm">
             <input type="hidden" id="stakeholderId">
-            
+
             <h6>Basic Information</h6>
             <div class="mb-3">
                 <label class="form-label" for="process">Process:</label>
@@ -281,7 +201,7 @@
             <button type="button" class="btn btn-success mb-3" id="addAnalysisSet">
                 <i class="fe-plus"></i> Add Analysis Set
             </button>
-            
+
             <div class="mt-4">
                 <button type="button" class="btn btn-primary" onclick="saveStakeholder()">Save Entry</button>
                 <button type="button" class="btn btn-light" onclick="closeStakeholderModal()">Cancel</button>
@@ -393,223 +313,216 @@
 </style>
 
 <script>
-let setCount = 1;
+$(function(){
+  var ENDPOINT = {
+    ENSURE: '<?=base_url('admin/iqms-data/ensure')?>',
+    LIST:   '<?=base_url('admin/iqms-data/list')?>',
+    SAVE:   '<?=base_url('admin/iqms-data/save')?>',
+    DEL:    '<?=base_url('admin/iqms-data/delete')?>',
+    EXPORT: '<?=base_url('admin/iqms-data/export')?>'
+  };
 
-function openStakeholderModal() {
-    document.getElementById('modalTitle').textContent = 'Add New Stakeholder Entry';
-    document.getElementById('stakeholderId').value = '';
-    document.getElementById('stakeholderForm').reset();
+  var setCount = 1;
+  var moduleCode = $('#iqmsModuleCode').val();
+  var officeId   = parseInt($('#iqmsOfficeId').val(),10) || null;
+  var processId  = $('#iqmsProcessId').val() ? parseInt($('#iqmsProcessId').val(),10) : null;
+  var fiscalYear = $('#iqmsFiscalYear').val() || (new Date().getFullYear());
+  var analysisId = null;
+
+  var catMapCodeToId = { business_persons:1, development_partners:4, dti_staff:10 };
+  var catIdToLabel   = { 1:'1. Business Persons', 4:'4. Development Partners', 10:'10. DTI-10 Staff/Contractual Services' };
+
+  function ensureAnalysis(){
+    return $.post(ENDPOINT.ENSURE, {
+      module_code: moduleCode,
+      office_id: officeId,
+      process_id: processId,
+      fiscal_year: fiscalYear
+    }, function(resp){ analysisId = resp.id; }, 'json');
+  }
+
+  function loadStakeholders(){
+    return $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, renderStakeholders);
+  }
+
+  function renderStakeholders(rows){
+    var $tbody = $('#stakeholdersTbody').empty();
+    var grouped = {};
+    $.each(rows, function(_, r){
+      var cid = parseInt(r.category_id,10); (grouped[cid] = grouped[cid] || []).push(r);
+    });
+    $.each(Object.keys(grouped).sort(function(a,b){return a-b;}), function(_, cid){
+      var items = grouped[cid], label = catIdToLabel[cid] || ('Category '+cid);
+      $.each(items, function(i, r){
+        var $tr = $('<tr/>');
+        if(i===0){ $tr.append($('<td/>',{rowspan: items.length, html:'<strong>'+label+'</strong>'})); }
+        $tr.append($('<td/>').text(r.needs_expectations||'-'));
+        $tr.append($('<td/>').text(r.potential_risks||'-'));
+        $tr.append($('<td/>').text(r.potential_opportunities||'-'));
+        $tr.append($('<td/>',{'class':'text-center'}).text(r.to_be_considered||'-'));
+        var refs = $.grep([r.risk_reference, r.opportunity_reference], Boolean).join(', ') || '-';
+        $tr.append($('<td/>',{'class':'text-center'}).text(refs));
+        $tr.append($('<td/>',{'class':'text-center'}).html(
+          '<div class="btn-group">'+
+          '<button class="btn btn-warning btn-sm" title="Edit" onclick="openStakeholderModal('+cid+','+r.id+')"><i class="fe-edit"></i></button>'+
+          '<button class="btn btn-danger btn-sm" title="Delete" onclick="deleteStakeholderEntry('+r.id+')"><i class="fe-trash"></i></button>'+
+          '</div>'
+        ));
+        $tbody.append($tr);
+      });
+    });
+  }
+
+  window.openStakeholderModal = function(categoryId, rowId){
+    $('#modalTitle').text(rowId ? 'Edit Stakeholder Entry' : 'Add New Stakeholder Entry');
+    $('#stakeholderId').val(rowId || '');
+    $('#stakeholderForm')[0].reset();
     resetAnalysisSets();
-    document.getElementById('stakeholderModal').style.display = 'block';
-}
+    $('#stakeholderModal').show();
+  };
 
-function closeStakeholderModal() {
-    document.getElementById('stakeholderModal').style.display = 'none';
+  window.closeStakeholderModal = function(){
+    $('#stakeholderModal').hide();
     resetAnalysisSets();
-}
+  };
 
-function resetAnalysisSets() {
-    const analysisSets = document.getElementById('analysisSets');
-    // Remove all sets except the first one
-    while (analysisSets.children.length > 1) {
-        analysisSets.removeChild(analysisSets.lastChild);
-    }
+  function resetAnalysisSets(){
+    var $analysisSets = $('#analysisSets');
+    while($analysisSets.children().length > 1){ $analysisSets.children().last().remove(); }
     setCount = 1;
+    $('#needs1').val('');
+    $('#potentialRisk1').val('');
+    $('#potentialOpportunity1').val('');
+    $('#toBeConsidered1').val('');
+    $('#riskReference1').val('');
+    $('#opportunityReference1').val('');
+  }
 
-    // Clear the first set
-    document.getElementById('needs1').value = '';
-    document.getElementById('potentialRisk1').value = '';
-    document.getElementById('potentialOpportunity1').value = '';
-    document.getElementById('toBeConsidered1').value = '';
-    document.getElementById('riskReference1').value = '';
-    document.getElementById('opportunityReference1').value = '';
-}
+  window.deleteStakeholderEntry = function(id){
+    if(!confirm('Delete this entry?')) return;
+    $.post(ENDPOINT.DEL, { table:'iqms_stakeholder_entries', id:id }, function(){ loadStakeholders(); });
+  };
 
-function editStakeholder(stakeholderType) {
-    document.getElementById('modalTitle').textContent = 'Edit Stakeholder Category';
-    document.getElementById('stakeholderId').value = stakeholderType;
-
-    // Set the interested party dropdown based on stakeholder type
-    const interestedPartySelect = document.getElementById('interestedParty');
-    interestedPartySelect.value = stakeholderType;
-
-    // In a real application, you would populate the form with existing data for this stakeholder category
-    // For now, we'll just open the modal with the correct stakeholder type selected
-    document.getElementById('stakeholderModal').style.display = 'block';
-}
-
-function deleteStakeholder(stakeholderType) {
-    const stakeholderNames = {
-        'business_persons': 'Business Persons',
-        'development_partners': 'Development Partners',
-        'dti_staff': 'DTI-10 Staff/Contractual Services'
-    };
-
-    const stakeholderName = stakeholderNames[stakeholderType] || stakeholderType;
-
-    if (confirm(`Are you sure you want to delete all entries for "${stakeholderName}"? This will remove all analysis sets for this stakeholder category.`)) {
-        // In a real application, this would make an AJAX call to delete all records for this stakeholder category
-        alert(`All entries for "${stakeholderName}" have been deleted successfully!`);
-    }
-}
-
-function saveStakeholder() {
-    // Validate that at least the first set has needs filled
-    const needs1 = document.getElementById('needs1').value;
-    const interestedParty = document.getElementById('interestedParty').value;
-
-    if (!interestedParty) {
-        alert('Please select an interested party');
-        return;
-    }
-
-    if (!needs1) {
-        alert('Please enter needs and expectations for Set #1');
-        return;
-    }
-
-    // In a real application, this would validate and save all analysis sets
-    alert('Stakeholder entry saved successfully!');
-    closeStakeholderModal();
-}
-
-// Add new analysis set functionality
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('addAnalysisSet').addEventListener('click', function() {
-        setCount++;
-        const newSet = document.createElement('div');
-        newSet.className = 'analysis-set';
-        newSet.innerHTML = `
-            <button type="button" class="remove-set-btn" onclick="removeAnalysisSet(this)" title="Remove this set">×</button>
-            <h6>Set #${setCount}</h6>
-            <h6>Needs & Expectations</h6>
-            <div class="mb-3">
-                <label class="form-label" for="needs${setCount}">What does the interested party need or expect from DTI related to the process?</label>
-                <textarea class="form-control" id="needs${setCount}" rows="3"></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="potentialRisk${setCount}">Potential Risk</label>
-                <p style="font-size: 0.9em; color: #666;">What potential NEGATIVE incident/event can happen if requirements are not met?</p>
-                <textarea class="form-control" id="potentialRisk${setCount}" rows="3"></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="potentialOpportunity${setCount}">Potential Opportunity</label>
-                <p style="font-size: 0.9em; color: #666;">What potential POSITIVE incident/event can happen if requirements are met or exceeded?</p>
-                <textarea class="form-control" id="potentialOpportunity${setCount}" rows="3"></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="toBeConsidered${setCount}">To Be Considered</label>
-                <select class="form-control" id="toBeConsidered${setCount}">
-                    <option value="">Select Option</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">References</label>
-                <div class="row">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" id="riskReference${setCount}" placeholder="Risk Reference # e.g., RR-1">
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" id="opportunityReference${setCount}" placeholder="Opportunity Reference # e.g., OR-1">
-                    </div>
-                </div>
-            </div>
-        `;
-        document.getElementById('analysisSets').appendChild(newSet);
+  window.deleteStakeholder = function(codeOrId){
+    var cid = isNaN(codeOrId) ? (catMapCodeToId[codeOrId]||0) : parseInt(codeOrId,10);
+    if(!cid){ alert('Unknown category'); return; }
+    if(!confirm('Delete all entries for this stakeholder category?')) return;
+    $.getJSON(ENDPOINT.LIST, { table:'iqms_stakeholder_entries', analysis_id: analysisId }, function(rows){
+      var ids = $.map(rows, function(r){ return (parseInt(r.category_id,10)===cid) ? r.id : null; });
+      var i=0; (function next(){ if(i>=ids.length) return loadStakeholders(); $.post(ENDPOINT.DEL, {table:'iqms_stakeholder_entries', id:ids[i++]}, next); })();
     });
+  };
 
-    // Handle "Other" option for interested party
-    document.getElementById('interestedParty').addEventListener('change', function() {
-        const existingOtherInput = document.getElementById('otherPartyInput');
-        if (existingOtherInput) {
-            existingOtherInput.remove();
-        }
+  window.saveStakeholder = function(){
+    var party = $('#interestedParty').val();
+    if(!party){ alert('Please select an interested party'); return; }
+    if(!$('#needs1').val()){ alert('Please enter needs and expectations for Set #1'); return; }
+    var cid = (party==='other') ? null : (isNaN(party) ? (catMapCodeToId[party]||null) : parseInt(party,10));
+    var $sets = $('#analysisSets .analysis-set');
 
-        if (this.value === 'other') {
-            const otherInput = document.createElement('input');
-            otherInput.type = 'text';
-            otherInput.className = 'form-control mt-2';
-            otherInput.placeholder = 'Specify interested party';
-            otherInput.id = 'otherPartyInput';
+    function saveOne(n, done){
+      var data = {
+        table:'iqms_stakeholder_entries',
+        analysis_id: analysisId,
+        category_id: cid,
+        custom_category_name: (party==='other') ? 'Other' : '',
+        needs_expectations: ($('#needs'+n).val()||'').trim(),
+        potential_risks: ($('#potentialRisk'+n).val()||'').trim(),
+        potential_opportunities: ($('#potentialOpportunity'+n).val()||'').trim(),
+        to_be_considered: $('#toBeConsidered'+n).val()||'',
+        risk_reference: ($('#riskReference'+n).val()||'').trim(),
+        opportunity_reference: ($('#opportunityReference'+n).val()||'').trim(),
+        analysis_set_number: n
+      };
+      $.post(ENDPOINT.SAVE, data, function(){ done(); });
+    }
 
-            this.parentNode.appendChild(otherInput);
-        }
+    var i=1, total=$sets.length; (function next(){ if(i>total){ alert('Stakeholder entry saved successfully!'); closeStakeholderModal(); return loadStakeholders(); } saveOne(i++, next); })();
+  };
+
+  // Add new analysis set
+  $('#addAnalysisSet').on('click', function(){
+    setCount++;
+    var html = ''+
+    '<div class="analysis-set">'+
+    '  <button type="button" class="remove-set-btn" onclick="removeAnalysisSet(this)" title="Remove this set">×</button>'+
+    '  <h6>Set #'+setCount+'</h6>'+
+    '  <h6>Needs & Expectations</h6>'+
+    '  <div class="mb-3">'+
+    '    <label class="form-label" for="needs'+setCount+'">What does the interested party need or expect from DTI related to the process?</label>'+
+    '    <textarea class="form-control" id="needs'+setCount+'" rows="3"></textarea>'+
+    '  </div>'+
+    '  <div class="mb-3">'+
+    '    <label class="form-label" for="potentialRisk'+setCount+'">Potential Risk</label>'+
+    '    <p style="font-size: 0.9em; color: #666;">What potential NEGATIVE incident/event can happen if requirements are not met?</p>'+
+    '    <textarea class="form-control" id="potentialRisk'+setCount+'" rows="3"></textarea>'+
+    '  </div>'+
+    '  <div class="mb-3">'+
+    '    <label class="form-label" for="potentialOpportunity'+setCount+'">Potential Opportunity</label>'+
+    '    <p style="font-size: 0.9em; color: #666;">What potential POSITIVE incident/event can happen if requirements are met or exceeded?</p>'+
+    '    <textarea class="form-control" id="potentialOpportunity'+setCount+'" rows="3"></textarea>'+
+    '  </div>'+
+    '  <div class="mb-3">'+
+    '    <label class="form-label" for="toBeConsidered'+setCount+'">To Be Considered</label>'+
+    '    <select class="form-control" id="toBeConsidered'+setCount+'">'+
+    '      <option value="">Select Option</option>'+
+    '      <option value="Yes">Yes</option>'+
+    '      <option value="No">No</option>'+
+    '    </select>'+
+    '  </div>'+
+    '  <div class="mb-3">'+
+    '    <label class="form-label">References</label>'+
+    '    <div class="row">'+
+    '      <div class="col-md-6">'+
+    '        <input type="text" class="form-control" id="riskReference'+setCount+'" placeholder="Risk Reference # e.g., RR-1">'+
+    '      </div>'+
+    '      <div class="col-md-6">'+
+    '        <input type="text" class="form-control" id="opportunityReference'+setCount+'" placeholder="Opportunity Reference # e.g., OR-1">'+
+    '      </div>'+
+    '    </div>'+
+    '  </div>'+
+    '</div>';
+    $('#analysisSets').append(html);
+  });
+
+  // Keep your existing "Other" handling logic
+  $('#interestedParty').on('change', function(){
+    var $existing = $('#otherPartyInput'); if($existing.length){ $existing.remove(); }
+    if(this.value==='other'){
+      $('<input/>',{type:'text',id:'otherPartyInput','class':'form-control mt-2',placeholder:'Specify interested party'}).appendTo($(this).parent());
+    }
+  });
+
+  window.removeAnalysisSet = function(button){
+    if(!confirm('Are you sure you want to remove this analysis set?')) return;
+    var $set = $(button).closest('.analysis-set');
+    $set.remove();
+    var $sets = $('.analysis-set');
+    $sets.each(function(idx){
+      var n = idx+1; var $s = $(this);
+      var $head = $s.find('h6').first(); if($head.text().indexOf('Set #')===0){ $head.text('Set #'+n); }
+      var baseText = ['needs','potentialRisk','potentialOpportunity'];
+      $s.find('textarea').each(function(i){ if(baseText[i]) $(this).attr('id', baseText[i]+n); });
+      $s.find('select').first().attr('id','toBeConsidered'+n);
+      var baseInputs = ['riskReference','opportunityReference'];
+      $s.find('input[type="text"]').each(function(i){ if(baseInputs[i]) $(this).attr('id', baseInputs[i]+n); });
     });
+    setCount = $sets.length;
+  };
+
+  // Search filter preserved
+  $('#searchStakeholders').on('input', function(){
+    var term = this.value.toLowerCase();
+    $('#stakeholdersTable tbody tr').each(function(){
+      var txt = $(this).text().toLowerCase();
+      $(this).toggle(txt.indexOf(term) >= 0);
+    });
+  });
+
+  // Click outside to close preserved
+  $(window).on('click', function(e){ if(e.target === document.getElementById('stakeholderModal')) closeStakeholderModal(); });
+
+  // Initialize
+  ensureAnalysis().then(loadStakeholders);
 });
-
-function removeAnalysisSet(button) {
-    if (confirm('Are you sure you want to remove this analysis set?')) {
-        const analysisSet = button.parentNode;
-        analysisSet.remove();
-
-        // Renumber remaining sets
-        const sets = document.querySelectorAll('.analysis-set');
-        sets.forEach((set, index) => {
-            const setNumber = index + 1;
-            const h6 = set.querySelector('h6');
-            if (h6 && h6.textContent.startsWith('Set #')) {
-                h6.textContent = `Set #${setNumber}`;
-            }
-
-            // Update IDs for form elements
-            const textareas = set.querySelectorAll('textarea');
-            const inputs = set.querySelectorAll('input[type="text"]');
-            const selects = set.querySelectorAll('select');
-
-            textareas.forEach((textarea, i) => {
-                const baseIds = ['needs', 'potentialRisk', 'potentialOpportunity'];
-                if (i < baseIds.length) {
-                    textarea.id = baseIds[i] + setNumber;
-                }
-            });
-
-            selects.forEach((select, i) => {
-                const baseIds = ['toBeConsidered'];
-                if (i < baseIds.length) {
-                    select.id = baseIds[i] + setNumber;
-                }
-            });
-
-            inputs.forEach((input, i) => {
-                const baseIds = ['riskReference', 'opportunityReference'];
-                if (i < baseIds.length) {
-                    input.id = baseIds[i] + setNumber;
-                }
-            });
-        });
-
-        setCount = sets.length;
-    }
-}
-
-// Search functionality
-document.getElementById('searchStakeholders').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const table = document.getElementById('stakeholdersTable');
-    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-    for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const text = row.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    }
-});
-
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('stakeholderModal');
-    if (event.target == modal) {
-        closeStakeholderModal();
-    }
-}
 </script>

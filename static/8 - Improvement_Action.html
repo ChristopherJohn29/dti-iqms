@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTI - Improvement Actions</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ffc107;
+            --text-color: #333;
+            --light-gray: #e9ecef;
+            --border-color: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .logo-text h1 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .logo-text h2 {
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: normal;
+        }
+        
+        .document-info {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-item .label {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 60px;
+        }
+        
+        .info-item .value {
+            padding: 5px 10px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            flex-grow: 1;
+        }
+        
+        .office-section {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .office-title {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .actions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .actions-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .actions-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .actions-table tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        
+        .actions-table tr:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status.planned {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.in-progress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status.completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .filter-group select, 
+        .filter-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #004494;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://via.placeholder.com/50x50?text=DTI" alt="DTI Logo">
+            <div class="logo-text">
+                <h1>DEPARTMENT OF TRADE AND INDUSTRY</h1>
+                <h2>IMPROVEMENT ACTIONS</h2>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="fy-title">FY 2025</span>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="document-info">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Code:</span>
+                    <span class="value">FM-PL-09</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Rev.:</span>
+                    <span class="value">3</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Date:</span>
+                    <span class="value">01-Apr-25</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="office-section">
+            <h3 class="office-title">DTI-10 Regional Office</h3>
+        </div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label for="status-filter">Status</label>
+                <select id="status-filter">
+                    <option value="all">All Status</option>
+                    <option value="planned">Planned</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="timeline-filter">Timeline</label>
+                <select id="timeline-filter">
+                    <option value="all">All Timelines</option>
+                    <option value="q1">Q1 2025</option>
+                    <option value="q2">Q2 2025</option>
+                    <option value="q3">Q3 2025</option>
+                    <option value="q4">Q4 2025</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="search">Search</label>
+                <input type="text" id="search" placeholder="Search improvement actions...">
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-secondary" id="export-btn">Export to PDF</button>
+            <button class="btn btn-primary" id="add-action-btn">Add Improvement Action</button>
+        </div>
+        
+        <table class="actions-table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Improvement Actions</th>
+                    <th>Responsibility</th>
+                    <th>Timeline</th>
+                    <th>Resources Needed</th>
+                    <th>Status / Remarks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Development of Client Management and Profiling System (CMAPS)</td>
+                    <td>ORD</td>
+                    <td>Q2 2025</td>
+                    <td>O365 Power Apps</td>
+                    <td><span class="status in-progress">To be rolled-out by April 2025</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm edit-btn">Edit</button>
+                        <button class="btn btn-secondary btn-sm delete-btn">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Training of Trainers for Technical Staff</td>
+                    <td>BDD, FAD</td>
+                    <td>Q2-Q4 2025</td>
+                    <td>Training Fee, TEV</td>
+                    <td><span class="status completed">3 personnel attended the ToT on Export Procedures on Mar 24-26, 2025</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm edit-btn">Edit</button>
+                        <button class="btn btn-secondary btn-sm delete-btn">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="action-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Add Improvement Action</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="action-form">
+                <input type="hidden" id="action-id">
+                <div class="form-group">
+                    <label for="improvement-action">Improvement Action</label>
+                    <input type="text" id="improvement-action" required>
+                </div>
+                <div class="form-group">
+                    <label for="responsibility">Responsibility</label>
+                    <input type="text" id="responsibility" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeline">Timeline</label>
+                    <select id="timeline" required>
+                        <option value="">Select Timeline</option>
+                        <option value="Q1 2025">Q1 2025</option>
+                        <option value="Q2 2025">Q2 2025</option>
+                        <option value="Q3 2025">Q3 2025</option>
+                        <option value="Q4 2025">Q4 2025</option>
+                        <option value="Q1-Q2 2025">Q1-Q2 2025</option>
+                        <option value="Q2-Q3 2025">Q2-Q3 2025</option>
+                        <option value="Q3-Q4 2025">Q3-Q4 2025</option>
+                        <option value="Q2-Q4 2025">Q2-Q4 2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="resources">Resources Needed</label>
+                    <input type="text" id="resources" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" required>
+                        <option value="">Select Status</option>
+                        <option value="planned">Planned</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="remarks">Remarks</label>
+                    <textarea id="remarks"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('action-modal');
+            const addBtn = document.getElementById('add-action-btn');
+            const closeModal = document.querySelector('.close-modal');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const actionForm = document.getElementById('action-form');
+            const modalTitle = document.getElementById('modal-title');
+            
+            // Open modal for adding new action
+            addBtn.addEventListener('click', function() {
+                modalTitle.textContent = 'Add Improvement Action';
+                actionForm.reset();
+                document.getElementById('action-id').value = '';
+                modal.style.display = 'flex';
+            });
+            
+            // Close modal
+            function closeActionModal() {
+                modal.style.display = 'none';
+            }
+            
+            closeModal.addEventListener('click', closeActionModal);
+            cancelBtn.addEventListener('click', closeActionModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeActionModal();
+                }
+            });
+            
+            // Form submission
+            actionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const id = document.getElementById('action-id').value;
+                const action = document.getElementById('improvement-action').value;
+                const responsibility = document.getElementById('responsibility').value;
+                const timeline = document.getElementById('timeline').value;
+                const resources = document.getElementById('resources').value;
+                const status = document.getElementById('status').value;
+                const remarks = document.getElementById('remarks').value;
+                
+                if (id) {
+                    // Update existing row
+                    // In a real app, you would update the corresponding row in the table
+                    alert('Improvement action updated successfully!');
+                } else {
+                    // Add new row
+                    // In a real app, you would add a new row to the table
+                    alert('Improvement action added successfully!');
+                }
+                
+                closeActionModal();
+            });
+            
+            // Edit button functionality
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const cells = row.querySelectorAll('td');
+                    
+                    // Set modal title
+                    modalTitle.textContent = 'Edit Improvement Action';
+                    
+                    // Set form values from the row
+                    document.getElementById('action-id').value = cells[0].textContent;
+                    document.getElementById('improvement-action').value = cells[1].textContent;
+                    document.getElementById('responsibility').value = cells[2].textContent;
+                    document.getElementById('timeline').value = cells[3].textContent;
+                    document.getElementById('resources').value = cells[4].textContent;
+                    
+                    // Get status from class
+                    const statusClass = cells[5].querySelector('.status').className;
+                    let status = '';
+                    if (statusClass.includes('planned')) status = 'planned';
+                    else if (statusClass.includes('in-progress')) status = 'in-progress';
+                    else if (statusClass.includes('completed')) status = 'completed';
+                    document.getElementById('status').value = status;
+                    
+                    document.getElementById('remarks').value = cells[5].querySelector('.status').textContent;
+                    
+                    // Open modal
+                    modal.style.display = 'flex';
+                });
+            });
+            
+            // Delete button functionality
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete this improvement action?')) {
+                        // In a real app, you would remove the row from the table
+                        alert('Improvement action deleted successfully!');
+                    }
+                });
+            });
+            
+            // Filter functionality
+            const statusFilter = document.getElementById('status-filter');
+            const timelineFilter = document.getElementById('timeline-filter');
+            const searchInput = document.getElementById('search');
+            
+            function applyFilters() {
+                const statusValue = statusFilter.value;
+                const timelineValue = timelineFilter.value;
+                const searchValue = searchInput.value.toLowerCase();
+                
+                document.querySelectorAll('.actions-table tbody tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    const statusClass = cells[5].querySelector('.status').className;
+                    const timelineText = cells[3].textContent;
+                    const actionText = cells[1].textContent.toLowerCase();
+                    
+                    let statusMatch = true;
+                    let timelineMatch = true;
+                    let searchMatch = true;
+                    
+                    // Status filter
+                    if (statusValue !== 'all') {
+                        if (statusValue === 'planned' && !statusClass.includes('planned')) statusMatch = false;
+                        if (statusValue === 'in-progress' && !statusClass.includes('in-progress')) statusMatch = false;
+                        if (statusValue === 'completed' && !statusClass.includes('completed')) statusMatch = false;
+                    }
+                    
+                    // Timeline filter
+                    if (timelineValue !== 'all') {
+                        if (timelineValue === 'q1' && !timelineText.includes('Q1')) timelineMatch = false;
+                        if (timelineValue === 'q2' && !timelineText.includes('Q2')) timelineMatch = false;
+                        if (timelineValue === 'q3' && !timelineText.includes('Q3')) timelineMatch = false;
+                        if (timelineValue === 'q4' && !timelineText.includes('Q4')) timelineMatch = false;
+                    }
+                    
+                    // Search filter
+                    if (searchValue && !actionText.includes(searchValue)) {
+                        searchMatch = false;
+                    }
+                    
+                    // Show/hide row based on filters
+                    if (statusMatch && timelineMatch && searchMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            statusFilter.addEventListener('change', applyFilters);
+            timelineFilter.addEventListener('change', applyFilters);
+            searchInput.addEventListener('input', applyFilters);
+            
+            // Export to PDF button
+            document.getElementById('export-btn').addEventListener('click', function() {
+                alert('Export to PDF functionality would be implemented here');
+                // In a real app, you would use a library like jsPDF or html2pdf.js
+            });
+        });
+    </script>
+</body>
+</html>
