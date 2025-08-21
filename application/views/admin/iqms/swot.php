@@ -188,8 +188,12 @@ $(function(){
   function loadSwot(){
     return $.getJSON(ENDPOINT.LIST, { table:'iqms_swot_entries', analysis_id: analysisId }, function(rows){
       var dataByType = { strengths:[], weaknesses:[], opportunities:[], threats:[] };
-      $.each(rows, function(_, r){
-        var cat = r.swot_type+'s';
+      var map = { strength:'strengths', weakness:'weaknesses', opportunity:'opportunities', threat:'threats' };
+      $.each(rows || [], function(_, r){
+        var t = String(r && r.swot_type || '').toLowerCase().trim();
+        if(t.endsWith('s')) t = t.slice(0,-1); // normalize pluralized values
+        var cat = map[t];
+        if(!cat) return; // skip unknown/empty types
         dataByType[cat].push({ id:r.id, number:r.item_number||'', text:r.item_description||'', risk:r.potential_risk||'', opportunity:r.potential_opportunity||'', reference:r.reference_links||'' });
       });
       renderCategory('strengths', dataByType.strengths);
