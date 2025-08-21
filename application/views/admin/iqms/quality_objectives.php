@@ -184,6 +184,17 @@
                         </select>
                     </div>
                 </div>
+                <div class="iqms-form-row">
+                    <div class="iqms-form-group">
+                        <label class="iqms-form-label" for="objectiveStatus">Objective Status:</label>
+                        <select class="iqms-form-control" id="objectiveStatus" required>
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Action Plans Section -->

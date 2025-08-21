@@ -73,10 +73,12 @@
         $('#target').val(o.target||'');
         $('#outputIndicator').val(o.output_indicator||'');
         $('#processOwner').val(o.process_owner||'');
+        $('#objectiveStatus').val(o.objective_status||'Not Started');
         $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:id},function(plans){
           window.populateActionPlans($.map(plans||[],function(p){return {text:p.action_text,timeline:p.timeline,responsibility:p.responsibility,resources:p.resources_needed,references:p.references,status:p.action_status};}));
           cb&&cb();
         });
+        $('#objectiveStatus').val(o.objective_status||'Not Started');
       });
     }
 
@@ -92,7 +94,7 @@
     $('#objectiveForm').off('submit').on('submit',function(e){ e.preventDefault(); window.saveObjective(); });
     window.saveObjective=function(){
       var id=$('#objectiveId').val()||null;
-      var data={table:'iqms_quality_objectives',id:id,analysis_id:analysisId,objective_code:(id?undefined:null),quality_objective:$('#qualityObjective').val(),target:$('#target').val(),output_indicator:$('#outputIndicator').val(),process_owner:$('#processOwner').val(),objective_status:'Not Started'};
+      var data={table:'iqms_quality_objectives',id:id,analysis_id:analysisId,quality_objective:$('#qualityObjective').val(),target:$('#target').val(),output_indicator:$('#outputIndicator').val(),process_owner:$('#processOwner').val(),objective_status:($('#objectiveStatus').val()||'Not Started')};
       $.post(ENDPOINT.SAVE,data,function(resp){ var objId=id||resp.id; $.post(ENDPOINT.DEL_CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:objId},function(){ var aps=[]; $('#actionPlansContainer .iqms-action-plan-container').each(function(){ aps.push({table:'iqms_quality_objective_action_plans',objective_id:objId,action_text:$(this).find('.action-plan-text').val(),timeline:$(this).find('.action-plan-timeline').val(),responsibility:$(this).find('.action-plan-responsibility').val(),resources_needed:$(this).find('.action-plan-resources').val(),references:$(this).find('.action-plan-references').val(),action_status:$(this).find('.action-plan-status').val()});}); var i=0;(function next(){ if(i>=aps.length){ alert('Quality objective saved successfully!'); window.closeObjectiveModal(); return loadObjectives(); } $.post(ENDPOINT.SAVE,aps[i++],function(){ next(); }); })(); }); },'json'); };
 
     // Search & filter
