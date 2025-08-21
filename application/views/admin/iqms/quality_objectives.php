@@ -320,6 +320,8 @@ $(function(){
 
   // Action plan helper functions preserved from original UI below
 });
+</script>
+
 let objectivesData = [
     {
         id: 'QO-001',
@@ -377,7 +379,6 @@ function closeObjectiveModal() {
 function editObjective(id) {
     const objective = objectivesData.find(obj => obj.id === id);
 
-<script>
 $(function(){
   var ENDPOINT = {
     ENSURE: '<?=base_url('admin/iqms-data/ensure')?>',
