@@ -489,7 +489,7 @@ CREATE TABLE `iqms_opportunity_actions` (
   `responsibility` varchar(255),
   `timeline` varchar(100),
   `success_indicator` text,
-  `action_status` enum('Planned','In Progress','Completed','Cancelled') DEFAULT 'Planned',
+  `action_status` enum('not-started','in-progress','completed','cancelled') DEFAULT 'not-started',
   `completion_date` date,
   `remarks` text,
   `status` tinyint(1) DEFAULT 1,
@@ -751,10 +751,10 @@ INSERT INTO `iqms_opportunity_register` (`analysis_id`, `opportunity_id`, `oppor
 
 -- Sample Opportunity Actions
 INSERT INTO `iqms_opportunity_actions` (`opportunity_id`, `action_description`, `responsibility`, `timeline`, `success_indicator`, `action_status`, `created_by`) VALUES
-(1, '1.1 Ensure to conduct TNA and profiling of participants and communication in advance to the resource person', 'Training Coordinator', 'every conduct of training', 'Client satisfaction feedback/rating', 'Planned', 1),
-(2, 'Develop internal trainer certification program', 'Training Coordinator', 'Annually', 'Number of certified internal trainers', 'Planned', 1),
-(3, 'Implement hybrid training delivery system', 'IT Coordinator/Training Coordinator', 'Q3 2025', 'Percentage of online training sessions conducted', 'In Progress', 1),
-(4, 'Expand training reach through digital platforms', 'Training Coordinator', 'Q2-Q4 2025', 'Number of participants reached through online platforms', 'In Progress', 1);
+(1, '1.1 Ensure to conduct TNA and profiling of participants and communication in advance to the resource person', 'Training Coordinator', 'every conduct of training', 'Client satisfaction feedback/rating', 'not-started', 1),
+(2, 'Develop internal trainer certification program', 'Training Coordinator', 'Annually', 'Number of certified internal trainers', 'not-started', 1),
+(3, 'Implement hybrid training delivery system', 'IT Coordinator/Training Coordinator', 'Q3 2025', 'Percentage of online training sessions conducted', 'in-progress', 1),
+(4, 'Expand training reach through digital platforms', 'Training Coordinator', 'Q2-Q4 2025', 'Number of participants reached through online platforms', 'in-progress', 1);
 
 -- =====================================================
 -- END OF SCRIPT

@@ -105,7 +105,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
-                                        <button class="btn btn-success waves-effect waves-light" onclick="openOpportunityModal()">
+                                        <button class="iqms-btn iqms-btn-success" onclick="openOpportunityModal()">
                                             <i class="fe-plus"></i> Add New
                                         </button>
                                     </div>
@@ -241,9 +241,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
-                                        <button class="btn btn-success waves-effect waves-light" onclick="openTreatmentModal()">
-                                            <i class="fe-plus"></i> Add Treatment
-                                        </button>
+                                        <!-- Add Treatment removed: opportunities are created in Register tab -->
                                     </div>
                                 </div>
 

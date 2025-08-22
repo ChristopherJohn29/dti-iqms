@@ -41,6 +41,14 @@ class IqmsApi extends CI_Controller {
             $rows = $this->db->get()->result_array();
             return $this->json($rows);
         }
+        if ($table === 'iqms_opportunity_actions') {
+            $this->db->select('a.*');
+            $this->db->from('iqms_opportunity_actions a');
+            $this->db->join('iqms_opportunity_register o', 'a.opportunity_id = o.id', 'inner');
+            $this->db->where('o.analysis_id', $analysis_id);
+            $rows = $this->db->get()->result_array();
+            return $this->json($rows);
+        }
 
         // Default behavior for tables that have analysis_id
         if ($this->db->field_exists('analysis_id', $table)) {
