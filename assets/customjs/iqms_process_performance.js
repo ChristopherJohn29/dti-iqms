@@ -57,6 +57,7 @@
         return;
       }
       $.each(performances, function(_, r){
+        var perfId = r.id;
         var tr = '<tr>' +
           '<td>'+ esc(r.sequence_number||'') +'</td>'+
           '<td>'+ esc(r.quality_objective_statement||'') +'</td>'+
@@ -66,15 +67,11 @@
           // Monthly placeholders (12 cells: split into two lines for readability)
           '<td></td><td></td><td></td><td></td><td></td><td></td>'+
           '<td></td><td></td><td></td><td></td><td></td><td></td>'+
-          // Action cell placeholder (will be replaced after hydration)
-          '<td class="text-center"></td>'+
+          // Action cell with Update button now
+          '<td class="text-center"><button class="btn btn-primary btn-sm" onclick="openMonitoring('+perfId+')"><i class="fe-edit"></i> Update</button></td>'+
         '</tr>';
 
-        // Fetch monitoring cells per performance and append action button
-        var perfId = r.id;
-        // Create row element to fill cells after async call
         var $tr = $(tr);
-        // Append then hydrate monitoring values
         $('#tableBody').append($tr);
         hydrateMonitoringCells($tr, perfId);
       });
