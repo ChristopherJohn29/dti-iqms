@@ -166,18 +166,10 @@
                                 <table id="treatment-table" class="table dt-responsive nowrap w-100">
                                     <thead>
                                         <tr>
-                                            <!-- Same fields as Risk Register -->
+                                            <!-- Essential Risk Register fields (read-only) + Treatment fields -->
                                             <th>Risk ID</th>
                                             <th>Risk Description</th>
                                             <th>Potential Cause</th>
-                                            <th>Potential Impact</th>
-                                            <th>Category</th>
-                                            <th>Probability</th>
-                                            <th>Impact</th>
-                                            <th>Score</th>
-                                            <th>Priority</th>
-                                            <th>Risk Status</th>
-                                            <!-- Plus treatment-specific fields -->
                                             <th>Treatment Action</th>
                                             <th>Treatment Description</th>
                                             <th>Responsible</th>
@@ -1552,14 +1544,6 @@ $(function(){
         '<td>'+escape(r.risk_id||('RR-'+(r.id||'')))+'</td>'+
         '<td>'+escape(r.risk_description||'')+'</td>'+
         '<td class="risk-causes" data-riskid="'+r.id+'">Loading...</td>'+
-        '<td>'+escape(r.potential_impact||'')+'</td>'+
-        '<td>'+escape(r.risk_category||'')+'</td>'+
-        '<td>'+escape(r.probability||'')+'</td>'+
-        '<td>'+escape(r.impact||'')+'</td>'+
-        '<td>'+escape(r.risk_score||'')+'</td>'+
-        '<td>'+escape(r.priority||'')+'</td>'+
-        '<td>'+escape(r.risk_status||'')+'</td>'+
-        // Treatment-specific fields
         '<td>'+escape((t.treatment_type||'').toLowerCase())+'</td>'+
         '<td>'+escape(t.treatment_description||'')+'</td>'+
         '<td>'+escape(t.responsible_person||'')+'</td>'+
