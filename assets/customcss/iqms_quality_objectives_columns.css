@@ -2,3 +2,37 @@
 .iqms-table td.qo-timeline, .iqms-table td.qo-responsibility, .iqms-table td.qo-status{ white-space:normal; }
 .iqms-table td.qo-action-plan{ white-space:normal; }
 
+
+/* Improved spacing and alignment */
+.iqms-table td{ vertical-align: top; padding: 10px 12px; }
+.iqms-table td .qo-ap-row{ padding: 6px 0; line-height: 1.35; }
+
+/* Visual hierarchy and zebra striping across columns */
+.qo-ap-row.qo-even{ background: rgba(0,0,0,0.02); }
+.qo-ap-row.qo-odd{ background: transparent; }
+.qo-ap-row{ padding-left: 6px; border-left: 2px solid transparent; }
+.qo-ap-row.qo-even{ border-left-color: rgba(0,0,0,0.05); }
+
+/* Typography */
+.qo-ap-row{ font-size: 13px; color: #333; }
+.qo-ap-row strong{ font-weight: 600; }
+
+/* Row separation between objectives */
+.iqms-table tbody tr + tr{ border-top: 2px solid #edf2f7; }
+
+/* Status badges */
+.status-badge{ display:inline-block; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600; }
+.status-badge.not-started{ background:#f6f7f9; color:#6b7280; }
+.status-badge.in-progress{ background:#fff3cd; color:#8a6d3b; }
+.status-badge.completed{ background:#d1fae5; color:#065f46; }
+
+/* Responsive adjustments */
+@media (max-width: 1200px){
+  .iqms-table td .qo-ap-row{ font-size:12px; }
+  .iqms-table td{ padding:8px 10px; }
+}
+@media (max-width: 768px){
+  .iqms-table thead th{ font-size:12px; }
+  .iqms-table td{ padding:6px 8px; }
+  .iqms-table td .qo-ap-row{ padding:4px 0; }
+}

@@ -54,10 +54,13 @@
           // Build column-wise multi-line lists (one row per action plan per column)
           var apHtml=[], tlHtml=[], respHtml=[], stHtml=[];
           $.each(plans,function(i,p){
-            apHtml.push('<div class="qo-ap-row">- '+esc(p.action_text||'')+'</div>');
-            tlHtml.push('<div class="qo-ap-row">- '+esc(p.timeline||'-')+'</div>');
-            respHtml.push('<div class="qo-ap-row">- '+esc(p.responsibility||'-')+'</div>');
-            stHtml.push('<div class="qo-ap-row">- '+esc(p.action_status||'-')+'</div>');
+            var alt = (i%2===0 ? 'qo-even' : 'qo-odd');
+            apHtml.push('<div class="qo-ap-row '+alt+'">- '+esc(p.action_text||'')+'</div>');
+            tlHtml.push('<div class="qo-ap-row '+alt+'">- '+esc(p.timeline||'-')+'</div>');
+            respHtml.push('<div class="qo-ap-row '+alt+'">- '+esc(p.responsibility||'-')+'</div>');
+            var sVal = (p.action_status||'-');
+            var sCls = String(sVal).toLowerCase().replace(/\s+/g,'-');
+            stHtml.push('<div class="qo-ap-row '+alt+'"><span class="status-badge '+sCls+'">'+esc(sVal)+'</span></div>');
           });
           $tr.find('.qo-action-plan').html(apHtml.join(''));
           $tr.find('.qo-timeline').html(tlHtml.join(''));
