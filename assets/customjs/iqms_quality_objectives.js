@@ -35,13 +35,13 @@
       var $tb=$('#objectivesTbody').empty();
       $.each(rows,function(_,o){
         var statusCls=(o.objective_status||'Not Started').toLowerCase().replace(/\s+/g,'-');
-        var $tr=$('<tr/>');
+        var $tr=$('<tr/>').attr('data-owner',(o.process_owner||'').toLowerCase());
         $tr.append('<td>'+(o.objective_code||('QO-'+o.id))+'</td>')
            .append('<td>'+esc(o.quality_objective||'')+'</td>')
            .append('<td>'+esc(o.target||'')+'</td>')
            .append('<td class="qo-action-plan">Loading...</td>')
            .append('<td class="qo-timeline">-</td>')
-           .append('<td>'+esc(o.process_owner||'')+'</td>')
+           .append('<td class="qo-responsibility">-</td>')
            .append('<td><span class="iqms-status '+statusCls+'">'+esc(o.objective_status||'Not Started')+'</span></td>')
            .append('<td class="text-center"><div class="iqms-action-btns">\
               <button class="iqms-btn iqms-btn-warning iqms-btn-sm" data-id="'+o.id+'" data-act="edit"><i class="fe-edit"></i></button>\
@@ -65,8 +65,9 @@
                  + '</div>';
           });
           $tr.find('.qo-action-plan').html(html);
-          // Leave timeline cell with first timeline value for filtering convenience
+          // Leave timeline and responsibility columns with first plan values for filtering convenience
           $tr.find('.qo-timeline').text(plans[0].timeline||'-');
+          $tr.find('.qo-responsibility').text(plans[0].responsibility|| (o.process_owner||'-'));
         });
       });
       $('#objectivesTbody [data-act]').off('click').on('click',function(){
