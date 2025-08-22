@@ -104,10 +104,23 @@
 
     // Save objective to backend
     $('#objectiveForm').off('submit').on('submit',function(e){ e.preventDefault(); window.saveObjective(); });
+
+    function getNextObjectiveCode(cb){
+      $.getJSON(ENDPOINT.LIST,{table:'iqms_quality_objectives',analysis_id:analysisId},function(rows){
+        var max=0; (rows||[]).forEach(function(r){ var c=r.objective_code||''; var m=c.match(/(\d+)/g); if(m){ var n=parseInt(m.pop(),10)||0; if(n>max) max=n; }});
+        var code='QO-'+String(max+1).padStart(3,'0'); cb(code);
+      });
+    }
+
     window.saveObjective=function(){
       var id=$('#objectiveId').val()||null;
-      var data={table:'iqms_quality_objectives',id:id,analysis_id:analysisId,quality_objective:$('#qualityObjective').val(),target:$('#target').val(),output_indicator:$('#outputIndicator').val(),process_owner:$('#processOwner').val(),objective_status:($('#objectiveStatus').val()||'Not Started')};
-      $.post(ENDPOINT.SAVE,data,function(resp){ var objId=id||resp.id; $.post(ENDPOINT.DEL_CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:objId},function(){ var aps=[]; $('#actionPlansContainer .iqms-action-plan-container').each(function(){ aps.push({table:'iqms_quality_objective_action_plans',objective_id:objId,action_text:$(this).find('.action-plan-text').val(),timeline:$(this).find('.action-plan-timeline').val(),responsibility:$(this).find('.action-plan-responsibility').val(),resources_needed:$(this).find('.action-plan-resources').val(),references:$(this).find('.action-plan-references').val(),action_status:$(this).find('.action-plan-status').val()});}); var i=0;(function next(){ if(i>=aps.length){ alert('Quality objective saved successfully!'); window.closeObjectiveModal(); return loadObjectives(); } $.post(ENDPOINT.SAVE,aps[i++],function(){ next(); }); })(); }); },'json'); };
+      function doSave(objCode){
+        var data={table:'iqms_quality_objectives',id:id,analysis_id:analysisId,quality_objective:$('#qualityObjective').val(),target:$('#target').val(),output_indicator:$('#outputIndicator').val(),process_owner:$('#processOwner').val(),objective_status:($('#objectiveStatus').val()||'Not Started')};
+        if(!id && objCode){ data.objective_code=objCode; }
+        $.post(ENDPOINT.SAVE,data,function(resp){ var objId=id||resp.id; $.post(ENDPOINT.DEL_CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:objId},function(){ var aps=[]; $('#actionPlansContainer .iqms-action-plan-container').each(function(){ aps.push({table:'iqms_quality_objective_action_plans',objective_id:objId,action_text:$(this).find('.action-plan-text').val(),timeline:$(this).find('.action-plan-timeline').val(),responsibility:$(this).find('.action-plan-responsibility').val(),resources_needed:$(this).find('.action-plan-resources').val(),references:$(this).find('.action-plan-references').val(),action_status:$(this).find('.action-plan-status').val()});}); var i=0;(function next(){ if(i>=aps.length){ alert('Quality objective saved successfully!'); window.closeObjectiveModal(); return loadObjectives(); } $.post(ENDPOINT.SAVE,aps[i++],function(){ next(); }); })(); }); },'json');
+      }
+      if(!id){ getNextObjectiveCode(doSave); } else { doSave(); }
+    };
 
     // Search & filter
     $('#searchObjectives').on('input',function(){var term=this.value.toLowerCase(); $('#objectivesTable tbody tr').each(function(){var txt=$(this).text().toLowerCase(); $(this).toggle(txt.indexOf(term)!==-1);});});
