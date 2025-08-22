@@ -156,11 +156,6 @@
       })();
     };
 
-          '</td>'+
-        '</tr>';
-        $tbody.append(tr);
-      });
-    }
 
     // Expose functions globally (same names as before; now jQuery-backed)
     window.openObjectiveModal = function(){
