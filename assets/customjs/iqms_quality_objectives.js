@@ -66,8 +66,15 @@
           });
           $tr.find('.qo-action-plan').html(html);
           // Leave timeline and responsibility columns with first plan values for filtering convenience
-          $tr.find('.qo-timeline').text(plans[0].timeline||'-');
-          $tr.find('.qo-responsibility').text(plans[0].responsibility|| (o.process_owner||'-'));
+          var first = plans[0] || {};
+          $tr.find('.qo-timeline').text(first.timeline||'-');
+          $tr.find('.qo-responsibility').text(first.responsibility || (o.process_owner||'-'));
+          // Update Status column to first plan status when available
+          if(first.action_status){
+            var apCls = String(first.action_status).toLowerCase().replace(/\s+/g,'-');
+            $tr.find('.iqms-status').text(first.action_status).attr('class','iqms-status '+apCls);
+          }
+
         });
       });
       $('#objectivesTbody [data-act]').off('click').on('click',function(){
