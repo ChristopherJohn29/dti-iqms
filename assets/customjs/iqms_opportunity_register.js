@@ -48,6 +48,7 @@
         renderOpportunitiesTable(rows);
         populateOpportunityDropdowns(rows);
         loadMonitoringTable(rows);
+        loadTreatmentsFromOpportunities(rows);
       });
     }
 
@@ -140,27 +141,25 @@
     };
 
     // ------- Treatments -------
-    function loadTreatments(){
-      $.getJSON(ENDPOINT.LIST, { table:'iqms_opportunity_actions', analysis_id: analysisId }, function(rows){
-        renderTreatments(rows||[]);
-      });
-    }
-
-    function renderTreatments(rows){
+    function loadTreatmentsFromOpportunities(opportunities){
       var $tbody = $('#treatmentTable tbody').empty();
-      $.each(rows, function(_, t){
-        var tr = '<tr>'+
-          '<td>'+(t.opportunity_id ? ('OR-'+t.opportunity_id) : '')+'</td>'+
-          '<td>'+esc((t.treatment_type||'').toLowerCase())+'</td>'+
-          '<td>'+esc(t.action_description||'')+'</td>'+
-          '<td>'+esc(t.responsibility||'')+'</td>'+
-          '<td>'+formatDate(t.target_date)+'</td>'+
-          '<td>'+formatDate(t.completion_date)+'</td>'+
-          '<td>'+(t.progress||'')+'%</td>'+
-          '<td>'+esc(t.action_status||'')+'</td>'+
-          '<td><button class="btn btn-warning btn-sm" onclick="editTreatment('+t.id+')"><i class="fe-edit"></i></button></td>'+
-        '</tr>';
-        $tbody.append(tr);
+      $.each(opportunities, function(_, o){
+        $.getJSON(ENDPOINT.CHILDREN, { table:'iqms_opportunity_actions', fk:'opportunity_id', id:o.id }, function(rows){
+          $.each(rows||[], function(_, t){
+            var tr = '<tr>'+
+              '<td>'+(t.opportunity_id ? ('OR-'+t.opportunity_id) : '')+'</td>'+
+              '<td>'+esc((t.treatment_type||'').toLowerCase())+'</td>'+
+              '<td>'+esc(t.action_description||'')+'</td>'+
+              '<td>'+esc(t.responsibility||'')+'</td>'+
+              '<td>'+formatDate(t.target_date)+'</td>'+
+              '<td>'+formatDate(t.completion_date)+'</td>'+
+              '<td>'+(t.progress||'')+'%</td>'+
+              '<td>'+esc(t.action_status||'')+'</td>'+
+              '<td><button class="btn btn-warning btn-sm" onclick="editTreatment('+t.id+','+o.id+')"><i class="fe-edit"></i></button></td>'+
+            '</tr>';
+            $tbody.append(tr);
+          });
+        });
       });
     }
 
@@ -172,22 +171,30 @@
     };
     window.closeTreatmentModal = function(){ $('#treatmentModal').hide(); };
 
-    window.editTreatment = function(id){
+    window.editTreatment = function(id, oppId){
       $('#treatmentModalTitle').text('Edit Treatment Plan');
       $('#treatmentId').val(id);
-      $.getJSON(ENDPOINT.LIST, { table:'iqms_opportunity_actions', analysis_id: analysisId }, function(rows){
-        var t = (rows||[]).find(function(x){ return x.id == id; });
-        if(!t) return;
-        $('#treatmentOpportunityId').val(t.opportunity_id);
-        $('#treatmentAction').val((t.treatment_type||'').toLowerCase());
-        $('#treatmentDescription').val(t.action_description||'');
-        $('#treatmentResponsible').val(t.responsibility||'');
-        $('#treatmentProgress').val(t.progress||0);
-        $('#treatmentStartDate').val(t.target_date||'');
-        $('#treatmentDueDate').val(t.completion_date||'');
-        $('#treatmentStatus').val((t.action_status||'').toLowerCase());
-        $('#treatmentModal').show();
-      });
+      var loadFrom = function(opportunityId){
+        $.getJSON(ENDPOINT.CHILDREN, { table:'iqms_opportunity_actions', fk:'opportunity_id', id:opportunityId }, function(rows){
+          var t = (rows||[]).find(function(x){ return x.id == id; });
+          if(!t) return;
+          $('#treatmentOpportunityId').val(t.opportunity_id);
+          $('#treatmentAction').val((t.treatment_type||'').toLowerCase());
+          $('#treatmentDescription').val(t.action_description||'');
+          $('#treatmentResponsible').val(t.responsibility||'');
+          $('#treatmentProgress').val(t.progress||0);
+          $('#treatmentStartDate').val(t.target_date||'');
+          $('#treatmentDueDate').val(t.completion_date||'');
+          $('#treatmentStatus').val((t.action_status||'').toLowerCase());
+          $('#treatmentModal').show();
+        });
+      };
+      if(oppId){ loadFrom(oppId); }
+      else {
+        // Guess from current dropdown if available
+        var guess = $('#treatmentOpportunityId').val();
+        if(guess){ loadFrom(guess); }
+      }
     };
 
     window.saveTreatment = function(){
@@ -276,6 +283,16 @@
         return dt.toLocaleDateString('en-US',{ year:'numeric', month:'short', day:'numeric' });
       }catch(e){ return d; }
     }
+
+
+    // Search filter (jQuery)
+    $('#searchOpportunities').off('input').on('input', function(){
+      var term = ($(this).val()||'').toLowerCase();
+      $('#opportunitiesTable tbody tr').each(function(){
+        var text = $(this).text().toLowerCase();
+        $(this).toggle(text.indexOf(term) !== -1);
+      });
+    });
 
     // Initialize
     ensureAnalysis().then(function(){
