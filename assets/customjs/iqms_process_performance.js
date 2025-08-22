@@ -61,9 +61,14 @@
           '<td>'+ esc(r.sequence_number||'') +'</td>'+
           '<td>'+ esc(r.quality_objective_statement||'') +'</td>'+
           '<td>'+ esc(r.quality_target||'') +'</td>'+
-          // Annual/Monthly placeholders (to wire from monitoring table later)
+          // Annual placeholders (7 cells)
           '<td></td><td></td><td></td><td></td><td></td><td></td><td></td>'+
+          // Monthly placeholders (12 cells: split into two lines for readability)
           '<td></td><td></td><td></td><td></td><td></td><td></td>'+
+          '<td></td><td></td><td></td><td></td><td></td><td></td>'+
+          // Action cell placeholder (will be replaced after hydration)
+          '<td class="text-center"></td>'+
+        '</tr>';
 
         // Fetch monitoring cells per performance and append action button
         var perfId = r.id;
@@ -143,7 +148,8 @@
         if(i>=entries.length){ alert('Monitoring updated!'); closeMonitoring(); return loadPerformances(); }
         var e = entries[i++];
         $.getJSON(ENDPOINT.CHILDREN, { table:'iqms_process_performance_monitoring', fk:'performance_id', id: perfId, extra_key:'period_type', extra_val: e.period }, function(rows){
-          var payload = { table:'iqms_process_performance_monitoring', performance_id: perfId, monitoring_type: (e.period.length<=3? 'annual':'monthly'), period_type: e.period, actual_value: e.val };
+          var type = (['ANNUAL','Q1','Q2','Q3','Q4','SEM1','SEM2'].indexOf(e.period) !== -1) ? 'annual' : 'monthly';
+          var payload = { table:'iqms_process_performance_monitoring', performance_id: perfId, monitoring_type: type, period_type: e.period, actual_value: e.val };
           if(rows && rows.length){ payload.id = rows[0].id; }
           $.post(ENDPOINT.SAVE, payload, function(){ next(); }, 'json');
         });
