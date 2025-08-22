@@ -130,6 +130,10 @@
     </div>
     <!-- container -->
 </div>
+
+<!-- Separated JS for Process Performance -->
+<script src="<?=base_url('assets/customjs/iqms_process_performance.js')?>"></script>
+
 <!-- content -->
 
 <!-- Modal for Add/Edit Objective -->
@@ -260,342 +264,62 @@
             </div>
         </form>
     </div>
+
+<!-- Monitoring Modal -->
+<div id="monitoringModal" class="iqms-modal">
+  <div class="iqms-modal-content" style="max-width: 720px;">
+    <div class="iqms-modal-header">
+      <h3 class="iqms-modal-title">Update Monitoring</h3>
+      <span class="iqms-close" onclick="closeMonitoring()">&times;</span>
+    </div>
+    <input type="hidden" id="monitoringPerformanceId">
+    <div class="iqms-form iqms-form-section">
+      <h4>Annual</h4>
+      <div class="iqms-form-row">
+        <div class="iqms-form-group"><label>Annual</label><input type="number" class="iqms-form-control" id="annualVal"></div>
+        <div class="iqms-form-group"><label>Q1</label><input type="number" class="iqms-form-control" id="q1Val"></div>
+        <div class="iqms-form-group"><label>Q2</label><input type="number" class="iqms-form-control" id="q2Val"></div>
+        <div class="iqms-form-group"><label>1st Sem</label><input type="number" class="iqms-form-control" id="sem1Val"></div>
+      </div>
+      <div class="iqms-form-row">
+        <div class="iqms-form-group"><label>Q3</label><input type="number" class="iqms-form-control" id="q3Val"></div>
+        <div class="iqms-form-group"><label>Q4</label><input type="number" class="iqms-form-control" id="q4Val"></div>
+        <div class="iqms-form-group"><label>2nd Sem</label><input type="number" class="iqms-form-control" id="sem2Val"></div>
+      </div>
+    </div>
+    <div class="iqms-form iqms-form-section">
+      <h4>Monthly</h4>
+      <div class="iqms-form-row">
+        <div class="iqms-form-group"><label>Jan</label><input type="number" class="iqms-form-control" id="janVal"></div>
+        <div class="iqms-form-group"><label>Feb</label><input type="number" class="iqms-form-control" id="febVal"></div>
+        <div class="iqms-form-group"><label>Mar</label><input type="number" class="iqms-form-control" id="marVal"></div>
+        <div class="iqms-form-group"><label>Apr</label><input type="number" class="iqms-form-control" id="aprVal"></div>
+      </div>
+      <div class="iqms-form-row">
+        <div class="iqms-form-group"><label>May</label><input type="number" class="iqms-form-control" id="mayVal"></div>
+        <div class="iqms-form-group"><label>Jun</label><input type="number" class="iqms-form-control" id="junVal"></div>
+        <div class="iqms-form-group"><label>Jul</label><input type="number" class="iqms-form-control" id="julVal"></div>
+        <div class="iqms-form-group"><label>Aug</label><input type="number" class="iqms-form-control" id="augVal"></div>
+      </div>
+      <div class="iqms-form-row">
+        <div class="iqms-form-group"><label>Sep</label><input type="number" class="iqms-form-control" id="sepVal"></div>
+        <div class="iqms-form-group"><label>Oct</label><input type="number" class="iqms-form-control" id="octVal"></div>
+        <div class="iqms-form-group"><label>Nov</label><input type="number" class="iqms-form-control" id="novVal"></div>
+        <div class="iqms-form-group"><label>Dec</label><input type="number" class="iqms-form-control" id="decVal"></div>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary" onclick="saveMonitoring()">Save</button>
+      <button class="btn btn-secondary" onclick="closeMonitoring()">Cancel</button>
+    </div>
+  </div>
 </div>
 
-<script>
-// Sample data for objectives
-let objectives = [
-    {
-        id: 1,
-        number: "1",
-        statement: "Build Productivity and Efficiency of MSMEs",
-        target: "90% of trainings conducted as scheduled/planned per semester based on the approved Annual Work and Financial Plan",
-        targets: {
-            annual: 0, q1: 0, q2: 0, sem1: 0, q3: 0, q4: 0, sem2: 0,
-            jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0,
-            jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0
-        },
-        isObjective: true
-    },
-    {
-        id: 2,
-        number: "",
-        statement: "",
-        target: "Number of trainings conducted as scheduled based on the approved Annual Work and Financial Plan",
-        targets: {
-            annual: 0, q1: 0, q2: 0, sem1: 0, q3: 0, q4: 0, sem2: 0,
-            jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0,
-            jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0
-        },
-        isObjective: false
-    },
-    {
-        id: 3,
-        number: "",
-        statement: "",
-        target: "Number of trainings scheduled/planned based on the approved Annual Work and Financial Plan",
-        targets: {
-            annual: 0, q1: 0, q2: 0, sem1: 0, q3: 0, q4: 0, sem2: 0,
-            jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0,
-            jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0
-        },
-        isObjective: false
-    },
-    {
-        id: 4,
-        number: "",
-        statement: "",
-        target: "100% of MSMEs (participants) who rate the conduct of training process as satisfactory or better",
-        targets: {
-            annual: 0, q1: 0, q2: 0, sem1: 0, q3: 0, q4: 0, sem2: 0,
-            jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0,
-            jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0
-        },
-        isObjective: false,
-        isHighlighted: true
-    }
-];
+</div>
 
-document.addEventListener('DOMContentLoaded', function() {
-    renderTable();
 
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#monitoringTable tbody tr');
 
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-    }
-});
 
-function renderTable() {
-    const tableBody = document.getElementById('tableBody');
-    if (!tableBody) return;
 
-    tableBody.innerHTML = '';
 
-    objectives.forEach((objective, index) => {
-        const row = document.createElement('tr');
-
-        if (objective.isObjective) {
-            row.style.fontWeight = 'bold';
-            row.style.backgroundColor = '#e7f1ff';
-        } else {
-            row.style.paddingLeft = '30px';
-        }
-
-        if (objective.isHighlighted) {
-            row.style.backgroundColor = '#ffc107';
-        }
-
-        row.innerHTML = `
-            <td>${objective.number}</td>
-            <td>${objective.statement}</td>
-            <td>${objective.target}</td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.annual}" data-id="${objective.id}" data-field="annual" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.q1}" data-id="${objective.id}" data-field="q1" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.q2}" data-id="${objective.id}" data-field="q2" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.sem1}" data-id="${objective.id}" data-field="sem1" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.q3}" data-id="${objective.id}" data-field="q3" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.q4}" data-id="${objective.id}" data-field="q4" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.sem2}" data-id="${objective.id}" data-field="sem2" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.jan}" data-id="${objective.id}" data-field="jan" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.feb}" data-id="${objective.id}" data-field="feb" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.mar}" data-id="${objective.id}" data-field="mar" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.apr}" data-id="${objective.id}" data-field="apr" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.may}" data-id="${objective.id}" data-field="may" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.jun}" data-id="${objective.id}" data-field="jun" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.jul}" data-id="${objective.id}" data-field="jul" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.aug}" data-id="${objective.id}" data-field="aug" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.sep}" data-id="${objective.id}" data-field="sep" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.oct}" data-id="${objective.id}" data-field="oct" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.nov}" data-id="${objective.id}" data-field="nov" style="width: 60px; text-align: center;"></td>
-            <td><input type="number" class="form-control input-cell" value="${objective.targets.dec}" data-id="${objective.id}" data-field="dec" style="width: 60px; text-align: center;"></td>
-            <td>
-                ${objective.isObjective ? `<button class="btn btn-warning btn-sm" onclick="editObjective(${objective.id})">Edit</button>` : ''}
-                <button class="btn btn-danger btn-sm" onclick="deleteObjective(${objective.id})">Delete</button>
-            </td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-
-    // Add event listeners to all input cells
-    document.querySelectorAll('.input-cell').forEach(input => {
-        input.addEventListener('change', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            const field = this.getAttribute('data-field');
-            const value = parseInt(this.value) || 0;
-
-            const objective = objectives.find(obj => obj.id === id);
-            if (objective) {
-                objective.targets[field] = value;
-            }
-        });
-    });
-}
-
-function openObjectiveModal() {
-    document.getElementById('objectiveModalTitle').textContent = 'Add New Objective';
-    document.getElementById('objectiveId').value = '';
-    document.getElementById('objectiveForm').reset();
-    document.getElementById('objectiveModal').style.display = 'block';
-}
-
-function closeObjectiveModal() {
-    document.getElementById('objectiveModal').style.display = 'none';
-}
-
-function editObjective(id) {
-    const objective = objectives.find(obj => obj.id === id);
-    if (objective) {
-        document.getElementById('objectiveModalTitle').textContent = 'Edit Objective';
-        document.getElementById('objectiveId').value = objective.id;
-        document.getElementById('objectiveNumber').value = objective.number;
-        document.getElementById('objectiveStatement').value = objective.statement;
-        document.getElementById('qualityTarget').value = objective.target;
-
-        // Annual Monitoring
-        document.getElementById('annualTarget').value = objective.targets.annual;
-        document.getElementById('q1Target').value = objective.targets.q1;
-        document.getElementById('q2Target').value = objective.targets.q2;
-        document.getElementById('sem1Target').value = objective.targets.sem1;
-        document.getElementById('q3Target').value = objective.targets.q3;
-        document.getElementById('q4Target').value = objective.targets.q4;
-        document.getElementById('sem2Target').value = objective.targets.sem2;
-
-        // Monthly Monitoring
-        document.getElementById('janTarget').value = objective.targets.jan;
-        document.getElementById('febTarget').value = objective.targets.feb;
-        document.getElementById('marTarget').value = objective.targets.mar;
-        document.getElementById('aprTarget').value = objective.targets.apr;
-        document.getElementById('mayTarget').value = objective.targets.may;
-        document.getElementById('junTarget').value = objective.targets.jun;
-        document.getElementById('julTarget').value = objective.targets.jul;
-        document.getElementById('augTarget').value = objective.targets.aug;
-        document.getElementById('sepTarget').value = objective.targets.sep;
-        document.getElementById('octTarget').value = objective.targets.oct;
-        document.getElementById('novTarget').value = objective.targets.nov;
-        document.getElementById('decTarget').value = objective.targets.dec;
-
-        document.getElementById('objectiveModal').style.display = 'block';
-    }
-}
-
-function deleteObjective(id) {
-    if (confirm('Are you sure you want to delete this item?')) {
-        objectives = objectives.filter(obj => obj.id !== id);
-        renderTable();
-        alert('Item deleted successfully!');
-    }
-}
-
-function saveObjective() {
-    const id = document.getElementById('objectiveId').value ? parseInt(document.getElementById('objectiveId').value) : Date.now();
-    const isNew = !document.getElementById('objectiveId').value;
-
-    const newObjective = {
-        id: id,
-        number: document.getElementById('objectiveNumber').value,
-        statement: document.getElementById('objectiveStatement').value,
-        target: document.getElementById('qualityTarget').value,
-        targets: {
-            annual: parseInt(document.getElementById('annualTarget').value) || 0,
-            q1: parseInt(document.getElementById('q1Target').value) || 0,
-            q2: parseInt(document.getElementById('q2Target').value) || 0,
-            sem1: parseInt(document.getElementById('sem1Target').value) || 0,
-            q3: parseInt(document.getElementById('q3Target').value) || 0,
-            q4: parseInt(document.getElementById('q4Target').value) || 0,
-            sem2: parseInt(document.getElementById('sem2Target').value) || 0,
-            jan: parseInt(document.getElementById('janTarget').value) || 0,
-            feb: parseInt(document.getElementById('febTarget').value) || 0,
-            mar: parseInt(document.getElementById('marTarget').value) || 0,
-            apr: parseInt(document.getElementById('aprTarget').value) || 0,
-            may: parseInt(document.getElementById('mayTarget').value) || 0,
-            jun: parseInt(document.getElementById('junTarget').value) || 0,
-            jul: parseInt(document.getElementById('julTarget').value) || 0,
-            aug: parseInt(document.getElementById('augTarget').value) || 0,
-            sep: parseInt(document.getElementById('sepTarget').value) || 0,
-            oct: parseInt(document.getElementById('octTarget').value) || 0,
-            nov: parseInt(document.getElementById('novTarget').value) || 0,
-            dec: parseInt(document.getElementById('decTarget').value) || 0
-        },
-        isObjective: true
-    };
-
-    if (isNew) {
-        objectives.push(newObjective);
-    } else {
-        const index = objectives.findIndex(obj => obj.id === id);
-        if (index !== -1) {
-            objectives[index] = newObjective;
-        }
-    }
-
-    renderTable();
-    closeObjectiveModal();
-    alert(`Objective ${isNew ? 'added' : 'updated'} successfully!`);
-}
-
-function saveData() {
-    alert('Data saved successfully!');
-}
-
-function exportToExcel() {
-    alert('Exporting to Excel...');
-    setTimeout(() => {
-        alert('Export completed!');
-    }, 1500);
-}
-
-function resetData() {
-    if (confirm('Are you sure you want to reset all values to zero?')) {
-        objectives.forEach(obj => {
-            Object.keys(obj.targets).forEach(key => {
-                obj.targets[key] = 0;
-            });
-        });
-        renderTable();
-        alert('All values have been reset.');
-    }
-}
-
-// Modal click outside to close
-window.onclick = function(event) {
-    const modal = document.getElementById('objectiveModal');
-    if (event.target == modal) {
-        closeObjectiveModal();
-    }
-}
-</script>
-
-<script>
-$(function(){
-  var ENDPOINT={
-    ENSURE:'<?=base_url('admin/iqms-data/ensure')?>',LIST:'<?=base_url('admin/iqms-data/list')?>',SAVE:'<?=base_url('admin/iqms-data/save')?>',DEL:'<?=base_url('admin/iqms-data/delete')?>',CHILDREN:'<?=base_url('admin/iqms-data/children')?>'
-  };
-  var moduleCode='PROCESS_PERFORMANCE', officeId=10, processId=1, fiscalYear='2025';
-  var analysisId=null;
-
-  function ensureAnalysis(){return $.post(ENDPOINT.ENSURE,{module_code:moduleCode,office_id:officeId,process_id:processId,fiscal_year:fiscalYear},function(r){analysisId=r.id;},'json');}
-
-  function loadProcesses(){ $.getJSON(ENDPOINT.LIST,{table:'iqms_process_performance',analysis_id:analysisId}, function(rows){ renderProcesses(rows); }); }
-
-  function renderProcesses(rows){ var $tbody=$('#processObjectivesTable tbody').empty(); $.each(rows,function(_,p){ var tr='<tr>'+
-      '<td>'+(p.process_code||('PP-'+p.id))+'</td>'+
-      '<td>'+esc(p.process_name||'')+'</td>'+
-      '<td>'+esc(p.objective||'')+'</td>'+
-      '<td>'+esc(p.target||'')+'</td>'+
-      '<td>'+esc(p.kpi||'')+'</td>'+
-      '<td>'+esc(p.process_owner||'')+'</td>'+
-      '<td><span class="status-badge '+statusClass(p.status)+'">'+esc(p.status||'not-started')+'</span></td>'+
-      '<td class="text-center">'+
-        '<button class="btn btn-warning btn-sm" onclick="openEditProcess('+p.id+')"><i class="fe-edit"></i></button> '+
-        '<button class="btn btn-danger btn-sm" onclick="deleteProcess('+p.id+')"><i class="fe-trash"></i></button>'+
-      '</td>'+
-    '</tr>'; $tbody.append(tr);
-  }); }
-
-  function statusClass(s){ s=(s||'not-started').toLowerCase(); if(s==='completed') return 'completed'; if(s==='in-progress') return 'in-progress'; return 'not-started'; }
-
-  window.openAddProcess = function(){ $('#processModalTitle').text('Add New Process Objective'); $('#processId').val(''); $('#processForm')[0].reset(); $('#processModal').show(); };
-  window.closeProcessModal = function(){ $('#processModal').hide(); };
-
-  window.openEditProcess = function(id){ $('#processModalTitle').text('Edit Process Objective'); $('#processId').val(id); $.getJSON(ENDPOINT.LIST,{table:'iqms_process_performance',analysis_id:analysisId}, function(rows){ var p=rows.find(function(x){return x.id==id;}); if(!p) return; $('#processCode').val(p.process_code||''); $('#processName').val(p.process_name||''); $('#objective').val(p.objective||''); $('#target').val(p.target||''); $('#kpi').val(p.kpi||''); $('#owner').val(p.process_owner||''); $('#status').val((p.status||'not-started')); $('#processModal').show(); }); };
-
-  window.saveProcess = function(){ var id=$('#processId').val()||null; var data={table:'iqms_process_performance', id:id, analysis_id:analysisId, process_code:$('#processCode').val(), process_name:$('#processName').val(), objective:$('#objective').val(), target:$('#target').val(), kpi:$('#kpi').val(), process_owner:$('#owner').val(), status:$('#status').val()}; $.post(ENDPOINT.SAVE,data,function(){ alert('Process objective saved!'); closeProcessModal(); loadProcesses(); }); };
-
-  window.deleteProcess = function(id){ if(!confirm('Delete this process objective?')) return; $.post(ENDPOINT.DEL,{table:'iqms_process_performance',id:id}, function(){ loadProcesses(); }); };
-
-  // Monitoring Tab
-  function loadMonitoring(){ $.getJSON(ENDPOINT.LIST,{table:'iqms_process_performance',analysis_id:analysisId}, function(rows){ renderMonitoring(rows); }); }
-  function renderMonitoring(rows){ var $tbody=$('#monitoringTable tbody').empty(); $.each(rows,function(_,p){ $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_process_performance_monitoring',fk:'process_id',id:p.id}, function(ms){ var q={Q1:'',Q2:'',Q3:'',Q4:''}; $.each(ms,function(_,m){ q[m.quarter]=m.monitoring_result||''; }); var tr='<tr>'+
-      '<td>'+(p.process_code||('PP-'+p.id))+'</td>'+
-      '<td>'+esc(p.kpi||'')+'</td>'+
-      '<td>'+esc(q.Q1)+'</td>'+
-      '<td>'+esc(q.Q2)+'</td>'+
-      '<td>'+esc(q.Q3)+'</td>'+
-      '<td>'+esc(q.Q4)+'</td>'+
-      '<td class="text-center"><button class="btn btn-primary btn-sm" onclick="openMonitoring('+p.id+')"><i class="fe-edit"></i> Update</button></td>'+
-    '</tr>'; $tbody.append(tr); }); }); }
-
-  window.openMonitoring = function(pid){ var $m=$('#monitoringModal'); $('#monitoringForm')[0].reset(); $('#monitoringProcessId').val(pid); $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_process_performance_monitoring',fk:'process_id',id:pid}, function(ms){ var map={}; $.each(ms,function(_,m){ map[m.quarter]=m; }); $('#q1').val(map.Q1? map.Q1.monitoring_result:''); $('#q2').val(map.Q2? map.Q2.monitoring_result:''); $('#q3').val(map.Q3? map.Q3.monitoring_result:''); $('#q4').val(map.Q4? map.Q4.monitoring_result:''); $m.show(); }); };
-  window.closeMonitoring = function(){ $('#monitoringModal').hide(); };
-  window.saveMonitoring = function(){ var pid=$('#monitoringProcessId').val(); var qs=['Q1','Q2','Q3','Q4'], i=0; (function next(){ if(i>=qs.length){ alert('Monitoring updated!'); closeMonitoring(); return loadMonitoring(); } var q=qs[i++]; var val=$('#'+q.toLowerCase()).val(); $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_process_performance_monitoring',fk:'process_id',id:pid,extra_key:'quarter',extra_val:q}, function(rows){ var payload={table:'iqms_process_performance_monitoring', process_id:pid, quarter:q, monitoring_result:val}; if(rows.length) payload.id=rows[0].id; $.post(ENDPOINT.SAVE,payload,function(){ next(); }); }); })(); };
-
-  function esc(s){return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m];});}
-
-  ensureAnalysis().then(function(){ loadProcesses(); loadMonitoring(); });
-});
-</script>
 
