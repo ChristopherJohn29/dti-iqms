@@ -110,7 +110,7 @@
                                         <input type="text" id="search-risk" class="form-control" placeholder="Search risks...">
                                     </div>
                                     <div class="col-md-2 text-right" style="padding-top: 25px;">
-                                        <button id="add-risk-btn" class="btn btn-success waves-effect waves-light">
+                                        <button id="add-risk-btn" class="iqms-btn iqms-btn-success">
                                             <i class="fe-plus"></i> Add Risk
                                         </button>
                                     </div>
@@ -159,24 +159,32 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4 text-right" style="padding-top: 25px;">
-                                        <button id="add-treatment-btn" class="btn btn-success waves-effect waves-light">
-                                            <i class="fe-plus"></i> Add Treatment
-                                        </button>
+                                        <!-- Add Treatment removed by requirement: all risks created via Risk Register -->
                                     </div>
                                 </div>
 
                                 <table id="treatment-table" class="table dt-responsive nowrap w-100">
                                     <thead>
                                         <tr>
+                                            <!-- Same fields as Risk Register -->
                                             <th>Risk ID</th>
                                             <th>Risk Description</th>
                                             <th>Potential Cause</th>
+                                            <th>Potential Impact</th>
+                                            <th>Category</th>
+                                            <th>Probability</th>
+                                            <th>Impact</th>
+                                            <th>Score</th>
+                                            <th>Priority</th>
+                                            <th>Risk Status</th>
+                                            <!-- Plus treatment-specific fields -->
+                                            <th>Treatment Action</th>
                                             <th>Treatment Description</th>
                                             <th>Responsible</th>
                                             <th>Start Date</th>
                                             <th>Due Date</th>
                                             <th>Progress</th>
-                                            <th>Status</th>
+                                            <th>Treatment Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -448,11 +456,9 @@
         <form id="treatment-form">
             <input type="hidden" id="treatment-id">
             <div class="form-group" style="margin-bottom: 15px;">
-                <label for="treatment-risk-id-select" style="display: block; margin-bottom: 5px; font-weight: 500;">Risk ID*</label>
-                <select id="treatment-risk-id-select" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
-                    <option value="">Select Risk</option>
-                    <!-- Will be populated by JavaScript -->
-                </select>
+                <label for="treatment-risk-code" style="display: block; margin-bottom: 5px; font-weight: 500;">Risk</label>
+                <input type="text" id="treatment-risk-code" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" readonly>
+                <input type="hidden" id="treatment-risk-id-input">
             </div>
             <div class="form-group" style="margin-bottom: 15px;">
                 <label for="treatment-action" style="display: block; margin-bottom: 5px; font-weight: 500;">Action*</label>
@@ -1452,9 +1458,8 @@ $(function(){
   }
 
   function populateRiskIdDropdownsDb(rows){
-    var $sel1=$('#treatment-risk-id-select').empty().append('<option value="">Select Risk</option>');
-    var $sel2=$('#treatment-risk-id').empty().append('<option value="">All Risks</option>');
-    $.each(rows, function(_, r){ $('<option/>',{value:r.id, text:r.risk_id||('RR-'+r.id)}).appendTo($sel1); $('<option/>',{value:r.id, text:r.risk_id||('RR-'+r.id)}).appendTo($sel2); });
+    var $filter=$('#treatment-risk-id').empty().append('<option value="">All Risks</option>');
+    $.each(rows, function(_, r){ $('<option/>',{value:r.id, text:r.risk_id||('RR-'+r.id)}).appendTo($filter); });
   }
 
   function openRiskModal(id){
@@ -1516,7 +1521,7 @@ $(function(){
           $.post(ENDPOINT.SAVE, {table:'iqms_risk_causes', risk_id:riskDbId, cause_number:num, cause_description:lines[idx-1]}, function(){ idx++; next(); });
         })();
       });
-      function afterSave(){ alert('Risk saved successfully!'); $('#risk-modal').hide(); loadRisks(); }
+      function afterSave(){ alert('Risk saved successfully!'); $('#risk-modal').hide(); loadRisks(); loadTreatments(); }
     },'json');
   }
   $('#risk-form').off('submit').on('submit', saveRisk);
@@ -1536,53 +1541,102 @@ $(function(){
   }
   function renderTreatmentsTableDb(trs, riskMap){
     var $tbody=$('#treatment-table tbody').empty();
-    $.each(trs,function(_, t){
-      var r = riskMap[t.risk_id] || {};
-      var statusBadge = t.treatment_status;
+    // Build an index of treatments by risk_id for quick lookup
+    var tByRisk = {};
+    $.each(trs, function(_, t){ tByRisk[t.risk_id] = t; });
+
+    // Show one row per risk (shared data source), with treatment columns editable via modal
+    $.each(riskMap, function(riskId, r){
+      var t = tByRisk[riskId] || {};
       var row = '<tr>'+
-        '<td>'+(r.risk_id||('RR-'+(r.id||'')))+'</td>'+
+        '<td>'+escape(r.risk_id||('RR-'+(r.id||'')))+'</td>'+
         '<td>'+escape(r.risk_description||'')+'</td>'+
+        '<td class="risk-causes" data-riskid="'+r.id+'">Loading...</td>'+
+        '<td>'+escape(r.potential_impact||'')+'</td>'+
+        '<td>'+escape(r.risk_category||'')+'</td>'+
+        '<td>'+escape(r.probability||'')+'</td>'+
+        '<td>'+escape(r.impact||'')+'</td>'+
+        '<td>'+escape(r.risk_score||'')+'</td>'+
+        '<td>'+escape(r.priority||'')+'</td>'+
+        '<td>'+escape(r.risk_status||'')+'</td>'+
+        // Treatment-specific fields
+        '<td>'+escape((t.treatment_type||'').toLowerCase())+'</td>'+
         '<td>'+escape(t.treatment_description||'')+'</td>'+
         '<td>'+escape(t.responsible_person||'')+'</td>'+
         '<td>'+formatDate(t.target_date)+'</td>'+
+        '<td>'+formatDate(t.completion_date)+'</td>'+
+        '<td>'+escape(t.progress||'')+'</td>'+
         '<td>'+escape(t.treatment_status||'')+'</td>'+
-        '<td><button class="btn btn-sm btn-warning edit-treatment-btn" data-id="'+t.id+'">Edit</button></td>'+
+        '<td><button class="btn btn-sm btn-warning edit-treatment-btn" data-riskid="'+r.id+'" data-id="'+(t.id||'')+'">Edit</button></td>'+
       '</tr>';
       $tbody.append(row);
     });
-    $('.edit-treatment-btn').off('click').on('click', function(){ openTreatmentModal($(this).data('id')); });
+
+    // Load causes in displayed rows
+    $('.risk-causes').each(function(){ var $cell=$(this), rid=$cell.data('riskid');
+      $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_risk_causes',fk:'risk_id',id:rid},function(cs){
+        if(!cs.length){ $cell.text('-'); return; }
+        $cell.html(cs.map(function(c){return escape(c.cause_number+': '+c.cause_description);}).join('<br>'));
+      });
+    });
+
+    $('.edit-treatment-btn').off('click').on('click', function(){ openTreatmentModal($(this).data('riskid'), $(this).data('id')||null); });
   }
 
-  function openTreatmentModal(id){
+  // Open Treatment modal; supports (riskId, treatmentId) or (treatmentId)
+  function openTreatmentModal(riskIdOrTreatmentId, maybeTreatmentId){
+    var riskId = null, treatmentId = null;
+    if (maybeTreatmentId !== undefined) { riskId = riskIdOrTreatmentId; treatmentId = maybeTreatmentId || null; }
+    else { treatmentId = riskIdOrTreatmentId || null; }
+
     var $m=$('#treatment-modal');
-    $('#treatment-modal-title').text(id? 'Edit Treatment Plan':'Add Treatment Plan');
     $('#treatment-form')[0].reset();
-    $('#treatment-id').val(id||'');
-    // Populate risk select options
-    $.getJSON(ENDPOINT.LIST,{table:'iqms_risk_register',analysis_id:analysisId},function(rows){
-      var $sel=$('#treatment-risk-id-select').empty().append('<option value="">Select Risk</option>');
-      $.each(rows,function(_,r){ $('<option/>',{value:r.id,text:r.risk_id||('RR-'+r.id)}).appendTo($sel); });
-      if(id){
-        $.getJSON(ENDPOINT.LIST,{table:'iqms_risk_treatments',analysis_id:analysisId},function(trs){ var t=trs.find(function(x){return x.id==id;}); if(t){
-          $('#treatment-risk-id-select').val(t.risk_id);
-          $('#treatment-action').val((t.treatment_type||'').toLowerCase());
-          $('#treatment-description').val(t.treatment_description||'');
-          $('#treatment-responsible').val(t.responsible_person||'');
-          $('#treatment-start-date').val(t.target_date||'');
-          $('#treatment-due-date').val(t.completion_date||'');
-          $('#treatment-progress').val('');
-          $('#treatment-status-select').val(t.treatment_status||'Planned');
-        } $m.show(); });
-      } else { $m.show(); }
-    });
+    $('#treatment-id').val(treatmentId||'');
+
+    function setRiskFields(r){
+      $('#treatment-risk-code').val(r.risk_id || ('RR-'+(r.id||'')));
+      $('#treatment-risk-id-input').val(r.id);
+    }
+
+    if (treatmentId) {
+      $.getJSON(ENDPOINT.LIST,{table:'iqms_risk_treatments',analysis_id:analysisId},function(trs){
+        var t = trs.find(function(x){ return x.id == treatmentId; });
+        if (t) {
+          $.getJSON(ENDPOINT.LIST,{table:'iqms_risk_register',analysis_id:analysisId},function(risks){
+            var r = risks.find(function(x){ return x.id == t.risk_id; });
+            if (r) setRiskFields(r);
+            $('#treatment-action').val((t.treatment_type||'').toLowerCase());
+            $('#treatment-description').val(t.treatment_description||'');
+            $('#treatment-responsible').val(t.responsible_person||'');
+            $('#treatment-start-date').val(t.target_date||'');
+            $('#treatment-due-date').val(t.completion_date||'');
+            $('#treatment-status-select').val(t.treatment_status||'Planned');
+            $('#treatment-modal-title').text('Edit Treatment Plan');
+            $m.show();
+          });
+        } else { $('#treatment-modal-title').text('Add Treatment Plan'); $m.show(); }
+      });
+    } else {
+      if (riskId) {
+        $.getJSON(ENDPOINT.LIST,{table:'iqms_risk_register',analysis_id:analysisId},function(risks){
+          var r = risks.find(function(x){ return x.id == riskId; });
+          if (r) setRiskFields(r);
+          $('#treatment-modal-title').text('Add Treatment Plan');
+          $m.show();
+        });
+      } else {
+        $('#treatment-modal-title').text('Add Treatment Plan');
+        $m.show();
+      }
+    }
   }
   window.openTreatmentModal = openTreatmentModal;
   window.closeTreatmentModal = function(){ $('#treatment-modal').hide(); };
 
   function saveTreatment(e){ e && e.preventDefault();
     var id=$('#treatment-id').val()||null;
-    var data={ table:'iqms_risk_treatments', id:id, analysis_id:analysisId,
-      risk_id: $('#treatment-risk-id-select').val(),
+    var data={ table:'iqms_risk_treatments', id:id,
+      risk_id: $('#treatment-risk-id-input').val(),
       treatment_description: $('#treatment-description').val(),
       treatment_type: ($('#treatment-action').val()||'mitigation').replace(/^./,c=>c.toUpperCase()),
       responsible_person: $('#treatment-responsible').val(),
@@ -1639,6 +1693,15 @@ $(function(){
   window.closeMonitoringModal = function(){ $('#monitoring-modal').hide(); };
 
   function saveMonitoring(e){ e && e.preventDefault();
+  // Near real-time sync: refresh Treatment tab periodically when visible
+  var _treatmentPoll = null;
+  function _startTreatmentPolling(){ if(_treatmentPoll) return; _treatmentPoll = setInterval(function(){ if($('#treatment').hasClass('active') || $('#treatment').hasClass('show')){ loadTreatments(); } }, 15000); }
+  function _stopTreatmentPolling(){ if(_treatmentPoll){ clearInterval(_treatmentPoll); _treatmentPoll = null; } }
+  function _startIfTreatmentVisible(){ if($('#treatment').hasClass('active') || $('#treatment').hasClass('show')){ _startTreatmentPolling(); } }
+  // Start/stop on tab switch
+  $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e){ if(e.target && e.target.id==='treatment-tab'){ loadTreatments(); _startTreatmentPolling(); } });
+  $('a[data-bs-toggle="tab"]').on('hidden.bs.tab', function(e){ if(e.target && e.target.id==='treatment-tab'){ _stopTreatmentPolling(); } });
+
     var rid=$('#monitoring-risk-id').val();
     var quarters=['Q1','Q2','Q3','Q4'];
     var i=0; (function next(){ if(i>=quarters.length){ alert('Monitoring data updated successfully!'); $('#monitoring-modal').hide(); return loadMonitoring(); }

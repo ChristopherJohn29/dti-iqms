@@ -31,19 +31,51 @@ class IqmsApi extends CI_Controller {
         $table = $this->input->get('table', true);
         $analysis_id = (int)$this->input->get('analysis_id');
         if(!$table || !$analysis_id) return $this->json(['error'=>'Missing table or analysis_id'],400);
-        $this->db->from($table);
-        $this->db->where('analysis_id', $analysis_id);
-        $rows = $this->db->get()->result_array();
+
+        // Special handling for child tables that don't have analysis_id directly
+        if ($table === 'iqms_risk_treatments') {
+            $this->db->select('t.*');
+            $this->db->from('iqms_risk_treatments t');
+            $this->db->join('iqms_risk_register r', 't.risk_id = r.id', 'inner');
+            $this->db->where('r.analysis_id', $analysis_id);
+            $rows = $this->db->get()->result_array();
+            return $this->json($rows);
+        }
+
+        // Default behavior for tables that have analysis_id
+        if ($this->db->field_exists('analysis_id', $table)) {
+            $this->db->from($table);
+            $this->db->where('analysis_id', $analysis_id);
+            $rows = $this->db->get()->result_array();
+            return $this->json($rows);
+        }
+
+        // Fallback: return all rows if table has no analysis_id and no special handling
+        $rows = $this->db->get($table)->result_array();
         return $this->json($rows);
     }
 
-    // Generic save (insert/update) for a table; analysis_id must be present in payload
+    // Generic save (insert/update) for a table; analysis_id must be present in payload where applicable
     public function save(){
         $table = $this->input->post('table', true);
         if(!$table) return $this->json(['error'=>'Missing table'],400);
         $payload = $this->input->post(null, true);
         $id = isset($payload['id']) ? (int)$payload['id'] : null;
         unset($payload['table']);
+
+        // Sanitize payload fields against actual table columns and set audit fields if present
+        $fields = $this->db->list_fields($table);
+        $userId = $this->session->userdata('userid');
+        if (!in_array('analysis_id', $fields) && array_key_exists('analysis_id', $payload)) {
+            unset($payload['analysis_id']);
+        }
+        if (in_array('last_update_by', $fields)) {
+            $payload['last_update_by'] = $userId;
+        }
+        if (!$id && in_array('created_by', $fields)) {
+            $payload['created_by'] = $userId;
+        }
+
         if(!$id){
             $this->db->insert($table, $payload);
             $id = $this->db->insert_id();

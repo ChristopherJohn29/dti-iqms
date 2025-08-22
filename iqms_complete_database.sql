@@ -364,7 +364,7 @@ CREATE TABLE `iqms_risk_register` (
   `impact` int(1) CHECK (impact BETWEEN 1 AND 5),
   `risk_score` int(2) GENERATED ALWAYS AS (probability * impact) STORED,
   `priority` enum('1st','2nd','3rd','4th','5th') DEFAULT '3rd',
-  `risk_status` enum('open','closed','monitoring') DEFAULT 'open',
+  `risk_status` enum('open','in-progress','closed','monitoring') DEFAULT 'open',
   `identification_date` date,
   `risk_owner` varchar(255),
   `effectiveness_indicator` text,
@@ -403,10 +403,10 @@ CREATE TABLE `iqms_risk_treatments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `risk_id` int(11) NOT NULL,
   `treatment_description` text NOT NULL,
-  `treatment_type` enum('Mitigate','Transfer','Accept','Avoid') DEFAULT 'Mitigate',
+  `treatment_type` enum('Elimination','Mitigation','Transfer','Acceptance') DEFAULT 'Mitigation',
   `responsible_person` varchar(255),
   `target_date` date,
-  `treatment_status` enum('Planned','In Progress','Completed','Overdue') DEFAULT 'Planned',
+  `treatment_status` enum('not-started','in-progress','completed','overdue') DEFAULT 'not-started',
   `effectiveness` enum('Low','Medium','High') DEFAULT 'Medium',
   `cost_estimate` decimal(10,2),
   `actual_cost` decimal(10,2),
@@ -419,6 +419,7 @@ CREATE TABLE `iqms_risk_treatments` (
   `last_update_by` int(11),
   PRIMARY KEY (`id`),
   KEY `idx_risk_id` (`risk_id`),
+  UNIQUE KEY `unique_risk_id` (`risk_id`),
   KEY `idx_treatment_type` (`treatment_type`),
   KEY `idx_treatment_status` (`treatment_status`),
   KEY `idx_status` (`status`),
@@ -723,7 +724,7 @@ INSERT INTO `iqms_quality_objective_action_plans` (`objective_id`, `action_text`
 
 INSERT INTO `iqms_risk_register` (`analysis_id`, `risk_id`, `risk_description`, `potential_impact`, `risk_category`, `probability`, `impact`, `priority`, `risk_status`, `identification_date`, `risk_owner`, `effectiveness_indicator`, `created_by`) VALUES
 (5, 'RR-1', 'Dissatisfied clients', '1.1 Low CSF rating', 'Service Delivery', 2, 3, '1st', 'open', '2025-06-05', 'Training Coordinator', '100% Satisfactory CSF rating', 1),
-(5, 'RR-2', 'Inadequate training resources', 'Poor training quality and participant experience', 'Resource Management', 3, 3, '2nd', 'open', '2025-06-05', 'Training Coordinator', 'All training sessions fully equipped', 1),
+(5, 'RR-2', 'Inadequate training resources', 'Poor training quality and participant experience', 'Resource Management', 3, 3, '2nd', 'in-progress', '2025-06-05', 'Training Coordinator', 'All training sessions fully equipped', 1),
 (5, 'RR-3', 'Misalignment with partner expectations', 'Partnership breakdown and resource loss', 'Partnership Management', 2, 4, '1st', 'open', '2025-06-05', 'Partnership Coordinator', 'Clear MOA/MOU compliance rate', 1);
 
 -- Sample Risk Causes
@@ -735,9 +736,8 @@ INSERT INTO `iqms_risk_causes` (`risk_id`, `cause_number`, `cause_description`, 
 
 -- Sample Risk Treatments
 INSERT INTO `iqms_risk_treatments` (`risk_id`, `treatment_description`, `treatment_type`, `responsible_person`, `target_date`, `treatment_status`, `created_by`) VALUES
-(1, 'Conduct comprehensive Training Needs Assessment before each program', 'Mitigate', 'Training Coordinator', '2025-07-01', 'Planned', 1),
-(1, 'Implement trainer evaluation and feedback system', 'Mitigate', 'Training Coordinator', '2025-08-01', 'Planned', 1),
-(2, 'Establish equipment maintenance schedule and backup resources', 'Mitigate', 'Administrative Officer', '2025-07-15', 'Planned', 1);
+(1, 'Conduct comprehensive Training Needs Assessment before each program', 'Mitigation', 'Training Coordinator', '2025-07-01', 'not-started', 1),
+(2, 'Establish equipment maintenance schedule and backup resources', 'Mitigation', 'Administrative Officer', '2025-07-15', 'not-started', 1);
 
 -- =====================================================
 -- 20. SEED DATA - SAMPLE OPPORTUNITY REGISTER
