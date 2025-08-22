@@ -130,6 +130,8 @@
             </table>
         </div>
     <link rel="stylesheet" href="<?=base_url('assets/customcss/iqms_quality_objectives_inline.css')?>" />
+    <link rel="stylesheet" href="<?=base_url('assets/customcss/iqms_quality_objectives_columns.css')?>" />
+
 
     </div>
     <!-- container -->

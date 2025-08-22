@@ -42,7 +42,7 @@
            .append('<td class="qo-action-plan">Loading...</td>')
            .append('<td class="qo-timeline">-</td>')
            .append('<td class="qo-responsibility">-</td>')
-           .append('<td><span class="iqms-status '+statusCls+'">'+esc(o.objective_status||'Not Started')+'</span></td>')
+           .append('<td class="qo-status">'+esc(o.objective_status||'-')+'</td>')
            .append('<td class="text-center"><div class="iqms-action-btns">\
               <button class="iqms-btn iqms-btn-warning iqms-btn-sm" data-id="'+o.id+'" data-act="edit"><i class="fe-edit"></i></button>\
               <button class="iqms-btn iqms-btn-danger iqms-btn-sm" data-id="'+o.id+'" data-act="del"><i class="fe-trash"></i></button>\
@@ -51,29 +51,18 @@
         // Load and render all action plans inline (Stakeholders-like layout)
         $.getJSON(ENDPOINT.CHILDREN,{table:'iqms_quality_objective_action_plans',fk:'objective_id',id:o.id},function(plans){
           if(!plans || !plans.length){ $tr.find('.qo-action-plan').html('<em>-</em>'); $tr.find('.qo-timeline').text('-'); return; }
-          var html='';
+          // Build column-wise multi-line lists (one row per action plan per column)
+          var apHtml=[], tlHtml=[], respHtml=[], stHtml=[];
           $.each(plans,function(i,p){
-            html += '<div class="qo-ap-row">'
-                 +   '<div class="qo-ap-text">'+esc(p.action_text||'')+'</div>'
-                 +   '<div class="qo-ap-meta">'
-                 +     '<span class="qo-ap-timeline"><strong>Timeline:</strong> '+esc(p.timeline||'-')+'</span>'
-                 +     ' &middot; '
-                 +     '<span class="qo-ap-resp"><strong>Responsibility:</strong> '+esc(p.responsibility||'-')+'</span>'
-                 +     ' &middot; '
-                 +     '<span class="qo-ap-status"><strong>Status:</strong> '+esc(p.action_status||'-')+'</span>'
-                 +   '</div>'
-                 + '</div>';
+            apHtml.push('<div class="qo-ap-row">- '+esc(p.action_text||'')+'</div>');
+            tlHtml.push('<div class="qo-ap-row">- '+esc(p.timeline||'-')+'</div>');
+            respHtml.push('<div class="qo-ap-row">- '+esc(p.responsibility||'-')+'</div>');
+            stHtml.push('<div class="qo-ap-row">- '+esc(p.action_status||'-')+'</div>');
           });
-          $tr.find('.qo-action-plan').html(html);
-          // Leave timeline and responsibility columns with first plan values for filtering convenience
-          var first = plans[0] || {};
-          $tr.find('.qo-timeline').text(first.timeline||'-');
-          $tr.find('.qo-responsibility').text(first.responsibility || (o.process_owner||'-'));
-          // Update Status column to first plan status when available
-          if(first.action_status){
-            var apCls = String(first.action_status).toLowerCase().replace(/\s+/g,'-');
-            $tr.find('.iqms-status').text(first.action_status).attr('class','iqms-status '+apCls);
-          }
+          $tr.find('.qo-action-plan').html(apHtml.join(''));
+          $tr.find('.qo-timeline').html(tlHtml.join(''));
+          $tr.find('.qo-responsibility').html(respHtml.join(''));
+          $tr.find('.qo-status').html(stHtml.join(''));
 
         });
       });
